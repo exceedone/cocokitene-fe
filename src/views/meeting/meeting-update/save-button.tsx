@@ -22,13 +22,11 @@ const SaveUpdateMeetingButton = () => {
                 data.meetingLink && !data.meetingLink.startsWith('https://')
                     ? `https://${data.meetingLink}`
                     : data.meetingLink,
-            hosts: data.hosts.map((i) => i.users_id),
-            controlBoards: data.controlBoards.map((i) => i.users_id),
-            shareholders: data.shareholders.map((i) => i.users_id),
-            directors: data.directors.map((i) => i.users_id),
-            administrativeCouncils: data.administrativeCouncils.map(
-                (i) => i.users_id,
-            ),
+            participants: data.participants.map((p) => ({
+                roleMtgId: p.roleMtgId,
+                roleName: p.roleName,
+                userIds: p.userParticipant.map((user) => user.users_id),
+            })),
             resolutions: data.resolutions.filter(
                 (r) => r.title.trim() || r.description.trim(),
             ),

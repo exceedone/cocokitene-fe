@@ -1,4 +1,5 @@
-import { get } from './fetcher'
+import { ICreateBoardMeetingPayload } from '@/services/request.type'
+import { get, post } from './fetcher'
 import { IGetAllMeetingQuery, IMeeting } from '@/stores/meeting/types'
 import { IGetAllDataReponse } from '@/services/response.type'
 
@@ -17,7 +18,11 @@ const serviceBoardMeeting = {
         )
 
         return response.data
-    }
+    },
+    createBoardMeeting: async (payload: ICreateBoardMeetingPayload) => {
+        const response = await post<any>('/board-meetings', payload)
+        return response.data
+    },
 }
 
 export default serviceBoardMeeting

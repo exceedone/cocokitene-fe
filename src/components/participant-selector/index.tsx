@@ -2,22 +2,30 @@
 import SelectParticipantGroup from '@/components/participant-selector/select-participant-group'
 import SelectedParticipantList from '@/components/participant-selector/selected-participant-list'
 import { Typography } from 'antd'
-import { UserStatus } from '@/constants/user-status'
 
 const { Text } = Typography
 
 export interface IParticipants {
     users_defaultAvatarHashColor: string
     users_avartar?: string
-    users_username: string
+    // users_username: string
+    users_email: string
     users_id: number
     userStatus_status?: string
     listRoleResponse?: string
 }
 
+export interface IParticipantsWithRole {
+    roleMtgId: number
+    roleName: string
+    userParticipant: IParticipants[]
+}
+
 interface IParticipantSelector {
     title: string
-    selectedParticipants: IParticipants[]
+    roleName?: string
+    type?: string
+    selectedParticipants: IParticipantsWithRole[]
     onSelectParticipant: (p: IParticipants) => void
     onSelectAllParticipants: (p: IParticipants[]) => void
     onDeleteParticipant: (p: IParticipants) => void
@@ -25,7 +33,9 @@ interface IParticipantSelector {
 
 const ParticipantSelector = ({
     title,
+    roleName,
     selectedParticipants,
+    type,
     onSelectParticipant,
     onSelectAllParticipants,
     onDeleteParticipant,
@@ -38,10 +48,13 @@ const ParticipantSelector = ({
                 onSelectParticipant={onSelectParticipant}
                 onSelectAllParticipants={onSelectAllParticipants}
                 title={title}
+                roleName={roleName}
+                type={type}
             />
             <SelectedParticipantList
                 selectedParticipants={selectedParticipants}
                 onDeleteParticipant={onDeleteParticipant}
+                roleName={roleName}
             />
         </div>
     )

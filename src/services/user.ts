@@ -110,6 +110,33 @@ const serviceUser = {
             meta: response.data.meta,
         }
     },
+
+    getAccountListByRoleName: async (
+        query?: string,
+        page: number = 1,
+        limit: number = 5,
+        roleName: string = '',
+    ): Promise<IAccountListResponse> => {
+        const params = {
+            searchQuery: query,
+            limit,
+            page,
+        }
+        const response = await get<any, { data: IAccountListResponse }>(
+            `/users/by-roleName/${roleName}`,
+            params,
+        )
+
+        const filterActiveAccount = response.data.items.filter(
+            // eslint-disable-next-line no-undef
+            (account) => account.userStatus_status === UserStatus.ACTIVE,
+        )
+
+        return {
+            items: filterActiveAccount,
+            meta: response.data.meta,
+        }
+    },
 }
 
 export default serviceUser

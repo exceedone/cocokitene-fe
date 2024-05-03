@@ -1,5 +1,4 @@
 import { IParticipantsView } from '@/components/participants-detail'
-import { truncateString } from '@/utils/format-string'
 import { getFirstCharacterUpperCase } from '@/utils/get-first-character'
 import { Avatar, Typography } from 'antd'
 import Color from 'color'
@@ -23,7 +22,7 @@ const ParticipantItem = ({
 
     return (
         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex w-[90%] items-center gap-2">
                 {avatar ? (
                     <Avatar
                         src={avatar}
@@ -48,12 +47,15 @@ const ParticipantItem = ({
                         {getFirstCharacterUpperCase(email)}
                     </Avatar>
                 )}
-                <div className="cursor-pointer">
+                <div className="w-[90%] cursor-pointer">
                     <Text
                         title={email}
-                        className={`${!joined && 'text-black-45'}`}
+                        className={`${
+                            !joined && 'text-black-45'
+                        } w-[80%] truncate`}
                     >
-                        {truncateString({ text: email, start: 10, end: 0 })}{' '}
+                        {/* {truncateString({ text: email, start: 10, end: 0 })}{' '} */}
+                        {email}{' '}
                     </Text>
                     {joined && (
                         <Text className="text-polar-green">

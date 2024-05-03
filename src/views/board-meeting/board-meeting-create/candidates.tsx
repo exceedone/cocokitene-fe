@@ -10,6 +10,7 @@ import CreateReportItem from '@/components/create-report-item'
 import { IElectionResponse } from '@/services/response.type'
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import { ElectionEnum } from '@/constants/election'
 
 export interface ICandidateForm {
     title: string
@@ -21,6 +22,7 @@ const Candidates = () => {
     const t = useTranslations()
     const [data, setData] = useCreateBoardMeetingInformation()
     const [electionList, setElectionList] = useState<IElectionResponse[]>()
+    const [defaultElection, setDefaultElection] = useState<number>(1)
 
     useEffect(() => {
         try {
@@ -29,8 +31,16 @@ const Candidates = () => {
                     page: 1,
                     limit: 10,
                 })
+                console.log('electionList', electionList)
                 if (electionList) {
                     setElectionList(electionList)
+                    setDefaultElection(
+                        electionList.filter(
+                            (election) =>
+                                election.status ==
+                                ElectionEnum.VOTE_OF_CONFIDENCE,
+                        )[0].id,
+                    )
                 }
             })()
         } catch (error) {
@@ -59,7 +69,7 @@ const Candidates = () => {
                 {
                     title: '',
                     candidateName: '',
-                    type: 1,
+                    type: defaultElection,
                 },
             ],
         })
@@ -86,6 +96,7 @@ const Candidates = () => {
                         onChangeContent={onChange('candidateName', index)}
                         onDelete={onDelete(index)}
                         electionList={electionList}
+                        defaultElection={defaultElection}
                     />
                 ))}
             </div>

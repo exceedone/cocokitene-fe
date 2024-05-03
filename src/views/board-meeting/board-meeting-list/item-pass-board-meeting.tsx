@@ -13,6 +13,9 @@ import {
     MeetingStatusName,
 } from '@/constants/meeting'
 import { EyeTwoTone } from '@ant-design/icons'
+import { useAuthLogin } from '@/stores/auth/hooks'
+import { checkPermission } from '@/utils/auth'
+import { Permissions } from '@/constants/permission'
 
 const { Text } = Typography
 const ItemPassBoardMeeting = ({
@@ -26,6 +29,13 @@ const ItemPassBoardMeeting = ({
 }: IMeetingItem) => {
     const t = useTranslations()
     const router = useRouter()
+
+    const { authState } = useAuthLogin()
+    const permissionDetail = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.DETAIL_BOARD_MEETING,
+    )
+
     return (
         <Row gutter={[16, 16]} className="mb-2 rounded-lg border p-2">
             <Col span={7} className="flex items-center space-x-2">
@@ -78,13 +88,15 @@ const ItemPassBoardMeeting = ({
                 })}
             </Col>
             <Col span={4} className="flex items-center justify-end pr-5">
-                <EyeTwoTone
-                    style={{ fontSize: '18px' }}
-                    twoToneColor="#5151e5"
-                    onClick={() => {
-                        router.push(`/board-meeting/detail/${meetings_id}`)
-                    }}
-                />
+                {permissionDetail && (
+                    <EyeTwoTone
+                        style={{ fontSize: '18px' }}
+                        twoToneColor="#5151e5"
+                        onClick={() => {
+                            router.push(`/board-meeting/detail/${meetings_id}`)
+                        }}
+                    />
+                )}
             </Col>
         </Row>
     )

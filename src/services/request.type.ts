@@ -4,6 +4,7 @@ import {
     IBoardMeetingDocument,
     IBoardMeetingExecutive,
     IBoardMeetingReport,
+    IBoardMeetingUpdateCandidate,
 } from '@/stores/board-meeting/types'
 import { TypeRoleMeeting } from '@/constants/role-mtg'
 
@@ -24,6 +25,14 @@ export interface IParticipantPayload {
     roleName: string
     userIds: number[]
 }
+
+export interface ICreateRoleMtgPayload {
+    roleName: string
+    description?: string
+    type: TypeRoleMeeting
+}
+
+export interface IUpdateRoleMtgPayload extends ICreateRoleMtgPayload {}
 
 export interface ICreateBoardMeetingPayload {
     title: string
@@ -86,4 +95,18 @@ export interface ICreateRolePayload {
     roleName: string
     description?: string
     idPermissions: number[]
+}
+
+export interface IUpdateBoardMeetingPayload {
+    title: string
+    meetingLink: string
+    startTime: string
+    endTime: string
+    status: MeetingStatus
+    meetingMinutes: IBoardMeetingDocument[]
+    meetingInvitations: IBoardMeetingDocument[]
+    managementAndFinancials: IBoardMeetingReport[]
+    elections: IBoardMeetingReport[]
+    candidates: IBoardMeetingUpdateCandidate[]
+    participants: IParticipantPayload[]
 }

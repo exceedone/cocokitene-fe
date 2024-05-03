@@ -15,6 +15,9 @@ import RoleInfo from '@/components/role-info'
 import React from 'react'
 import { EditTwoTone, EyeTwoTone } from '@ant-design/icons'
 import { useRouter } from 'next/navigation'
+import { useAuthLogin } from '@/stores/auth/hooks'
+import { checkPermission } from '@/utils/auth'
+import { Permissions } from '@/constants/permission'
 
 const { Text } = Typography
 
@@ -22,6 +25,17 @@ const AccountList = () => {
     const t = useTranslations()
     const router = useRouter()
     const { accountState, getListAccountAction } = useListAccount()
+
+    const { authState } = useAuthLogin()
+    const permissionDetail = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.DETAIL_ACCOUNT,
+    )
+
+    const permissionEdit = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.EDIT_ACCOUNT,
+    )
 
     const columns: ColumnsType<IAccountList> = [
         {
@@ -173,20 +187,24 @@ const AccountList = () => {
             key: 'action',
             render: (_, record) => (
                 <div className="flex gap-3">
-                    <EditTwoTone
-                        style={{ fontSize: '18px' }}
-                        twoToneColor="#5151e5"
-                        onClick={() => {
-                            router.push(`/account/update/${record.id}`)
-                        }}
-                    />
-                    <EyeTwoTone
-                        style={{ fontSize: '18px' }}
-                        twoToneColor="#5151e5"
-                        onClick={() => {
-                            router.push(`/account/detail/${record.id}`)
-                        }}
-                    />
+                    {permissionEdit && (
+                        <EditTwoTone
+                            style={{ fontSize: '18px' }}
+                            twoToneColor="#5151e5"
+                            onClick={() => {
+                                router.push(`/account/update/${record.id}`)
+                            }}
+                        />
+                    )}
+                    {permissionDetail && (
+                        <EyeTwoTone
+                            style={{ fontSize: '18px' }}
+                            twoToneColor="#5151e5"
+                            onClick={() => {
+                                router.push(`/account/detail/${record.id}`)
+                            }}
+                        />
+                    )}
                 </div>
             ),
             width: '7%',

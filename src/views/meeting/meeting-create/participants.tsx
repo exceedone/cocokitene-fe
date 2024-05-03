@@ -67,7 +67,7 @@ const Participants = () => {
             const roleMtgList = await serviceRoleMtg.getAllRoleMtg({
                 page: 1,
                 limit: 10,
-                type: TypeRoleMeeting.SHAREHOLDER_MTG,
+                type: TypeRoleMeeting.SHAREHOLDER_MEETING,
             })
             if (roleMtgList) {
                 setRoleMtgList(roleMtgList)

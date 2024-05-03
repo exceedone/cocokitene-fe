@@ -1,4 +1,4 @@
-import { ParamsFilter } from '@/stores/setting-role/type'
+import { ParamsFilter } from '@/stores/setting-role-sys/type'
 import { get, patch, post } from './fetcher'
 import { ICreateRolePayload, IUpdatePermissionRole } from './request.type'
 import { IPermissionResponse, IRoleResponse } from './response.type'

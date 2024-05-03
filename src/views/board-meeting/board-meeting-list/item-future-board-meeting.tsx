@@ -16,6 +16,9 @@ import {
 } from '@/constants/meeting'
 import { enumToArray } from '@/utils'
 import { EditTwoTone, EyeTwoTone } from '@ant-design/icons'
+import { useAuthLogin } from '@/stores/auth/hooks'
+import { checkPermission } from '@/utils/auth'
+import { Permissions } from '@/constants/permission'
 
 const { Text } = Typography
 const ItemFutureBoardMeeting = ({
@@ -33,6 +36,17 @@ const ItemFutureBoardMeeting = ({
     const [isModalOpen, setIsModalOpen] = useState(false)
     const { joinMeetingAction } = useAttendance()
     const { openNotification, contextHolder } = useNotification()
+    const { authState } = useAuthLogin()
+    const permissionDetail = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.DETAIL_BOARD_MEETING,
+    )
+
+    const permissionEdit = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.EDIT_BOARD_MEETING,
+    )
+
     const showModal = (startTime: string) => {
         const result = calculateTimeDifference(startTime)
         if (result) {
@@ -139,24 +153,28 @@ const ItemFutureBoardMeeting = ({
                         {t('BTN_VIEW_DETAIL')}
                     </Button> */}
                     <div className="flex gap-3">
-                        <EditTwoTone
-                            style={{ fontSize: '18px' }}
-                            twoToneColor="#5151e5"
-                            onClick={() => {
-                                router.push(
-                                    `/board-meeting/update/${meetings_id}`,
-                                )
-                            }}
-                        />
-                        <EyeTwoTone
-                            style={{ fontSize: '18px' }}
-                            twoToneColor="#5151e5"
-                            onClick={() => {
-                                router.push(
-                                    `/board-meeting/detail/${meetings_id}`,
-                                )
-                            }}
-                        />
+                        {permissionEdit && (
+                            <EditTwoTone
+                                style={{ fontSize: '18px' }}
+                                twoToneColor="#5151e5"
+                                onClick={() => {
+                                    router.push(
+                                        `/board-meeting/update/${meetings_id}`,
+                                    )
+                                }}
+                            />
+                        )}
+                        {permissionDetail && (
+                            <EyeTwoTone
+                                style={{ fontSize: '18px' }}
+                                twoToneColor="#5151e5"
+                                onClick={() => {
+                                    router.push(
+                                        `/board-meeting/detail/${meetings_id}`,
+                                    )
+                                }}
+                            />
+                        )}
                     </div>
                 </Col>
             </Row>

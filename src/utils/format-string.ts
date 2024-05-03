@@ -25,9 +25,9 @@ export function truncateString({
     return `${startText}${separator}${endText}`
 }
 
-export function convertSnakeCaseToTitleCase(value: string): string {
+export function convertSnakeCaseToTitleCase(value: string | undefined): string {
     if (!value) {
-        return value
+        return ''
     }
 
     return value

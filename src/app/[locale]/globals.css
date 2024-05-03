@@ -78,4 +78,35 @@ body {
     display: flex;
     justify-content: center;
   }
-  
+  .ant-tabs-tab {
+      padding: 8px !important;
+      border: 1px solid #5151E5 !important;
+      background-color: #5151E5 !important;
+      opacity: 0.6 !important;
+      border-radius: 15px 15px 0 0;
+      margin: 0 0 0 2px !important;
+      /* width: 100px !important; */
+      text-align: center !important;
+
+  }
+
+
+.ant-tabs-tab-active {
+    padding: 8px !important;
+    opacity: 1.0 !important;
+    color: white !important;
+    margin: 0 0 0 2px !important;
+}
+.ant-tabs-ink-bar {
+    display: none  ;
+}
+.ant-tabs-tab-btn {
+    color: white !important;
+    font-weight: 500;
+    width: 200px;
+
+}
+
+.ant-tabs-nav{
+    margin-bottom: 0 !important;
+}

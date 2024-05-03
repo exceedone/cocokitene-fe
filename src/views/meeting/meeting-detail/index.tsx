@@ -36,6 +36,11 @@ const MeetingDetail = () => {
         Permissions.EDIT_MEETING,
     )
 
+    const permissionSendEmailShareholder = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.SEND_MAIL_TO_SHAREHOLDER,
+    )
+
     useEffect(() => {
         if (meetingId) {
             fetchMeetingDetail(meetingId)
@@ -66,7 +71,9 @@ const MeetingDetail = () => {
                     )
                 }
                 // editUrl={`/meeting/update/${meetingId}`}
-                extraButton={<SendEmailButton />}
+                extraButton={
+                    permissionSendEmailShareholder && <SendEmailButton />
+                }
             />
             <div className="flex flex-col gap-6 p-6">
                 <DetailInformation />

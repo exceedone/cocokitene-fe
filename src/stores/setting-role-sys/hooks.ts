@@ -7,7 +7,7 @@ import {
     setOpenModalRegisterRole,
 } from './slice'
 
-type SettingRoleType = {
+type SettingRoleTypeSys = {
     settingRoleState: ISettingRoleState
     // eslint-disable-next-line
     setOpenModal: (isOpenModal: boolean) => void
@@ -17,7 +17,7 @@ type SettingRoleType = {
     setFilterAction: (data: ParamsFilter) => void
 }
 
-export const useSettingRole = (): SettingRoleType => {
+export const useSettingRoleSys = (): SettingRoleTypeSys => {
     const dispatch = useAppDispatch()
     const settingRoleState = useAppSelector(
         (state: RootState) => state.settingRole,

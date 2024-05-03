@@ -11,12 +11,27 @@ import React from 'react'
 import { UserStatus } from '@/constants/user-status'
 import { EditTwoTone, EyeTwoTone } from '@ant-design/icons'
 import { useRouter } from 'next/navigation'
+import { useAuthLogin } from '@/stores/auth/hooks'
+import { checkPermission } from '@/utils/auth'
+import { Permissions } from '@/constants/permission'
 const { Text } = Typography
 
 const ShareholderList = () => {
     const t = useTranslations()
     const router = useRouter()
     const { shareholderState, getListShareholderAction } = useListShareholder()
+
+    const { authState } = useAuthLogin()
+    const permissionDetail = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.DETAIL_SHAREHOLDERS,
+    )
+
+    const permissionEdit = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.EDIT_SHAREHOLDERS,
+    )
+
     const columns: ColumnsType<IShareholderList> = [
         {
             title: t('NO'),
@@ -117,20 +132,24 @@ const ShareholderList = () => {
                 //     {t('SEE_DETAIL')}
                 // </Link>
                 <div className="flex gap-3">
-                    <EditTwoTone
-                        style={{ fontSize: '18px' }}
-                        twoToneColor="#5151e5"
-                        onClick={() => {
-                            router.push(`/shareholder/update/${record.id}`)
-                        }}
-                    />
-                    <EyeTwoTone
-                        style={{ fontSize: '18px' }}
-                        twoToneColor="#5151e5"
-                        onClick={() => {
-                            router.push(`/shareholder/detail/${record.id}`)
-                        }}
-                    />
+                    {permissionEdit && (
+                        <EditTwoTone
+                            style={{ fontSize: '18px' }}
+                            twoToneColor="#5151e5"
+                            onClick={() => {
+                                router.push(`/shareholder/update/${record.id}`)
+                            }}
+                        />
+                    )}
+                    {permissionDetail && (
+                        <EyeTwoTone
+                            style={{ fontSize: '18px' }}
+                            twoToneColor="#5151e5"
+                            onClick={() => {
+                                router.push(`/shareholder/detail/${record.id}`)
+                            }}
+                        />
+                    )}
                 </div>
             ),
             width: '7%',

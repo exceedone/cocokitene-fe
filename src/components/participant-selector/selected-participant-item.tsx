@@ -1,5 +1,4 @@
 import { IParticipants } from '@/components/participant-selector'
-import { truncateString } from '@/utils/format-string'
 import { getFirstCharacterUpperCase } from '@/utils/get-first-character'
 import { CloseCircleFilled } from '@ant-design/icons'
 import { Avatar, Typography } from 'antd'
@@ -24,7 +23,7 @@ const SelectedParticipantItem = ({
 
     return (
         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-[80%]">
                 {users_avartar ? (
                     <Avatar
                         src={users_avartar}
@@ -48,12 +47,8 @@ const SelectedParticipantItem = ({
                     </Avatar>
                 )}
 
-                <Text title={users_email} className="cursor-pointer">
-                    {truncateString({
-                        text: users_email,
-                        start: 15,
-                        end: 0,
-                    })}
+                <Text title={users_email} className="cursor-pointer truncate w-[70%]">
+                    {users_email}
                 </Text>
             </div>
             <CloseCircleFilled

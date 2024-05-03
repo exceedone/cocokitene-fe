@@ -9,8 +9,8 @@ import ParticipantOptionItem from './participant-option-item'
 import useDebounce from '@/hooks/useDebounce'
 import serviceUser from '@/services/user'
 import { useOnClickOutside } from '@/hooks/useOnClickOutside'
-import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { RoleMtgEnum, TypeRoleMeeting } from '@/constants/role-mtg'
+import { IAccountListResponse } from '@/services/response.type'
 
 export interface ISelectParticipantGroup {
     onSelectParticipant: (p: IParticipants) => void
@@ -58,40 +58,92 @@ const SelectParticipantGroup = ({
                         ...optionsData,
                         status: FETCH_STATUS.LOADING,
                     })
-                    let optionsRes = await serviceUser.getAccountList(
-                        query,
-                        1,
-                        278,
-                    )
-                    if (
-                        roleName === convertSnakeCaseToTitleCase('SHAREHOLDER')
-                    ) {
-                        optionsRes = {
-                            ...optionsRes,
-                            items: optionsRes.items.filter((item) => {
-                                const listRole = item.listRoleResponse || ''
-                                return listRole.includes('SHAREHOLDER')
-                            }),
-                        }
+
+                    let optionsRes: IAccountListResponse = {
+                        items: [],
+                        meta: {
+                            totalItems: 0,
+                            itemCount: 0,
+                            itemsPerPage: 0,
+                            totalPages: 0,
+                            currentPage: 0,
+                        },
                     }
 
-                    if (
-                        type === TypeRoleMeeting.BOARD_MTG &&
-                        roleName !==
-                            convertSnakeCaseToTitleCase(RoleMtgEnum.HOST)
-                    ) {
+                    if (type === TypeRoleMeeting.BOARD_MEETING) {
+                        optionsRes = await serviceUser.getAccountListByRoleName(
+                            query,
+                            1,
+                            278,
+                            'Board',
+                        )
                         optionsRes = {
                             ...optionsRes,
-                            items: optionsRes.items.filter((item) => {
-                                const listRole = item.listRoleResponse || ''
-                                return listRole.includes('BOARD')
-                            }),
+                            items: optionsRes.items,
+                        }
+                        if (
+                            roleName?.toLocaleUpperCase() ===
+                            RoleMtgEnum.HOST.toLocaleUpperCase()
+                        ) {
+                            let optionsRes1 =
+                                await serviceUser.getAccountListByRoleName(
+                                    query,
+                                    1,
+                                    278,
+                                    'ADMIN',
+                                )
+                            //Remove duplicate participants
+                            const uniqueObjects: { [key: number]: boolean } = {}
+                            const uniqueArray = [
+                                ...optionsRes.items,
+                                ...optionsRes1.items,
+                            ].filter((obj) => {
+                                if (!uniqueObjects[obj.users_id]) {
+                                    uniqueObjects[obj.users_id] = true
+                                    return true
+                                }
+                                return false
+                            })
+
+                            optionsRes = {
+                                ...optionsRes1,
+                                items: [...uniqueArray],
+                            }
+                        }
+                    } else {
+                        if (
+                            roleName?.toLocaleUpperCase() ===
+                            RoleMtgEnum.SHAREHOLDER.toUpperCase()
+                        ) {
+                            optionsRes =
+                                await serviceUser.getAccountListByRoleName(
+                                    query,
+                                    1,
+                                    278,
+                                    roleName,
+                                )
+
+                            optionsRes = {
+                                ...optionsRes,
+                                items: optionsRes.items,
+                            }
+                        } else {
+                            optionsRes = await serviceUser.getAccountList(
+                                query,
+                                1,
+                                278,
+                            )
+                            optionsRes = {
+                                ...optionsRes,
+                                items: optionsRes.items,
+                            }
                         }
                     }
                     console.log(
                         '🚀 ~ file: select-participant-group.tsx:128 ~ ; ~ optionsRes:',
                         optionsRes,
                     )
+
                     setOptionsData({
                         options: [
                             {

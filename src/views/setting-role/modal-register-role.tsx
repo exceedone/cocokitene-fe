@@ -1,5 +1,5 @@
 import serviceSettingRole from '@/services/setting-role'
-import { useSettingRole } from '@/stores/setting-role/hooks'
+import { useSettingRoleSys } from '@/stores/setting-role-sys/hooks'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { Button, Form, Input, Modal, Select, notification } from 'antd'
 import { useForm } from 'antd/es/form/Form'
@@ -22,7 +22,7 @@ const ModalRegisterRole = () => {
     const t = useTranslations()
     const [form] = useForm<IRoleForm>()
     const { settingRoleState, setOpenModal, getAllCombineRoleWithPermission } =
-        useSettingRole()
+        useSettingRoleSys()
     const [selectedItems, setSelectedItems] = useState<TypeSelect[]>([])
     const [permissions, setPermissions] = useState<TypeSelect[]>([])
 

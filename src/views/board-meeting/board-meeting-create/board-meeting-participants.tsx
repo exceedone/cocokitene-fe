@@ -26,7 +26,7 @@ const BoardMeetingParticipants = () => {
             const roleBoardMtgList = await serviceRoleMtg.getAllRoleMtg({
                 page: 1,
                 limit: 10,
-                type: TypeRoleMeeting.BOARD_MTG,
+                type: TypeRoleMeeting.BOARD_MEETING,
             })
             if (roleBoardMtgList) {
                 setRoleBoardMtgList(roleBoardMtgList)
@@ -153,7 +153,7 @@ const BoardMeetingParticipants = () => {
                                 roleBoardMtg.roleName,
                             )}
                             roleName={roleBoardMtg.roleName}
-                            type={TypeRoleMeeting.BOARD_MTG}
+                            type={TypeRoleMeeting.BOARD_MEETING}
                             selectedParticipants={data.participants?.filter(
                                 (participant) =>
                                     participant.roleName ==

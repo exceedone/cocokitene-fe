@@ -36,6 +36,7 @@ interface ICreateReportItem extends Resolution {
     onRemoveFile?: (uuid: string) => void
     onDelete: () => void
     electionList?: IElectionResponse[] | []
+    defaultElection?: number
 }
 
 const CreateReportItem = ({
@@ -52,6 +53,7 @@ const CreateReportItem = ({
     onRemoveFile,
     onDelete,
     electionList,
+    defaultElection,
 }: ICreateReportItem) => {
     const t = useTranslations()
     const [data, setData] = useCreateBoardMeetingInformation()
@@ -71,10 +73,13 @@ const CreateReportItem = ({
         }
 
     const onChange =
-        (callback: (value: string) => void) =>
-        (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            callback(event.target.value)
-        }
+        // eslint-disable-next-line
+
+
+            (callback: (value: string) => void) =>
+            (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                callback(event.target.value)
+            }
 
     const [fileData, setFileData] = useState<{
         fileList: UploadFile[]
@@ -212,6 +217,7 @@ const CreateReportItem = ({
                         size="large"
                         placeholder={t('PLEASE_SELECT_ELECTION_TYPE')}
                         style={{ width: '100%' }}
+                        defaultValue={defaultElection}
                         options={electionList?.map((election) => ({
                             value: election.id,
                             label: (
@@ -230,7 +236,8 @@ const CreateReportItem = ({
             </div>
             <div></div>
             <DeleteOutlined
-                className={`h-10 text-dust-red ${index === 1 && 'invisible'}`}
+                // className={`h-10 text-dust-red ${index === 1 && 'invisible'}`}
+                className={`h-10 text-dust-red`}
                 disabled={index === 1}
                 onClick={onDelete}
             />

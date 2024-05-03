@@ -39,7 +39,7 @@ const initialState: ICreateBoardMeeting = {
             type: 1,
         },
     ],
-    participants: []
+    participants: [],
 }
 
 export const boardMeetingCreateSlice = createSlice({

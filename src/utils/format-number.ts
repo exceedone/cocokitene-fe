@@ -1,5 +1,5 @@
 export const formatNumber = (
-    value: number | string,
+    value: number | string | unknown,
     options?: { maximumFractionDigits: number },
 ) => {
     const maximumFractionDigits = options?.maximumFractionDigits ?? 3

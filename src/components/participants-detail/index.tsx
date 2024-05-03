@@ -18,18 +18,16 @@ interface IParticipantDetail {
     title: string
     participantList: IParticipantsView[]
     isLoading: boolean
-    width?: string
 }
 
 const ParticipantDetail = ({
     title,
     participantList,
     isLoading,
-    width,
 }: IParticipantDetail) => {
     const t = useTranslations()
     return (
-        <div className={`flex ${width} flex-col gap-4`}>
+        <div className={`flex  flex-col gap-4`}>
             <Text className="text-sm">{t(title)}</Text>
 
             <ParticipantList

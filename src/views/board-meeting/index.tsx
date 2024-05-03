@@ -25,7 +25,7 @@ const BoardMeetingList = () => {
     const { authState } = useAuthLogin()
     const permissionCreateBoardMeeting = checkPermission(
         authState.userData?.permissionKeys,
-        Permissions.CREATE_MEETING,
+        Permissions.CREATE_BOARD_MEETING,
     )
     const {
         meetingState,
@@ -54,6 +54,7 @@ const BoardMeetingList = () => {
     const handleInputChange = (value: string) => {
         setFilterAction({ ...meetingState.filter, searchQuery: value })
     }
+
     const handleSelectChange = (value: string) => {
         setFilterAction({ ...meetingState.filter, sortOrder: value })
     }
@@ -61,27 +62,53 @@ const BoardMeetingList = () => {
     useEffect(() => {
         if (attendanceState.status == EActionStatus.Succeeded) {
             openNotification({
-                message: 'Board meeting',
+                message: 'Meeting',
                 placement: 'bottomRight',
                 type: 'info',
             })
             resetStateAttendance()
-            router.push('/board-meeting/detail' + attendanceState.meetingIdJoin)
+            router.push(
+                '/board-meeting/detail/' + attendanceState.meetingIdJoin,
+            )
         }
+
         if (attendanceState.status == EActionStatus.Failed) {
+            openNotification({
+                message: attendanceState.errorMessage,
+                placement: 'bottomRight',
+                type: 'error',
+            })
+        }
+        // eslint-disable-next-line
+    }, [attendanceState.status])
+
+    useEffect(() => {
+        if (meetingState.status == EActionStatus.Failed) {
             openNotification({
                 message: meetingState.errorMessage,
                 placement: 'bottomRight',
                 type: 'error',
             })
         }
+        // eslint-disable-next-line
+    }, [meetingState.status])
+
+    useEffect(() => {
+        if (meetingState.status === EActionStatus.Failed) {
+            openNotification({
+                message: meetingState.errorMessage,
+                placement: 'bottomRight',
+                type: 'error',
+            })
+        }
+        // eslint-disable-next-line
     }, [meetingState.status])
 
     return (
         <div>
             {contextHolder}
             <ListTitle
-                pageName={t('BOARDS_MEETING')}
+                pageName={t('LIST_BOARD_MEETINGS')}
                 addButton={
                     permissionCreateBoardMeeting && (
                         <Button

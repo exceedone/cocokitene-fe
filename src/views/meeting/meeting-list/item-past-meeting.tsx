@@ -3,7 +3,10 @@ import {
     MeetingStatusColor,
     MeetingStatusName,
 } from '@/constants/meeting'
+import { Permissions } from '@/constants/permission'
+import { useAuthLogin } from '@/stores/auth/hooks'
 import { enumToArray } from '@/utils'
+import { checkPermission } from '@/utils/auth'
 import { formatTimeMeeting } from '@/utils/date'
 import { truncateString } from '@/utils/format-string'
 import { IMeetingItem } from '@/views/meeting/meeting-list/type'
@@ -26,8 +29,14 @@ const ItemPastMeeting = ({
     meetings_note,
 }: IMeetingItem) => {
     const t = useTranslations()
-
     const router = useRouter()
+
+    const { authState } = useAuthLogin()
+    const permissionDetail = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.DETAIL_MEETING,
+    )
+
     return (
         <Row
             className="border-true-gray-300 mb-2 rounded-lg border p-2"
@@ -87,13 +96,15 @@ const ItemPastMeeting = ({
                 })}
             </Col>
             <Col span={4} className="flex items-center justify-end pr-5">
-                <EyeTwoTone
-                    style={{ fontSize: '18px' }}
-                    twoToneColor="#5151e5"
-                    onClick={() => {
-                        router.push(`/meeting/detail/${meetings_id}`)
-                    }}
-                />
+                {permissionDetail && (
+                    <EyeTwoTone
+                        style={{ fontSize: '18px' }}
+                        twoToneColor="#5151e5"
+                        onClick={() => {
+                            router.push(`/meeting/detail/${meetings_id}`)
+                        }}
+                    />
+                )}
             </Col>
         </Row>
     )

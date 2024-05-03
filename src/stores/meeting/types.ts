@@ -107,6 +107,19 @@ export interface IProposal {
     proposalFiles: IProposalFile[]
 }
 
+export interface IBoardProposal {
+    id: number
+    title: string
+    description: string
+    oldDescription?: string
+    type: ResolutionType
+    votedQuantity: number | null
+    unVotedQuantity: number | null
+    notVoteYetQuantity: number | null
+    voteResult: VoteProposalOption
+    meetingId: number
+}
+
 export interface IUserMeeting {
     id: number
     status: UserMeetingStatusEnum

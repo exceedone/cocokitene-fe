@@ -1,11 +1,10 @@
 /* eslint-disable */
 import withAuth from '@/components/component-auth'
-import ListTitle from '@/components/content-page-title/list-title'
 import { FETCH_STATUS } from '@/constants/common'
 import { Permissions } from '@/constants/permission'
 import { IUpdatePermissionRole } from '@/services/request.type'
 import serviceSettingRole from '@/services/setting-role'
-import { useSettingRole } from '@/stores/setting-role/hooks'
+import { useSettingRoleSys } from '@/stores/setting-role-sys/hooks'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons'
 import { Button, notification } from 'antd'
@@ -16,6 +15,10 @@ import { useEffect, useState } from 'react'
 import ModalRegisterRole from './modal-register-role'
 import { AxiosError } from 'axios'
 import { RoleName } from '@/constants/role'
+import SettingTitle from '@/components/content-page-title/setting-title'
+import RoleMtgList from '@/views/setting-role/role-mtg-list'
+import { useSettingRoleMtg } from '@/stores/setting-role-mtg/hook'
+import ModalRegisterRoleMtg from '@/views/setting-role/modal-register-role-mtg'
 interface DataType {
     namePermission: string
     [key: string]: any
@@ -39,7 +42,10 @@ const SettingRoleView = () => {
         getAllCombineRoleWithPermission,
         setOpenModal,
         setFilterAction,
-    } = useSettingRole()
+    } = useSettingRoleSys()
+
+    const { setOpenModalRoleMtg } = useSettingRoleMtg()
+
     const [clickButtonEdit, setClickButtonEdit] = useState<boolean>(false)
     const [checkboxState, setCheckboxState] = useState<any>({})
     const [dataInitial, setDataInitial] = useState<any>({})
@@ -301,6 +307,11 @@ const SettingRoleView = () => {
 
         setCheckboxState(updatedCheckboxState)
     }
+    const [choiceTab, setChoiceTab] = useState<boolean>(true)
+
+    const handleToggleTab = (key: string) => {
+        setChoiceTab(key === 'roleSys')
+    }
 
     const handleEditRolePerrmisson = () => {
         // eslint-disable-next-line
@@ -331,55 +342,69 @@ const SettingRoleView = () => {
 
     return (
         <div>
-            <ListTitle
-                pageName={t('SETTING_ROLES')}
+            <SettingTitle
                 addButton={
                     <Button
                         type="primary"
                         icon={<PlusOutlined />}
                         size="large"
-                        onClick={() => setOpenModal(true)}
+                        onClick={() => {
+                            if (choiceTab) {
+                                setOpenModal(true)
+                            } else {
+                                setOpenModalRoleMtg(true)
+                            }
+                        }}
                     >
                         {t('ADD_NEW')}
                     </Button>
                 }
                 editButton={
-                    <>
-                        {!clickButtonEdit ? (
-                            <Button
-                                type={'primary'}
-                                icon={<EditOutlined />}
-                                size="large"
-                                onClick={() =>
-                                    setClickButtonEdit(!clickButtonEdit)
-                                }
-                            >
-                                {t('EDIT')}
-                            </Button>
-                        ) : (
-                            <Button
-                                type={'default'}
-                                icon={<SaveOutlined />}
-                                size="large"
-                                onClick={() => handleEditRolePerrmisson()}
-                            >
-                                {t('SAVE')}
-                            </Button>
-                        )}
-                    </>
+                    !clickButtonEdit
+                        ? [
+                              <Button
+                                  key="edit-button"
+                                  type={'primary'}
+                                  icon={<EditOutlined />}
+                                  size="large"
+                                  onClick={() =>
+                                      setClickButtonEdit(!clickButtonEdit)
+                                  }
+                              >
+                                  {t('EDIT')}
+                              </Button>,
+                          ]
+                        : [
+                              <Button
+                                  key="save-button"
+                                  type={'default'}
+                                  icon={<SaveOutlined />}
+                                  size="large"
+                                  onClick={() => handleEditRolePerrmisson()}
+                              >
+                                  {t('SAVE')}
+                              </Button>,
+                          ]
                 }
                 onChangeInput={handleInputChange}
+                onChangeTab={handleToggleTab}
             />
+
             <div className="p-6">
-                <Table
-                    columns={columns}
-                    dataSource={data}
-                    rowKey={(record) => record.namePermission}
-                    loading={isLoading != FETCH_STATUS.SUCCESS}
-                    // pagination={false}
-                />
+                {choiceTab ? (
+                    <Table
+                        columns={columns}
+                        dataSource={data}
+                        rowKey={(record) => record.namePermission}
+                        loading={isLoading != FETCH_STATUS.SUCCESS}
+                        // pagination={false}
+                    />
+                ) : (
+                    <RoleMtgList />
+                )}
             </div>
-            <ModalRegisterRole />
+
+            {choiceTab ? <ModalRegisterRole /> : <ModalRegisterRoleMtg />}
         </div>
     )
 }

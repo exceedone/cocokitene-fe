@@ -230,6 +230,7 @@ const MeetingInformation = () => {
                                 size="large"
                                 value={data.title}
                                 onChange={onChange}
+                                maxLength={255}
                             />
                         </Form.Item>
                     </Form>
@@ -445,6 +446,7 @@ const MeetingInformation = () => {
                                 size="large"
                                 value={data.note}
                                 onChange={onChange}
+                                maxLength={5000}
                             />
                         </Form.Item>
                     </Form>

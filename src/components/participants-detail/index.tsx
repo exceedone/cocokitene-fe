@@ -1,7 +1,7 @@
 import ParticipantList from '@/components/participants-detail/participant-list'
 import { Typography } from 'antd'
 import { UserMeetingStatusEnum } from '@/stores/attendance/type'
-import { useTranslations } from 'next-intl'
+import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 
 const { Text } = Typography
 
@@ -25,10 +25,11 @@ const ParticipantDetail = ({
     participantList,
     isLoading,
 }: IParticipantDetail) => {
-    const t = useTranslations()
     return (
         <div className={`flex  flex-col gap-4`}>
-            <Text className="text-sm">{t(title)}</Text>
+            <Text className="text-sm">
+                {convertSnakeCaseToTitleCase(title)}
+            </Text>
 
             <ParticipantList
                 participantList={participantList}

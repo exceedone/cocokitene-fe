@@ -15,6 +15,7 @@ import ModalUpdateRoleMtg from '@/views/setting-role/modal-update-role-mtg'
 import withAuth from '@/components/component-auth'
 import { Permissions } from '@/constants/permission'
 import { TypeRoleMeeting } from '@/constants/role-mtg'
+import { MeetingRole } from '@/stores/attendance/type'
 
 const { Text } = Typography
 const RoleMtgList = () => {
@@ -38,6 +39,24 @@ const RoleMtgList = () => {
         })
         // eslint-disable-next-line
     }, [settingRoleMtgState.searchQuery])
+
+    const checkBaseRoleMtg = (roleMtg: IRoleMtgList) => {
+        if (
+            roleMtg.roleName.toUpperCase() === MeetingRole.HOST.toUpperCase() &&
+            roleMtg.type === TypeRoleMeeting.BOTH_MEETING
+        ) {
+            return true
+        }
+        if (
+            roleMtg.roleName.toUpperCase() ===
+                MeetingRole.SHAREHOLDER.toUpperCase() &&
+            roleMtg.type === TypeRoleMeeting.SHAREHOLDER_MEETING
+        ) {
+            return true
+        }
+        return false
+    }
+
     const colums: ColumnsType<IRoleMtgList> = [
         {
             title: t('NO'),
@@ -99,19 +118,25 @@ const RoleMtgList = () => {
         {
             title: '',
             key: 'action',
-            render: (_, record) => (
-                <div className="flex gap-3">
-                    <EditTwoTone
-                        style={{ fontSize: '18px' }}
-                        twoToneColor="#5151e5"
-                        onClick={() => {
-                            // setSelectedRoleMtgId(record.id)
-                            setIdMOpenModalUpdateRoleMtg(record.id)
-                            setOpenModalUpdatedRoleMtg(true)
-                        }}
-                    />
-                </div>
-            ),
+            render: (_, record) => {
+                return (
+                    <div
+                        className={`$ flex gap-3 ${
+                            checkBaseRoleMtg(record) ? 'hidden' : ''
+                        }`}
+                    >
+                        <EditTwoTone
+                            style={{ fontSize: '18px' }}
+                            twoToneColor="#5151e5"
+                            onClick={() => {
+                                // setSelectedRoleMtgId(record.id)
+                                setIdMOpenModalUpdateRoleMtg(record.id)
+                                setOpenModalUpdatedRoleMtg(true)
+                            }}
+                        />
+                    </div>
+                )
+            },
             width: '7%',
         },
     ]

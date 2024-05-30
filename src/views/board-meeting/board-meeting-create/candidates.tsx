@@ -31,7 +31,7 @@ const Candidates = () => {
                     page: 1,
                     limit: 10,
                 })
-                console.log('electionList', electionList)
+                // console.log('electionList', electionList)
                 if (electionList) {
                     setElectionList(electionList)
                     setDefaultElection(

@@ -110,3 +110,6 @@ export interface IUpdateBoardMeetingPayload {
     candidates: IBoardMeetingUpdateCandidate[]
     participants: IParticipantPayload[]
 }
+
+//Chat-Meeting
+

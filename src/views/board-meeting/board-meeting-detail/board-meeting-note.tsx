@@ -14,7 +14,12 @@ const BoardMeetingNote = () => {
         <BoxArea title={t('NOTE_INFORMATION')}>
             <div className="flex flex-col gap-1">
                 <Text className="text-black-45">{t('NOTE')}:</Text>
-                <div className="flex flex-col gap-1">{boardMeeting.note}</div>
+                <div className="flex flex-col gap-1">
+                    {/* {boardMeeting.note} */}
+                    {boardMeeting.note.split('\n').map((text, index) => {
+                        return <div key={index}>{text}</div>
+                    })}
+                </div>
             </div>
         </BoxArea>
     )

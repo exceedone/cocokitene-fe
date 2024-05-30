@@ -17,6 +17,8 @@ import { Button } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { truncateString } from '@/utils/format-string'
+import MeetingChat from '@/components/view-chat'
 
 const MeetingDetail = () => {
     const t = useTranslations()
@@ -55,7 +57,15 @@ const MeetingDetail = () => {
         <div>
             <DetailTitle
                 urlBack="/meeting"
-                pageName={meeting.title}
+                pageName={
+                    meeting.title.length > 100
+                        ? truncateString({
+                              text: meeting.title,
+                              start: 70,
+                              end: 5,
+                          })
+                        : meeting.title
+                }
                 editButton={
                     permissionEditMeeting && (
                         <Button
@@ -81,6 +91,7 @@ const MeetingDetail = () => {
                 <Resolutions />
                 <AmendmentResolutions />
                 <Participants />
+                <MeetingChat meetingInfo={meeting} />
             </div>
         </div>
     )

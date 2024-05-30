@@ -145,7 +145,10 @@ const DetailInformation = () => {
                         <div className="mt-2 flex flex-col gap-1">
                             <Text className="text-black-45">{t('NOTE')}:</Text>
                             <div className="flex flex-col gap-1">
-                                {meeting.note}
+                                {/* {meeting.note} */}
+                                {meeting.note.split('\n').map((text, index) => {
+                                    return <div key={index}>{text}</div>
+                                })}
                             </div>
                         </div>
                     </BoxArea>

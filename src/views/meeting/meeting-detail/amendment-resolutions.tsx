@@ -26,7 +26,7 @@ const AmendmentResolutions = () => {
             if (item.roleMtgName === RoleMtgEnum.SHAREHOLDER) {
                 return item.userParticipants.some(
                     (option) =>
-                        option.user?.id === authState.userData?.id &&
+                        option.userId === authState.userData?.id &&
                         option.status === UserMeetingStatusEnum.PARTICIPATE,
                 )
             }

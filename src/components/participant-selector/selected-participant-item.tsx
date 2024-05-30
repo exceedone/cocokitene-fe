@@ -23,7 +23,7 @@ const SelectedParticipantItem = ({
 
     return (
         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 w-[80%]">
+            <div className="flex w-[80%] items-center gap-2">
                 {users_avartar ? (
                     <Avatar
                         src={users_avartar}
@@ -47,7 +47,10 @@ const SelectedParticipantItem = ({
                     </Avatar>
                 )}
 
-                <Text title={users_email} className="cursor-pointer truncate w-[70%]">
+                <Text
+                    title={users_email}
+                    className="w-[70%] cursor-pointer truncate"
+                >
                     {users_email}
                 </Text>
             </div>

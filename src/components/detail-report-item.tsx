@@ -130,11 +130,19 @@ const DetailReportItem = ({
                 footer={null}
             >
                 <div className="text-black-45">{t('CONTENT')}</div>
-                <div>{content}</div>
+                <div>
+                    {content.split('\n').map((text, index) => {
+                        return <div key={index}>{text}</div>
+                    })}
+                </div>
                 {oldContent && (
                     <div className="mt-4">
                         <div className="text-black-45">{t('OLD_CONTENT')}</div>
-                        <div>{oldContent}</div>
+                        <div>
+                            {oldContent.split('\n').map((text, index) => {
+                                return <div key={index}>{text}</div>
+                            })}
+                        </div>
                     </div>
                 )}
                 {proposalFiles && (

@@ -100,11 +100,26 @@ const ItemFutureMeeting = ({
                 <Col span={8} className="flex items-center">
                     <Tooltip
                         placement="topLeft"
-                        title={truncateString({
-                            text: meetings_note,
-                            start: 200,
-                            end: 0,
-                        })}
+                        // title={truncateString({
+                        //     text: meetings_note,
+                        //     start: 200,
+                        //     end: 0,
+                        // })}
+                        title={
+                            meetings_note && (
+                                <>
+                                    {truncateString({
+                                        text: meetings_note,
+                                        start: 200,
+                                        end: 0,
+                                    })
+                                        .split('\n')
+                                        .map((text, index) => (
+                                            <div key={index}>{text}</div>
+                                        ))}
+                                </>
+                            )
+                        }
                         overlayClassName=" lg:max-2xl:max-w-[370px] 2xl:max-w-[500px]"
                         color={'rgba(81, 81, 229, 1)'}
                     >

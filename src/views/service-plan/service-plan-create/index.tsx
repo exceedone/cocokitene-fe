@@ -63,7 +63,7 @@ const CreatePlan = () => {
         <div>
             <Form onFinish={onFinish} form={form} layout="vertical">
                 <CreateTitle
-                    pageName={t('CREATE_NEW_ACCOUNT')}
+                    pageName={t('CREATE_SERVICE_PLAN')}
                     saveButton={
                         <SaveCreatePlanButton
                             form={form}

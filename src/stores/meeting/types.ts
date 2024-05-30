@@ -120,17 +120,28 @@ export interface IBoardProposal {
     meetingId: number
 }
 
+// export interface IUserMeeting {
+//     id: number
+//     status: UserMeetingStatusEnum
+//     user: {
+//         id: number
+//         username: string
+//         email: string
+//         avatar: string | null
+//         shareQuantity: number | null
+//         defaultAvatarHashColor: string | null
+//     }
+// }
+
 export interface IUserMeeting {
     id: number
     status: UserMeetingStatusEnum
-    user: {
-        id: number
-        username: string
-        email: string
-        avatar: string | null
-        shareQuantity: number | null
-        defaultAvatarHashColor: string | null
-    }
+
+    userId: number
+    userEmail: string
+    userAvatar: string | null
+    userShareQuantity: number | null
+    userDefaultAvatarHashColor: string | null
 }
 
 export interface IMeetingDetail {

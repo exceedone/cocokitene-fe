@@ -22,6 +22,7 @@ import BoardMeetingParticipants from '@/views/board-meeting/board-meeting-detail
 import BoardMeetingNote from '@/views/board-meeting/board-meeting-detail/board-meeting-note'
 import withAuth from '@/components/component-auth'
 import SendEmailButton from './send-email-button'
+import MeetingChat from '@/components/view-chat'
 
 const BoardMeetingDetail = () => {
     const t = useTranslations()
@@ -83,6 +84,7 @@ const BoardMeetingDetail = () => {
                 <Elections />
                 <Candidates />
                 <BoardMeetingParticipants />
+                <MeetingChat meetingInfo={boardMeeting} />
             </div>
         </div>
     )

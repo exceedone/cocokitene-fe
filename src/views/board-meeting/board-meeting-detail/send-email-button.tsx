@@ -3,9 +3,9 @@ import { Button, notification } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { FETCH_STATUS } from '@/constants/common'
-import serviceMeeting from '@/services/meeting'
 import { useParams } from 'next/navigation'
 import { AxiosError } from 'axios'
+import serviceBoardMeeting from '@/services/board-meeting'
 
 const SendEmailButton = () => {
     const t = useTranslations()
@@ -18,7 +18,7 @@ const SendEmailButton = () => {
         setStatus(FETCH_STATUS.LOADING)
         try {
             const response =
-                await serviceMeeting.sendMailInvitationShareholderMeeting(
+                await serviceBoardMeeting.sendMailInvitationBoardMeeting(
                     meetingId,
                 )
             if (response) {

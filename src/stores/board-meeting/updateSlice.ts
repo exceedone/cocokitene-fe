@@ -5,7 +5,10 @@ import { ResolutionType } from '@/constants/resolution'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import serviceBoardMeeting from '@/services/board-meeting'
 import serviceMeeting from '@/services/meeting'
-import { IParticipants, IParticipantsWithRole } from '@/components/participant-selector'
+import {
+    IParticipants,
+    IParticipantsWithRole,
+} from '@/components/participant-selector'
 import { AxiosError } from 'axios'
 
 const initialState: IUpdateBoardMeetingState = {

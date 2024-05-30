@@ -7,7 +7,7 @@ import serviceMeeting from '@/services/meeting'
 import { IMeetingParticipantsResponse } from '@/services/response.type'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { SettingOutlined } from '@ant-design/icons'
-import { Input, Typography } from 'antd'
+import { Empty, Input, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
 import { ChangeEvent, useEffect, useState } from 'react'
@@ -61,31 +61,46 @@ const Participants = () => {
 
     return (
         <BoxArea title={t('PARTICIPANTS')}>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                <Input
-                    placeholder={t('SEARCH')}
-                    className="mb-6"
-                    addonAfter={<SettingOutlined />}
-                    onChange={onChange}
-                    value={query}
-                    // onFocus={() => setFocus(true)}
-                />
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                {participants.data.userWithRoleMtg &&
-                    participants.data.userWithRoleMtg.map((item, index) => (
-                        <ParticipantDetail
-                            isLoading={
-                                participants.status === FETCH_STATUS.LOADING
-                            }
-                            title={convertSnakeCaseToTitleCase(
-                                item.roleMtgName,
-                            )}
-                            participantList={item.userParticipants}
+            {participants.data.userWithRoleMtg.length > 0 ? (
+                <>
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                        <Input
+                            placeholder={t('SEARCH')}
+                            className="mb-6"
+                            addonAfter={<SettingOutlined />}
+                            onChange={onChange}
+                            value={query}
+                            // onFocus={() => setFocus(true)}
                         />
-                    ))}
-            </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                        {participants.data.userWithRoleMtg &&
+                            participants.data.userWithRoleMtg.map(
+                                (item, index) => (
+                                    <ParticipantDetail
+                                        key={index}
+                                        isLoading={
+                                            participants.status ===
+                                            FETCH_STATUS.LOADING
+                                        }
+                                        title={convertSnakeCaseToTitleCase(
+                                            item.roleMtgName,
+                                        )}
+                                        participantList={item.userParticipants}
+                                    />
+                                ),
+                            )}
+                    </div>
+                </>
+            ) : (
+                <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    style={{
+                        marginBlock: 0,
+                    }}
+                />
+            )}
         </BoxArea>
     )
 }

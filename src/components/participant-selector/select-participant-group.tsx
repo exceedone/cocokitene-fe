@@ -71,19 +71,9 @@ const SelectParticipantGroup = ({
                     }
 
                     if (type === TypeRoleMeeting.BOARD_MEETING) {
-                        optionsRes = await serviceUser.getAccountListByRoleName(
-                            query,
-                            1,
-                            278,
-                            'Board',
-                        )
-                        optionsRes = {
-                            ...optionsRes,
-                            items: optionsRes.items,
-                        }
                         if (
-                            roleName?.toLocaleUpperCase() ===
-                            RoleMtgEnum.HOST.toLocaleUpperCase()
+                            roleName?.toUpperCase() ===
+                            RoleMtgEnum.HOST.toUpperCase()
                         ) {
                             let optionsRes1 =
                                 await serviceUser.getAccountListByRoleName(
@@ -109,9 +99,49 @@ const SelectParticipantGroup = ({
                                 ...optionsRes1,
                                 items: [...uniqueArray],
                             }
+                        } else {
+                            optionsRes =
+                                await serviceUser.getAccountListByRoleName(
+                                    query,
+                                    1,
+                                    278,
+                                    'Board',
+                                )
+                            optionsRes = {
+                                ...optionsRes,
+                                items: optionsRes.items,
+                            }
                         }
                     } else {
                         if (
+                            roleName?.toUpperCase() ===
+                            RoleMtgEnum.HOST.toUpperCase()
+                        ) {
+                            let optionsRes1 =
+                                await serviceUser.getAccountListByRoleName(
+                                    query,
+                                    1,
+                                    278,
+                                    'ADMIN',
+                                )
+                            //Remove duplicate participants
+                            const uniqueObjects: { [key: number]: boolean } = {}
+                            const uniqueArray = [
+                                ...optionsRes.items,
+                                ...optionsRes1.items,
+                            ].filter((obj) => {
+                                if (!uniqueObjects[obj.users_id]) {
+                                    uniqueObjects[obj.users_id] = true
+                                    return true
+                                }
+                                return false
+                            })
+
+                            optionsRes = {
+                                ...optionsRes1,
+                                items: [...uniqueArray],
+                            }
+                        } else if (
                             roleName?.toLocaleUpperCase() ===
                             RoleMtgEnum.SHAREHOLDER.toUpperCase()
                         ) {

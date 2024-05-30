@@ -46,6 +46,13 @@ const serviceBoardMeeting = {
         )
         return response.data
     },
+
+    sendMailInvitationBoardMeeting: async (boardMeetingId: number) => {
+        const response = await post<any>(
+            `/board-meetings/send-email/board-meeting/${boardMeetingId}`,
+        )
+        return response.data
+    },
 }
 
 export default serviceBoardMeeting

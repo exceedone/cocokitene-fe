@@ -91,6 +91,7 @@ export interface IBoardMeetingDetail {
     participants: ParticipantDetailBoardMeeting[]
     boardsTotal: number
     boardsJoined: number
+    chatPermissionId: number
 }
 export interface IBoardMeetingFile {
     id: number

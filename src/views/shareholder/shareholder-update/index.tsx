@@ -128,9 +128,8 @@ const UpdateShareholder = () => {
         const fetchData = async () => {
             setInitStatus(FETCH_STATUS.LOADING)
             try {
-                const res = await serviceShareholder.getDetailShareholder(
-                    shareholderId,
-                )
+                const res =
+                    await serviceShareholder.getDetailShareholder(shareholderId)
                 if (res) {
                     const userCompanyName = authState.userData?.id
                         ? (

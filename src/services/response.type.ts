@@ -150,6 +150,7 @@ export interface IMeetingDetailResponse {
     shareholdersJoined: number
     joinedMeetingShares: number
     totalMeetingShares: number
+    chatPermissionId: number
 }
 
 export interface IBoardMeetingDetailResponse {
@@ -170,6 +171,7 @@ export interface IBoardMeetingDetailResponse {
     participants: ParticipantDetailMeetingResponse[]
     boardsTotal: number
     boardsJoined: number
+    chatPermissionId: number
 }
 
 export interface ParticipantDetailMeetingResponse {
@@ -228,6 +230,12 @@ export interface IUserStatusResponse {
 export interface IElectionResponse {
     id: number
     status: ElectionEnum
+    description: string
+}
+
+export interface IReactionIconResponse {
+    id: number
+    key: string
     description: string
 }
 
@@ -396,31 +404,63 @@ export interface IRoleMtgResponse {
     roleName: string
     description: string
 }
-// export interface IRoleMtgResponse {
-//
-// }
 
 //Type Chat Meeting
+
+export interface ReactionIconResponse {
+    id: number
+    key: string
+}
+
+export interface ReactionMessage {
+    id: number
+    userId: number
+    messageId: number
+    emoji: ReactionIconResponse
+}
 export interface userChatInfo {
-    id: number,
-    email: string,
+    id: number
+    email: string
 }
 
 export interface replyMessageInfo {
-    id: number,
-    senderId: userChatInfo,
-    receiverId:userChatInfo,
+    id: number
+    senderId: userChatInfo
+    receiverId: userChatInfo
     content: string
 }
 export interface DataMessageChat {
+    id: number
     sender: userChatInfo
     receiver: userChatInfo
     content: string
     createdAt: string
     replyMessage?: replyMessageInfo
+    reactions?: ReactionMessage[]
 }
 
 export interface IAllMeetingChatInMeetingResponse {
     roomChat: number
-    messageChat: DataMessageChat[]    
+    messageChat: DataMessageChat[]
+}
+
+export interface IPermissionChatResponse {
+    id: number
+    name: string
+    description?: string
+}
+
+export interface IUpdatePermissionChat {
+    permissionChatId: number
+}
+
+export interface ILastMessageSeen {
+    id: number
+    userId: number
+    meetingId: number
+    lastMessageIdSeen: number
+}
+
+export interface IUpdateLastMessageSeen {
+    lastMessageIdSeen: number
 }

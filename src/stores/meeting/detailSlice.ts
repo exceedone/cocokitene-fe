@@ -38,6 +38,7 @@ export const getMeetingDetail = createAsyncThunk<
             shareholdersJoined: meetingDetail.shareholdersJoined,
             joinedMeetingShares: meetingDetail.joinedMeetingShares,
             totalMeetingShares: meetingDetail.totalMeetingShares,
+            chatPermissionId: meetingDetail.chatPermissionId,
         } as unknown as IMeetingDetail
     } catch (error) {
         const err = error as AxiosError

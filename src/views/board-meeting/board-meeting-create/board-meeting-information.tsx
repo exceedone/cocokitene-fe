@@ -36,15 +36,21 @@ const BoardMeetingInformation = () => {
         [key in 'meetingInvitations' | 'meetingMinutes']: {
             fileList: UploadFile[]
             errorUniqueFile: boolean
+            errorWrongFileType?: boolean
+            errorFileSize?: boolean
         }
     }>({
         meetingInvitations: {
             fileList: [],
             errorUniqueFile: false,
+            errorWrongFileType: false,
+            errorFileSize: false,
         },
         meetingMinutes: {
             fileList: [],
             errorUniqueFile: false,
+            errorWrongFileType: false,
+            errorFileSize: false,
         },
     })
 
@@ -55,6 +61,7 @@ const BoardMeetingInformation = () => {
         ) =>
         async ({ file }: RcCustomRequestOptions) => {
             try {
+                console.log('upload file board mtg-----')
                 const res = await serviceUpload.getPresignedUrl(
                     [file as File],
                     fileType,
@@ -104,6 +111,8 @@ const BoardMeetingInformation = () => {
                     [name]: {
                         fileList: info.fileList,
                         errorUniqueFile: false,
+                        errorWrongFileType: false,
+                        errorFileSize: false,
                     },
                 })
                 const uid = info.file.uid
@@ -120,6 +129,18 @@ const BoardMeetingInformation = () => {
     const validateFile =
         (name: 'meetingInvitations' | 'meetingMinutes') =>
         (file: RcFile, listRcFile: RcFile[]) => {
+            const extension = file.name.split('.').slice(-1)[0]
+            if (!ACCEPT_FILE_TYPES.split(',').includes(`.${extension}`)) {
+                setFileData({
+                    ...fileData,
+                    [name]: {
+                        ...fileData[name],
+                        errorWrongFileType: true,
+                    },
+                })
+                return false
+                // return Upload.LIST_IGNORE
+            }
             // filter unique file
             const listCurrentFileNames = fileData[name].fileList?.map(
                 (file) => file.name,
@@ -145,12 +166,17 @@ const BoardMeetingInformation = () => {
                 },
             })
             if (file.size > 10 * (1024 * 1024)) {
-                return Upload.LIST_IGNORE
+                setFileData({
+                    ...fileData,
+                    [name]: {
+                        ...fileData[name],
+                        errerrorFileSize: true,
+                    },
+                })
+                return false
+                // return Upload.LIST_IGNORE
             }
-            const extension = file.name.split('.').slice(-1)[0]
-            if (!ACCEPT_FILE_TYPES.split(',').includes(`.${extension}`)) {
-                return Upload.LIST_IGNORE
-            }
+
             return true
         }
     const onChangeDateTime = (
@@ -275,22 +301,35 @@ const BoardMeetingInformation = () => {
                                     MeetingFileType.MEETING_INVITATION,
                                 )}
                             >
-                                <div className="flex flex-col items-start">
-                                    <Button icon={<UploadOutlined />}>
-                                        {t('CLICK_TO_UPLOAD')}
-                                    </Button>
-                                    <Text className="text-black-45">
-                                        {t('INVITATION_FILE_UPLOAD_NOTICE')}
-                                    </Text>
-                                    {fileData.meetingInvitations
-                                        .errorUniqueFile && (
-                                        <Text className="text-dust-red">
-                                            {' '}
-                                            {t('UNIQUE_FILE_ERROR_MESSAGE')}
-                                        </Text>
-                                    )}
-                                </div>
+                                <Button icon={<UploadOutlined />}>
+                                    {t('CLICK_TO_UPLOAD')}
+                                </Button>
                             </Upload>
+                            <div className="flex flex-col items-start">
+                                <Text className="text-black-45">
+                                    {t('INVITATION_FILE_UPLOAD_NOTICE')}
+                                </Text>
+                                {fileData.meetingInvitations
+                                    .errorUniqueFile && (
+                                    <Text className="text-dust-red">
+                                        {' '}
+                                        {t('UNIQUE_FILE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingInvitations
+                                    .errorWrongFileType && (
+                                    <Text className="text-dust-red">
+                                        {t('WRONG_FILE_TYPE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingInvitations.errorFileSize && (
+                                    <Text className="text-dust-red">
+                                        {t(
+                                            'FILE_THROUGH_THE_CAPACITY_FOR_UPLOAD',
+                                        )}
+                                    </Text>
+                                )}
+                            </div>
                         </Form.Item>
                     </Form>
                 </Col>
@@ -314,22 +353,33 @@ const BoardMeetingInformation = () => {
                                     MeetingFileType.MEETING_MINUTES,
                                 )}
                             >
-                                <div className="flex flex-col items-start">
-                                    <Button icon={<UploadOutlined />}>
-                                        {t('CLICK_TO_UPLOAD')}
-                                    </Button>
-                                    <Text className="text-black-45">
-                                        {t('INVITATION_FILE_UPLOAD_NOTICE')}
-                                    </Text>
-                                    {fileData.meetingMinutes
-                                        .errorUniqueFile && (
-                                        <Text className="text-dust-red">
-                                            {' '}
-                                            {t('UNIQUE_FILE_ERROR_MESSAGE')}
-                                        </Text>
-                                    )}
-                                </div>
+                                <Button icon={<UploadOutlined />}>
+                                    {t('CLICK_TO_UPLOAD')}
+                                </Button>
                             </Upload>
+                            <div className="flex flex-col items-start">
+                                <Text className="text-black-45">
+                                    {t('INVITATION_FILE_UPLOAD_NOTICE')}
+                                </Text>
+                                {fileData.meetingMinutes.errorUniqueFile && (
+                                    <Text className="text-dust-red">
+                                        {' '}
+                                        {t('UNIQUE_FILE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingMinutes.errorWrongFileType && (
+                                    <Text className="text-dust-red">
+                                        {t('WRONG_FILE_TYPE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingMinutes.errorFileSize && (
+                                    <Text className="text-dust-red">
+                                        {t(
+                                            'FILE_THROUGH_THE_CAPACITY_FOR_UPLOAD',
+                                        )}
+                                    </Text>
+                                )}
+                            </div>
                         </Form.Item>
                     </Form>
                 </Col>

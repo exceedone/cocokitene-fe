@@ -89,3 +89,14 @@ export const titleTooltip = {
     shareHolder: 'YOU_MUST_BE_A_SHAREHOLDER(JOINED)_TO_VOTE',
     votingTime: 'OUTSIDE_THE_VOTING_PERIOD',
 }
+
+export enum ScrollType {
+    SMOOTH = 1,
+    FAST = 2,
+}
+
+export enum ChatPermissionEnum {
+    HOST_ONLY = 'HOST_ONLY',
+    EVERY_PUBLIC = 'EVERY_PUBLIC',
+    EVERY_PUBLIC_PRIVATE = 'EVERY_PUBLIC_PRIVATE',
+}

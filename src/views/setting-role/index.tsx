@@ -317,9 +317,8 @@ const SettingRoleView = () => {
         // eslint-disable-next-line
         ;(async () => {
             try {
-                const response = await serviceSettingRole.updateRolePermissions(
-                    dataChecked,
-                )
+                const response =
+                    await serviceSettingRole.updateRolePermissions(dataChecked)
                 if (response) {
                     notification.success({
                         message: t('UPDATED_PERMISSION'),

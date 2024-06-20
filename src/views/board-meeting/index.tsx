@@ -16,6 +16,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import ListBoardMeetingFuture from '@/views/board-meeting/board-meeting-list/list-board-meeting-future'
 import ListBoardMeetingPast from './board-meeting-list/list-board-meeting-pass'
 import withAuth from '@/components/component-auth'
+import { useListBoardMeeting } from '@/stores/board-meeting/hook'
 
 const BoardMeetingList = () => {
     const router = useRouter()
@@ -23,40 +24,41 @@ const BoardMeetingList = () => {
     const { attendanceState, resetStateAttendance } = useAttendance()
     const { openNotification, contextHolder } = useNotification()
     const { authState } = useAuthLogin()
+
     const permissionCreateBoardMeeting = checkPermission(
         authState.userData?.permissionKeys,
         Permissions.CREATE_BOARD_MEETING,
     )
     const {
-        meetingState,
-        getListFutureMeetingAction,
-        getListPassMeetingAction,
+        boardMeetingState,
+        getListFutureBoardMeetingAction,
+        getListPassBoardMeetingAction,
         setFilterAction,
-    } = useListMeeting()
+    } = useListBoardMeeting()
     useEffect(() => {
-        getListFutureMeetingAction({
-            page: meetingState.page,
-            limit: meetingState.limit,
+        getListFutureBoardMeetingAction({
+            page: boardMeetingState.page,
+            limit: boardMeetingState.limit,
             type: MeetingTime.MEETING_FUTURE,
             meetingType: MeetingType.BOARD_MEETING,
-            filter: { ...meetingState.filter },
+            filter: { ...boardMeetingState.filter },
         })
 
-        getListPassMeetingAction({
-            page: meetingState.page,
-            limit: meetingState.limit,
+        getListPassBoardMeetingAction({
+            page: boardMeetingState.page,
+            limit: boardMeetingState.limit,
             type: MeetingTime.MEETING_PASS,
             meetingType: MeetingType.BOARD_MEETING,
-            filter: { ...meetingState.filter },
+            filter: { ...boardMeetingState.filter },
         })
-    }, [meetingState.filter])
+    }, [boardMeetingState.filter])
 
     const handleInputChange = (value: string) => {
-        setFilterAction({ ...meetingState.filter, searchQuery: value })
+        setFilterAction({ ...boardMeetingState.filter, searchQuery: value })
     }
 
     const handleSelectChange = (value: string) => {
-        setFilterAction({ ...meetingState.filter, sortOrder: value })
+        setFilterAction({ ...boardMeetingState.filter, sortOrder: value })
     }
 
     useEffect(() => {
@@ -83,26 +85,26 @@ const BoardMeetingList = () => {
     }, [attendanceState.status])
 
     useEffect(() => {
-        if (meetingState.status == EActionStatus.Failed) {
+        if (boardMeetingState.status == EActionStatus.Failed) {
             openNotification({
-                message: meetingState.errorMessage,
+                message: boardMeetingState.errorMessage,
                 placement: 'bottomRight',
                 type: 'error',
             })
         }
         // eslint-disable-next-line
-    }, [meetingState.status])
+    }, [boardMeetingState.status])
 
     useEffect(() => {
-        if (meetingState.status === EActionStatus.Failed) {
+        if (boardMeetingState.status === EActionStatus.Failed) {
             openNotification({
-                message: meetingState.errorMessage,
+                message: boardMeetingState.errorMessage,
                 placement: 'bottomRight',
                 type: 'error',
             })
         }
         // eslint-disable-next-line
-    }, [meetingState.status])
+    }, [boardMeetingState.status])
 
     return (
         <div>
@@ -123,13 +125,17 @@ const BoardMeetingList = () => {
                         </Button>
                     )
                 }
-                defaultSort={meetingState.filter?.sortOrder}
+                defaultSort={boardMeetingState.filter?.sortOrder}
                 onChangeInput={handleInputChange}
                 onChangeSelect={handleSelectChange}
             />
             <div className="p-6">
-                <ListBoardMeetingFuture data={meetingState.meetingFutureList} />
-                <ListBoardMeetingPast data={meetingState.meetingPassList} />
+                <ListBoardMeetingFuture
+                    data={boardMeetingState.meetingFutureList}
+                />
+                <ListBoardMeetingPast
+                    data={boardMeetingState.meetingPassList}
+                />
             </div>
         </div>
     )

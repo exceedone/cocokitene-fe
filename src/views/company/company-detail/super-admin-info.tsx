@@ -63,9 +63,9 @@ const SuperAdminInfo = () => {
                             UserStatus.ACTIVE
                                 ? 'bg-green-300'
                                 : company?.superAdminInfo?.userStatus?.status ==
-                                  UserStatus.INACTIVE
-                                ? 'bg-red-500'
-                                : null
+                                    UserStatus.INACTIVE
+                                  ? 'bg-red-500'
+                                  : null
                         } `}
                     ></div>
                     <p>
@@ -73,9 +73,9 @@ const SuperAdminInfo = () => {
                         UserStatus.ACTIVE
                             ? t('ACTIVE')
                             : company?.superAdminInfo?.userStatus?.status ==
-                              UserStatus.INACTIVE
-                            ? t('INACTIVE')
-                            : null}
+                                UserStatus.INACTIVE
+                              ? t('INACTIVE')
+                              : null}
                     </p>
                 </div>
             ),

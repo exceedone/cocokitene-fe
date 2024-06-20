@@ -31,7 +31,7 @@ const initialState: IMeetingState = {
     meetingType: MeetingType.BOARD_MEETING,
 }
 
-export const getAllFutureBoardMeetings = createAsyncThunk<
+export const getAllBoardMeetings = createAsyncThunk<
     IGetAllDataReponse<IMeeting>,
     IGetAllMeetingQuery,
     {
@@ -74,7 +74,7 @@ export const getAllPassBoardMeetings = createAsyncThunk<
     }
 })
 
-const meetingListSlice = createSlice({
+const boardMeetingListSlice = createSlice({
     name: 'boardMeetingListSlice',
     initialState,
     reducers: {
@@ -84,16 +84,16 @@ const meetingListSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getAllFutureBoardMeetings.pending, (state) => {
+            .addCase(getAllBoardMeetings.pending, (state) => {
                 state.status = EActionStatus.Pending
             })
-            .addCase(getAllFutureBoardMeetings.fulfilled, (state, action) => {
+            .addCase(getAllBoardMeetings.fulfilled, (state, action) => {
                 state.status = EActionStatus.Succeeded
                 state.meetingFutureList = action.payload?.items ?? []
-                state.totalFutureMeetingItem =
-                    action.payload?.meta?.totalItems ?? 0
+                state.totalFutureMeetingItem = action.payload?.meta?.totalItems ?? 0
+                
             })
-            .addCase(getAllFutureBoardMeetings.rejected, (state, action) => {
+            .addCase(getAllBoardMeetings.rejected, (state, action) => {
                 state.status = EActionStatus.Failed
                 state.errorCode = action.payload?.errorCode ?? ''
                 state.errorMessage = action.payload?.errorMessage ?? ''
@@ -115,6 +115,6 @@ const meetingListSlice = createSlice({
     },
 })
 
-export const { setFilter } = meetingListSlice.actions
+export const { setFilter } = boardMeetingListSlice.actions
 
-export default meetingListSlice.reducer
+export default boardMeetingListSlice.reducer

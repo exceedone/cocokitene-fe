@@ -45,6 +45,8 @@ const MeetingInformation = () => {
         [key in 'meetingInvitations' | 'meetingMinutes']: {
             fileList: UploadFile[]
             errorUniqueFile: boolean
+            errorWrongFileType: boolean
+            errorFileSize: boolean
         }
     }>({
         meetingInvitations: {
@@ -55,6 +57,8 @@ const MeetingInformation = () => {
                 status: 'done',
             })),
             errorUniqueFile: false,
+            errorWrongFileType: false,
+            errorFileSize: false,
         },
         meetingMinutes: {
             fileList: data?.meetingMinutes?.map((file, index) => ({
@@ -64,6 +68,8 @@ const MeetingInformation = () => {
                 status: 'done',
             })),
             errorUniqueFile: false,
+            errorWrongFileType: false,
+            errorFileSize: false,
         },
     })
 
@@ -136,6 +142,8 @@ const MeetingInformation = () => {
                     [name]: {
                         fileList: info.fileList,
                         errorUniqueFile: false,
+                        errorWrongFileType: false,
+                        errorFileSize: false,
                     },
                 })
                 const uid = info.file.uid
@@ -151,6 +159,18 @@ const MeetingInformation = () => {
     const validateFile =
         (name: 'meetingInvitations' | 'meetingMinutes') =>
         (file: RcFile, listRcFile: RcFile[]) => {
+            const extension = file.name.split('.').slice(-1)[0]
+            if (!ACCEPT_FILE_TYPES.split(',').includes(`.${extension}`)) {
+                setFileData({
+                    ...fileData,
+                    [name]: {
+                        ...fileData[name],
+                        errorWrongFileType: true,
+                    },
+                })
+                return false
+                // return Upload.LIST_IGNORE
+            }
             // filter unique file
             const listCurrentFileNames = fileData[name].fileList.map(
                 (file) => file.name,
@@ -179,11 +199,15 @@ const MeetingInformation = () => {
                 },
             })
             if (file.size > 10 * (1024 * 1024)) {
-                return Upload.LIST_IGNORE
-            }
-            const extension = file.name.split('.').slice(-1)[0]
-            if (!ACCEPT_FILE_TYPES.split(',').includes(`.${extension}`)) {
-                return Upload.LIST_IGNORE
+                setFileData({
+                    ...fileData,
+                    [name]: {
+                        ...fileData[name],
+                        errorFileSize: true,
+                    },
+                })
+                return false
+                // return Upload.LIST_IGNORE
             }
 
             return true
@@ -322,21 +346,34 @@ const MeetingInformation = () => {
                                 accept={ACCEPT_FILE_TYPES}
                                 name="meeting-invitations"
                             >
-                                <div className="flex flex-col items-start">
-                                    <Button icon={<UploadOutlined />}>
-                                        {t('CLICK_TO_UPLOAD')}
-                                    </Button>
-                                    <Text className="text-black-45">
-                                        {t('INVITATION_FILE_UPLOAD_NOTICE')}
-                                    </Text>
-                                    {fileData.meetingInvitations
-                                        .errorUniqueFile && (
-                                        <Text className="text-dust-red">
-                                            {t('UNIQUE_FILE_ERROR_MESSAGE')}
-                                        </Text>
-                                    )}
-                                </div>
+                                <Button icon={<UploadOutlined />}>
+                                    {t('CLICK_TO_UPLOAD')}
+                                </Button>
                             </Upload>
+                            <div className="flex flex-col items-start">
+                                <Text className="text-black-45">
+                                    {t('INVITATION_FILE_UPLOAD_NOTICE')}
+                                </Text>
+                                {fileData.meetingInvitations
+                                    .errorUniqueFile && (
+                                    <Text className="text-dust-red">
+                                        {t('UNIQUE_FILE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingInvitations
+                                    .errorWrongFileType && (
+                                    <Text className="text-dust-red">
+                                        {t('WRONG_FILE_TYPE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingInvitations.errorFileSize && (
+                                    <Text className="text-dust-red">
+                                        {t(
+                                            'FILE_THROUGH_THE_CAPACITY_FOR_UPLOAD',
+                                        )}
+                                    </Text>
+                                )}
+                            </div>
                         </Form.Item>
                     </Form>
                 </Col>
@@ -372,21 +409,33 @@ const MeetingInformation = () => {
                                     MeetingFileType.MEETING_MINUTES,
                                 )}
                             >
-                                <div className="flex flex-col items-start">
-                                    <Button icon={<UploadOutlined />}>
-                                        {t('CLICK_TO_UPLOAD')}
-                                    </Button>
-                                    <Text className="text-black-45">
-                                        {t('INVITATION_FILE_UPLOAD_NOTICE')}
-                                    </Text>
-                                    {fileData.meetingMinutes
-                                        .errorUniqueFile && (
-                                        <Text className="text-dust-red">
-                                            {t('UNIQUE_FILE_ERROR_MESSAGE')}
-                                        </Text>
-                                    )}
-                                </div>
+                                handleSliderChange
+                                <Button icon={<UploadOutlined />}>
+                                    {t('CLICK_TO_UPLOAD')}
+                                </Button>
                             </Upload>
+                            <div className="flex flex-col items-start">
+                                <Text className="text-black-45">
+                                    {t('INVITATION_FILE_UPLOAD_NOTICE')}
+                                </Text>
+                                {fileData.meetingMinutes.errorUniqueFile && (
+                                    <Text className="text-dust-red">
+                                        {t('UNIQUE_FILE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingMinutes.errorWrongFileType && (
+                                    <Text className="text-dust-red">
+                                        {t('WRONG_FILE_TYPE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingMinutes.errorFileSize && (
+                                    <Text className="text-dust-red">
+                                        {t(
+                                            'FILE_THROUGH_THE_CAPACITY_FOR_UPLOAD',
+                                        )}
+                                    </Text>
+                                )}
+                            </div>
                         </Form.Item>
                     </Form>
                 </Col>
@@ -478,20 +527,38 @@ const MeetingInformation = () => {
                                 defaultValue={data.status}
                                 onChange={onChangeStatus}
                                 options={enumToArray(MeetingStatus).map(
-                                    (status) => ({
-                                        value: status,
-                                        label: (
-                                            <span
-                                                style={{
-                                                    color: MeetingStatusColor[
-                                                        status
-                                                    ],
-                                                }}
-                                            >
-                                                {t(MeetingStatusName[status])}
-                                            </span>
-                                        ),
-                                    }),
+                                    (status) => {
+                                        const isDisabled = [
+                                            '0',
+                                            '1',
+                                            '2',
+                                        ].includes(status)
+                                        return {
+                                            value: status,
+                                            label: (
+                                                <div
+                                                    style={{
+                                                        position: 'relative',
+                                                    }}
+                                                >
+                                                    <span
+                                                        style={{
+                                                            color: MeetingStatusColor[
+                                                                status
+                                                            ],
+                                                        }}
+                                                    >
+                                                        {t(
+                                                            MeetingStatusName[
+                                                                status
+                                                            ],
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            ),
+                                            disabled: isDisabled,
+                                        }
+                                    },
                                 )}
                             />
                         </Form.Item>

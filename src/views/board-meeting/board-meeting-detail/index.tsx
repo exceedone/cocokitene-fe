@@ -23,6 +23,7 @@ import BoardMeetingNote from '@/views/board-meeting/board-meeting-detail/board-m
 import withAuth from '@/components/component-auth'
 import SendEmailButton from './send-email-button'
 import MeetingChat from '@/components/view-chat'
+import { MeetingStatus } from '@/constants/meeting'
 
 const BoardMeetingDetail = () => {
     const t = useTranslations()
@@ -59,7 +60,9 @@ const BoardMeetingDetail = () => {
                 urlBack={'/board-meeting'}
                 pageName={boardMeeting.title}
                 editButton={
-                    permissionEditBoardMeeting && (
+                    permissionEditBoardMeeting &&
+                    boardMeeting.status !== MeetingStatus.CANCELED &&
+                    boardMeeting.status !== MeetingStatus.HAPPENED && (
                         <Button
                             icon={<EditOutlined />}
                             type="default"
@@ -74,7 +77,13 @@ const BoardMeetingDetail = () => {
                         </Button>
                     )
                 }
-                extraButton={permissionSendMailBoard && <SendEmailButton />}
+                extraButton={
+                    permissionSendMailBoard &&
+                    boardMeeting.status !== MeetingStatus.CANCELED &&
+                    boardMeeting.status !== MeetingStatus.HAPPENED && (
+                        <SendEmailButton />
+                    )
+                }
             />
             <div className="flex flex-col gap-6 p-6">
                 <BoardMeetingInformation />

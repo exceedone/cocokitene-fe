@@ -7,7 +7,7 @@ import { Pagination } from 'antd'
 import { MeetingTime, MeetingType } from '@/constants/meeting'
 import EmptyMeeting from '@/views/meeting/meeting-list/empty-meeting'
 import ItemFutureBoardMeeting from './item-future-board-meeting'
-import { getAllFutureBoardMeetings } from '@/stores/board-meeting/listSlice'
+import { getAllBoardMeetings } from '@/stores/board-meeting/listSlice'
 
 export interface ListFutureBoardMeetingProps {
     data: IMeetingItem[]
@@ -15,13 +15,14 @@ export interface ListFutureBoardMeetingProps {
 
 const ListBoardMeetingFuture = ({ data }: ListFutureBoardMeetingProps) => {
     const { page, limit, filter, totalFutureMeetingItem } = useSelector(
-        (state: RootState) => state.meetingList,
+        (state: RootState) => state.boardMeetingList,
     )
     const dispatch = useAppDispatch()
     const t = useTranslations()
+
     const handlePageChange = (pageChange: number) => {
         dispatch(
-            getAllFutureBoardMeetings({
+            getAllBoardMeetings({
                 page: pageChange,
                 limit,
                 type: MeetingTime.MEETING_FUTURE,

@@ -110,3 +110,26 @@ body {
 .ant-tabs-nav{
     margin-bottom: 0 !important;
 }
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /* display: none; */
+  visibility: hidden
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 5px; 
+}
+
+::-webkit-scrollbar-thumb:scroll {
+  background: #888;
+  border-radius: 5px; 
+}

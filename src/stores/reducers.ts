@@ -15,8 +15,9 @@ import shareholderDetailReducer from '@/stores/shareholder/detailSlice'
 import settingRoleReducer from '@/stores/setting-role-sys/slice'
 import planListSlice from '@/stores/service-plan/listSlice'
 import forgotPasswordReducer from '@/stores/forgot-password/slice'
-import boardMeetingCreateReducer from '@/stores/board-meeting/createSlice'
 import settingRoleMtgReducer from '@/stores/setting-role-mtg/slice'
+import boardMeetingListReducer from '@/stores/board-meeting/listSlice'
+import boardMeetingCreateReducer from '@/stores/board-meeting/createSlice'
 import boardMeetingDetailReducer from '@/stores/board-meeting/detailSlice'
 import boardMeetingUpdateReducer from '@/stores/board-meeting/updateSlice'
 
@@ -38,9 +39,11 @@ const rootReducer = combineReducers({
     settingRoleMtg: settingRoleMtgReducer,
     planListSlice: planListSlice,
     forgotPassword: forgotPasswordReducer,
+    boardMeetingList: boardMeetingListReducer,
     boardMeetingCreate: boardMeetingCreateReducer,
     boardMeetingDetail: boardMeetingDetailReducer,
     boardMeetingUpdate: boardMeetingUpdateReducer,
+
 })
 
 export default rootReducer

@@ -82,10 +82,16 @@ const ItemPassBoardMeeting = ({
                 </Tooltip>
             </Col>
             <Col span={3} className="flex items-center pl-4">
-                <Link href={meetings_meeting_link.toString()}>
-                    <Text className="text-blue-500 hover:underline">
-                        {t('BOARD_MEETING_LINK')}
-                    </Text>
+                <Link
+                    href={meetings_meeting_link.toString()}
+                    passHref
+                    legacyBehavior
+                >
+                    <a target="_blank" rel="noopener noreferrer">
+                        <Text className="text-blue-500 hover:underline">
+                            {t('BOARD_MEETING_LINK')}
+                        </Text>
+                    </a>
                 </Link>
             </Col>
             <Col span={2} className="flex items-center pl-3">

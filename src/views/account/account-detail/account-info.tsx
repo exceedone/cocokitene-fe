@@ -125,9 +125,9 @@ const AccountInfo = () => {
                                     account?.userStatus == UserStatus.ACTIVE
                                         ? 'bg-green-500'
                                         : account?.userStatus ==
-                                          UserStatus.INACTIVE
-                                        ? 'bg-red-500'
-                                        : null
+                                            UserStatus.INACTIVE
+                                          ? 'bg-red-500'
+                                          : null
                                 } `}
                             ></div>
                             <span

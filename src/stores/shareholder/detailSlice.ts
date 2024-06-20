@@ -18,9 +18,8 @@ export const getShareholderDetail = createAsyncThunk<
     { rejectValue: FetchError }
 >('/shareholders/getSharholderDetail', async (param, { rejectWithValue }) => {
     try {
-        const shareholderDetail = await serviceShareholder.getDetailShareholder(
-            param,
-        )
+        const shareholderDetail =
+            await serviceShareholder.getDetailShareholder(param)
         return {
             userName: shareholderDetail.username,
             email: shareholderDetail.email,

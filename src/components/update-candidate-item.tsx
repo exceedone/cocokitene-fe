@@ -204,18 +204,20 @@ const UpdateCandidateItem = ({
                 )}
                 {(title || content) &&
                     type !== ResolutionType.EXECUTIVE_OFFICER && (
-                        <Upload
-                            onChange={onFileChange}
-                            fileList={fileData.fileList}
-                            beforeUpload={validateFile}
-                            customRequest={onUpload}
-                            accept={ACCEPT_FILE_TYPES}
-                            name="proposal-files"
-                        >
-                            <div className="flex flex-col items-start">
+                        <>
+                            <Upload
+                                onChange={onFileChange}
+                                fileList={fileData.fileList}
+                                beforeUpload={validateFile}
+                                customRequest={onUpload}
+                                accept={ACCEPT_FILE_TYPES}
+                                name="proposal-files"
+                            >
                                 <Button icon={<UploadOutlined />}>
                                     {t('CLICK_TO_UPLOAD')}
                                 </Button>
+                            </Upload>
+                            <div className="flex flex-col items-start">
                                 <Text className="text-black-45">
                                     {t('INVITATION_FILE_UPLOAD_NOTICE')}
                                 </Text>
@@ -225,7 +227,7 @@ const UpdateCandidateItem = ({
                                     </Text>
                                 )}
                             </div>
-                        </Upload>
+                        </>
                     )}
                 {type === ResolutionType.EXECUTIVE_OFFICER && (
                     <Select

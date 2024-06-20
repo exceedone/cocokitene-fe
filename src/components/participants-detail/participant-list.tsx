@@ -31,7 +31,7 @@ const ParticipantList = ({ participantList, isLoading }: IParticipantList) => {
         )
     }
     return (
-        <div className="mt-2 flex max-h-52 flex-col gap-2 overflow-y-hidden hover:overflow-y-auto">
+        <div className="mt-2 flex max-h-52 flex-col gap-2 overflow-x-hidden overflow-y-hidden hover:overflow-y-auto">
             {participantList.map((participant, index) => (
                 <ParticipantItem
                     key={index}

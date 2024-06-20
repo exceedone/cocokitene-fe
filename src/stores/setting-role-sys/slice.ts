@@ -23,9 +23,8 @@ export const getCombineRoleWithPermission = createAsyncThunk<
     }
 >('meeting/getPassMeetingAll', async (param, { rejectWithValue }) => {
     try {
-        const data = await serviceSettingRole.getCombineRoleWithPermission(
-            param,
-        )
+        const data =
+            await serviceSettingRole.getCombineRoleWithPermission(param)
         return { items: data.data } as IGetAllDataReponse<ISettingRole>
     } catch (error) {
         const err = error as AxiosError

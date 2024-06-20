@@ -7,8 +7,6 @@ import ItemPassBoardMeeting from '@/views/board-meeting/board-meeting-list/item-
 import { MeetingTime, MeetingType } from '@/constants/meeting'
 import { Pagination } from 'antd'
 import EmptyMeeting from '@/views/meeting/meeting-list/empty-meeting'
-import withAuth from '@/components/component-auth'
-import { Permissions } from '@/constants/permission'
 import { getAllPassBoardMeetings } from '@/stores/board-meeting/listSlice'
 
 export interface ListPassBoardMeetingProps {
@@ -17,7 +15,7 @@ export interface ListPassBoardMeetingProps {
 
 const ListBoardMeetingPast = ({ data }: ListPassBoardMeetingProps) => {
     const { page, limit, totalPassMeetingItem, filter } = useSelector(
-        (state: RootState) => state.meetingList,
+        (state: RootState) => state.boardMeetingList,
     )
     const dispatch = useAppDispatch()
     const t = useTranslations()
@@ -32,6 +30,7 @@ const ListBoardMeetingPast = ({ data }: ListPassBoardMeetingProps) => {
             }),
         )
     }
+
     return (
         <div className="list-board-meeting-pass mt-6">
             <BoxArea title={t('BOARD_MEETING_PAST_LIST')}>
@@ -58,4 +57,4 @@ const ListBoardMeetingPast = ({ data }: ListPassBoardMeetingProps) => {
         </div>
     )
 }
-export default withAuth(ListBoardMeetingPast, Permissions.SHAREHOLDERS_MTG)
+export default ListBoardMeetingPast

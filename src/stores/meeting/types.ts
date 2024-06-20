@@ -163,6 +163,7 @@ export interface IMeetingDetail {
     shareholdersJoined: number
     joinedMeetingShares: number
     totalMeetingShares: number
+    chatPermissionId: number
 }
 
 export interface ParticipantDetailMeeting {

@@ -125,17 +125,17 @@ const CompanyInfo = () => {
                             company?.status.status == CompanyStatus.ACTIVE
                                 ? ' bg-green-300'
                                 : company?.status.status ==
-                                  CompanyStatus.INACTIVE
-                                ? ' bg-red-500'
-                                : null
+                                    CompanyStatus.INACTIVE
+                                  ? ' bg-red-500'
+                                  : null
                         } `}
                     ></div>
                     <p>
                         {company?.status.status == CompanyStatus.ACTIVE
                             ? t('ACTIVE')
                             : company?.status.status == CompanyStatus.INACTIVE
-                            ? t('INACTIVE')
-                            : null}
+                              ? t('INACTIVE')
+                              : null}
                     </p>
                 </div>
             ),

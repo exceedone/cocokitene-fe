@@ -19,6 +19,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { truncateString } from '@/utils/format-string'
 import MeetingChat from '@/components/view-chat'
+import { MeetingStatus } from '@/constants/meeting'
 
 const MeetingDetail = () => {
     const t = useTranslations()
@@ -53,6 +54,8 @@ const MeetingDetail = () => {
         return <Loader />
     }
 
+    console.log('meeting: ', meeting)
+
     return (
         <div>
             <DetailTitle
@@ -67,7 +70,9 @@ const MeetingDetail = () => {
                         : meeting.title
                 }
                 editButton={
-                    permissionEditMeeting && (
+                    permissionEditMeeting &&
+                    meeting.status !== MeetingStatus.CANCELED &&
+                    meeting.status !== MeetingStatus.HAPPENED && (
                         <Button
                             icon={<EditOutlined />}
                             type="default"
@@ -82,7 +87,11 @@ const MeetingDetail = () => {
                 }
                 // editUrl={`/meeting/update/${meetingId}`}
                 extraButton={
-                    permissionSendEmailShareholder && <SendEmailButton />
+                    permissionSendEmailShareholder &&
+                    meeting.status !== MeetingStatus.CANCELED &&
+                    meeting.status !== MeetingStatus.HAPPENED && (
+                        <SendEmailButton />
+                    )
                 }
             />
             <div className="flex flex-col gap-6 p-6">

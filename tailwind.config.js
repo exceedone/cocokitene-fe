@@ -75,12 +75,27 @@ module.exports = {
                               transform: 'translateX(500px)'
                     }
                   },
+                  'scale-up-message' : {
+                    '0%': {
+                      '-webkit-transform': "scale(1)",
+                              transform:' scale(1)',
+                    },
+                    '70%' : {
+                      '-webkit-transform': 'scale(1.13)',
+                              transform: 'scale(1.13)',
+                    },
+                    '100%' : {
+                      '-webkit-transform': 'scale(1)',
+                              transform: 'scale(1)',
+                    }
+                  },
             },
             animation:{
                 'scale-up-card' :'scale-up-card 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
                 'scale-down-card' :'scale-down-card 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
                 'message-chat-move-right': 'message-chat-move-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
                 'message-chat-move-left': 'message-chat-move-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
+                'scale-up-message' : 'scale-up-message 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both'
             }
         },
     },

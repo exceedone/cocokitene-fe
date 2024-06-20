@@ -112,4 +112,7 @@ export interface IUpdateBoardMeetingPayload {
 }
 
 //Chat-Meeting
-
+export interface ICreateReactionMessagePayload {
+    messageId: number
+    reactionIconId: number
+}

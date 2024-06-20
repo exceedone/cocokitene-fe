@@ -21,6 +21,12 @@ import {
     initUpdateBoardMeeting,
     updateBoardMeetingInformation,
 } from './updateSlice'
+import {
+    IGetAllMeetingQuery,
+    IMeetingState,
+    ListParamsFilter,
+} from '../meeting/types'
+import { getAllBoardMeetings, getAllPassBoardMeetings, setFilter } from './listSlice'
 
 export function useCreateBoardMeetingInformation(): [
     ICreateBoardMeeting,
@@ -41,6 +47,48 @@ export function useCreateBoardMeetingInformation(): [
         dispatch(resetCreateBoardMeetingData())
     }, [dispatch])
     return [data, setCreateBoardMeetingInformation, resetData]
+}
+
+type ListBoardMeetingType = {
+    boardMeetingState: IMeetingState
+    // eslint-disable-next-line
+    getListFutureBoardMeetingAction: (data: IGetAllMeetingQuery) => void
+    // eslint-disable-next-line
+    getListPassBoardMeetingAction: (data: IGetAllMeetingQuery) => void
+    // eslint-disable-next-line
+    setFilterAction: (data: ListParamsFilter) => void
+}
+
+export const useListBoardMeeting = (): ListBoardMeetingType => {
+    const dispatch = useAppDispatch()
+    const boardMeetingState = useAppSelector(
+        (state: RootState) => state.boardMeetingList,
+    )
+
+    const getListFutureBoardMeetingAction = useCallback(
+        (data: IGetAllMeetingQuery) => {
+            dispatch(getAllBoardMeetings(data))
+        },
+        [dispatch],
+    )
+
+    const getListPassBoardMeetingAction = useCallback(
+        (data: IGetAllMeetingQuery) => {
+            dispatch(getAllPassBoardMeetings(data))
+        },
+        [dispatch],
+    )
+
+    const setFilterAction = useCallback((data:ListParamsFilter )=>{
+        dispatch(setFilter(data))
+    },[dispatch])
+
+    return {
+        boardMeetingState,
+        getListFutureBoardMeetingAction,
+        getListPassBoardMeetingAction,
+        setFilterAction,
+    }
 }
 
 export function useBoardMeetingDetail(): [

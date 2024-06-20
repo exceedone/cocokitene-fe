@@ -50,6 +50,8 @@ const CreateResolutionItem = ({
     const [fileData, setFileData] = useState<{
         fileList: UploadFile[]
         errorUniqueFile: boolean
+        errorWrongFileType?: boolean
+        errorFileSize?: boolean
     }>({ fileList: fileList, errorUniqueFile: false })
 
     const onUpload = async ({ file }: RcCustomRequestOptions) => {
@@ -129,11 +131,21 @@ const CreateResolutionItem = ({
         })
 
         if (file.size > 10 * (1024 * 1024)) {
-            return Upload.LIST_IGNORE
+            setFileData({
+                ...fileData,
+                errorFileSize: true,
+            })
+            return false
+            // return Upload.LIST_IGNORE
         }
         const extension = file.name.split('.').slice(-1)[0]
         if (!ACCEPT_FILE_TYPES.split(',').includes(`.${extension}`)) {
-            return Upload.LIST_IGNORE
+            setFileData({
+                ...fileData,
+                errorWrongFileType: true,
+            })
+            return false
+            // return Upload.LIST_IGNORE
         }
 
         return true
@@ -168,20 +180,22 @@ const CreateResolutionItem = ({
                         />
                     )}
                 {(title || content) && (
-                    <Upload
-                        onChange={onFileChange}
-                        fileList={fileData.fileList}
-                        beforeUpload={validateFile}
-                        // multiple={true}
-                        // method="PUT"
-                        customRequest={onUpload}
-                        accept={ACCEPT_FILE_TYPES}
-                        name="proposal-files"
-                    >
-                        <div className="flex flex-col items-start">
+                    <>
+                        <Upload
+                            onChange={onFileChange}
+                            fileList={fileData.fileList}
+                            beforeUpload={validateFile}
+                            // multiple={true}
+                            // method="PUT"
+                            customRequest={onUpload}
+                            accept={ACCEPT_FILE_TYPES}
+                            name="proposal-files"
+                        >
                             <Button icon={<UploadOutlined />}>
                                 {t('CLICK_TO_UPLOAD')}
                             </Button>
+                        </Upload>
+                        <div className="flex flex-col items-start">
                             <Text className="text-black-45">
                                 {t('INVITATION_FILE_UPLOAD_NOTICE')}
                             </Text>
@@ -190,8 +204,18 @@ const CreateResolutionItem = ({
                                     {t('UNIQUE_FILE_ERROR_MESSAGE')}
                                 </Text>
                             )}
+                            {fileData.errorWrongFileType && (
+                                <Text className="text-dust-red">
+                                    {t('WRONG_FILE_TYPE_ERROR_MESSAGE')}
+                                </Text>
+                            )}
+                            {fileData.errorFileSize && (
+                                <Text className="text-dust-red">
+                                    {t('FILE_THROUGH_THE_CAPACITY_FOR_UPLOAD')}
+                                </Text>
+                            )}
                         </div>
-                    </Upload>
+                    </>
                 )}
             </div>
             <div></div>

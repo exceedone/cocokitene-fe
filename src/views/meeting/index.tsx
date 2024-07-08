@@ -75,10 +75,11 @@ const MeetingList = () => {
 
         if (attendanceState.status == EActionStatus.Failed) {
             openNotification({
-                message: attendanceState.errorMessage,
+                message: t(attendanceState.errorMessage),
                 placement: 'bottomRight',
                 type: 'error',
             })
+            resetStateAttendance()
         }
         // eslint-disable-next-line
     }, [attendanceState.status])

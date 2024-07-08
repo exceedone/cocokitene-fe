@@ -13,7 +13,7 @@ import Participants from '@/views/meeting/meeting-detail/participants'
 import Resolutions from '@/views/meeting/meeting-detail/resolutions'
 import SendEmailButton from '@/views/meeting/meeting-detail/send-email-button'
 import { EditOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button, notification } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -24,7 +24,8 @@ import { MeetingStatus } from '@/constants/meeting'
 const MeetingDetail = () => {
     const t = useTranslations()
 
-    const [{ meeting, status }, fetchMeetingDetail] = useMeetingDetail()
+    const [{ meeting, status }, fetchMeetingDetail, resetStatusGetMeeting] =
+        useMeetingDetail()
 
     const params = useParams()
 
@@ -49,6 +50,17 @@ const MeetingDetail = () => {
             fetchMeetingDetail(meetingId)
         }
     }, [meetingId, fetchMeetingDetail])
+
+    useEffect(() => {
+        if (status == EActionStatus.Failed) {
+            notification.error({
+                message: 'Error',
+                description: t('MEETING_NOT_FOUND'),
+                duration: 3,
+            })
+            resetStatusGetMeeting()
+        }
+    }, [status])
 
     if (!meeting || status === EActionStatus.Pending) {
         return <Loader />

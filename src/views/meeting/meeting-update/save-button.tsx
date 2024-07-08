@@ -82,6 +82,7 @@ const SaveUpdateMeetingButton = () => {
                 notification.success({
                     message: t('UPDATED'),
                     description: t('UPDATED_MEETING_SUCCESSFULLY'),
+                    duration: 2,
                 })
                 setStatus(FETCH_STATUS.SUCCESS)
                 router.push(`/meeting/detail/${data.id}`)
@@ -90,6 +91,7 @@ const SaveUpdateMeetingButton = () => {
             notification.error({
                 message: 'Error',
                 description: 'Something went wrong!',
+                duration: 2,
             })
             setStatus(FETCH_STATUS.ERROR)
         }

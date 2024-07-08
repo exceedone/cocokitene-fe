@@ -1,11 +1,14 @@
 import BoxArea from '@/components/box-area'
 import { LikeIcon, ShareholdersIcon } from '@/components/svgs'
 import { MeetingStatusColor, MeetingStatusName } from '@/constants/meeting'
+import { RoleMtgEnum } from '@/constants/role-mtg'
+import { useAuthLogin } from '@/stores/auth/hooks'
 import { useMeetingDetail } from '@/stores/meeting/hooks'
+import { PieChartOutlined } from '@ant-design/icons'
 import { Col, Row, Typography } from 'antd'
 import moment from 'moment'
 import { useTranslations } from 'next-intl'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 const { Text, Title } = Typography
 
@@ -64,17 +67,75 @@ export const BoxGeneralInformation = ({
     )
 }
 
+export const BoxInformationQuantityShareOfParticipant = ({
+    icon,
+    title,
+    quantityShare,
+}: {
+    icon: ReactNode
+    title: string
+    quantityShare: number
+}) => {
+    return (
+        <div className="h-full bg-white p-6">
+            <div className="flex items-end justify-between ">
+                <div className="flex items-end justify-center gap-2">
+                    {icon}
+                    <Text className="leading-none">{title}</Text>
+                </div>
+                <div>
+                    <div className="flex items-baseline gap-2">
+                        <Title
+                            level={2}
+                            className="mb-0 font-medium leading-none"
+                        >
+                            {quantityShare}
+                        </Title>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const DetailInformation = () => {
     const [{ meeting }] = useMeetingDetail()
+    const { authState } = useAuthLogin()
+
+    const [quantityShare, setQuantityShare] = useState<number>(0)
 
     const t = useTranslations()
+
+    // console.log('meeting:', meeting?.participants)
+
+    useEffect(() => {
+        // calculate quantityShare in Meeting of User
+        const listShareholderParticipant = meeting?.participants
+            .filter(
+                (participant) =>
+                    participant.roleMtgName.toUpperCase() ==
+                    RoleMtgEnum.SHAREHOLDER.toUpperCase(),
+            )
+            .flatMap((shareholder) => shareholder.userParticipants)
+        if (
+            listShareholderParticipant &&
+            listShareholderParticipant.length > 0
+        ) {
+            const quantityShareOfUser = listShareholderParticipant.find(
+                (shareholder) => shareholder.userId == authState.userData?.id,
+            )
+            setQuantityShare(quantityShareOfUser?.userShareQuantity ?? 0)
+        } else {
+            setQuantityShare(0)
+        }
+    }, [meeting?.participants, authState])
 
     if (!meeting) return null
 
     return (
         <>
             <Row gutter={[16, 24]}>
-                <Col xs={24} lg={12}>
+                <Col xs={24} lg={10}>
                     <BoxGeneralInformation
                         icon={<LikeIcon fill1="#EFEFFF" fill2="#5151E5" />}
                         title={t('TOTAL_SHARES_BY_SHAREHOLDERS_JOINED')}
@@ -82,7 +143,7 @@ const DetailInformation = () => {
                         totalNumber={meeting.totalMeetingShares}
                     />
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={12} lg={7}>
                     <BoxGeneralInformation
                         icon={
                             <ShareholdersIcon fill1="#EFEFFF" fill2="#5151E5" />
@@ -90,6 +151,13 @@ const DetailInformation = () => {
                         title={t('TOTAL_SHAREHOLDERS_JOINED')}
                         realNumber={meeting.shareholdersJoined}
                         totalNumber={meeting.shareholdersTotal}
+                    />
+                </Col>
+                <Col xs={12} lg={7}>
+                    <BoxInformationQuantityShareOfParticipant
+                        icon={<PieChartOutlined style={{ color: '#5151e5' }} />}
+                        title={t('QUANTITY_SHARE_AT_MEETING')}
+                        quantityShare={quantityShare}
                     />
                 </Col>
                 <Col xs={24} lg={24}>

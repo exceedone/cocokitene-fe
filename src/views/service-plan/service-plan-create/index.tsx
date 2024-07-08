@@ -43,6 +43,7 @@ const CreatePlan = () => {
                 notification.success({
                     message: t('CREATED'),
                     description: t('CREATED_PLAN_SUCCESSFULLY'),
+                    duration: 2,
                 })
                 router.push('/plan')
                 form.resetFields()
@@ -53,6 +54,7 @@ const CreatePlan = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t(error.response?.data.info.message),
+                    duration: 3,
                 })
             }
             setStatus(FETCH_STATUS.ERROR)
@@ -111,7 +113,7 @@ const CreatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}
@@ -134,7 +136,7 @@ const CreatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}
@@ -155,7 +157,7 @@ const CreatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}
@@ -176,7 +178,7 @@ const CreatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}

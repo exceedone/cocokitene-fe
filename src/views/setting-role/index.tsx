@@ -19,6 +19,7 @@ import SettingTitle from '@/components/content-page-title/setting-title'
 import RoleMtgList from '@/views/setting-role/role-mtg-list'
 import { useSettingRoleMtg } from '@/stores/setting-role-mtg/hook'
 import ModalRegisterRoleMtg from '@/views/setting-role/modal-register-role-mtg'
+import EmptyData from '../service-plan/service-plan-list/empty-plan'
 interface DataType {
     namePermission: string
     [key: string]: any
@@ -60,6 +61,10 @@ const SettingRoleView = () => {
         null,
     )
     const [dataChecked, setDataCheked] = useState<IUpdatePermissionRole[]>([])
+
+    let locale = {
+        emptyText: <EmptyData />,
+    }
 
     useEffect(() => {
         getAllCombineRoleWithPermission({
@@ -127,7 +132,13 @@ const SettingRoleView = () => {
                         style={{
                             pointerEvents: !clickButtonEdit ? 'none' : 'auto',
                         }}
-                        disabled={item === RoleName.SUPER_ADMIN}
+                        disabled={
+                            item === RoleName.SUPER_ADMIN ||
+                            record.namePermission ===
+                                Permissions.CREATE_MEETING ||
+                            record.namePermission ===
+                                Permissions.CREATE_BOARD_MEETING
+                        }
                         checked={checkboxState[record.namePermission]?.[item]}
                         onChange={(e) =>
                             onChange(record.namePermission, item, e)
@@ -186,6 +197,7 @@ const SettingRoleView = () => {
                     notification.error({
                         message: t('ERROR'),
                         description: error.response?.data.info.message,
+                        duration: 3,
                     })
                 }
             }
@@ -194,7 +206,9 @@ const SettingRoleView = () => {
     }, [settingRoleState.filter])
 
     const handleInputChange = (value: string) => {
-        setFilterAction({ searchQuery: value })
+        setFilterAction({
+            searchQuery: value.toLocaleLowerCase().trim().replaceAll(' ', '_'),
+        })
     }
 
     const onChange = (
@@ -317,12 +331,14 @@ const SettingRoleView = () => {
         // eslint-disable-next-line
         ;(async () => {
             try {
-                const response =
-                    await serviceSettingRole.updateRolePermissions(dataChecked)
+                const response = await serviceSettingRole.updateRolePermissions(
+                    dataChecked,
+                )
                 if (response) {
                     notification.success({
                         message: t('UPDATED_PERMISSION'),
                         description: t('CHANGE_RESULT_PERMISSION_SUCCESSFULLY'),
+                        duration: 2,
                     })
                     setClickButtonEdit(!clickButtonEdit)
                     setDataCheked([])
@@ -333,6 +349,7 @@ const SettingRoleView = () => {
                     notification.error({
                         message: t('ERROR'),
                         description: error.response?.data.info.message,
+                        duration: 3,
                     })
                 }
             }
@@ -397,6 +414,7 @@ const SettingRoleView = () => {
                         rowKey={(record) => record.namePermission}
                         loading={isLoading != FETCH_STATUS.SUCCESS}
                         // pagination={false}
+                        locale={locale}
                     />
                 ) : (
                     <RoleMtgList />

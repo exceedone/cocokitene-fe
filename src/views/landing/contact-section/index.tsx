@@ -44,6 +44,7 @@ const ContactSection = () => {
                 notification.success({
                     message: t('CREATED'),
                     description: t('SEND_EMAIL_TO_SYSTEM_ADMIN_SUCCESSFULLY'),
+                    duration: 2,
                 })
                 form.resetFields()
                 setStatus(FETCH_STATUS.SUCCESS)
@@ -53,6 +54,7 @@ const ContactSection = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: error.response?.data.info.message,
+                    duration: 3,
                 })
             }
             setStatus(FETCH_STATUS.ERROR)
@@ -151,6 +153,12 @@ const ContactSection = () => {
                                                 required: true,
                                                 message: t(
                                                     'PLEASE_INPUT_YOUR_PHONE_NUMBER',
+                                                ),
+                                            },
+                                            {
+                                                pattern: new RegExp(/^[0-9]+$/),
+                                                message: t(
+                                                    'PLEASE_ENTER_ONLY_NUMBER',
                                                 ),
                                             },
                                         ]}

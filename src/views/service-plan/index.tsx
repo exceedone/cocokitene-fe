@@ -7,8 +7,6 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import PlanList from './service-plan-list'
-import { EActionStatus } from '@/stores/type'
-import Loader from '@/components/loader'
 
 const ServicePlanList = () => {
     const t = useTranslations()
@@ -33,9 +31,6 @@ const ServicePlanList = () => {
         setFilterAction({ ...planState.filter, sortOrder: value })
     }
 
-    if (!planState || planState?.status === EActionStatus.Pending) {
-        return <Loader />
-    }
     return (
         <div>
             <ListTitle

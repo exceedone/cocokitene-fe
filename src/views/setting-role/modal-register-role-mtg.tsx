@@ -54,6 +54,7 @@ const ModalRegisterRoleMtg = () => {
                 notification.success({
                     message: t('CREATED'),
                     description: t('CREATE_NEW_ROLE'),
+                    duration: 2,
                 })
                 form.resetFields()
                 setOpenModalRoleMtg(false)
@@ -64,6 +65,7 @@ const ModalRegisterRoleMtg = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: error?.response?.data.info.message,
+                    duration: 3,
                 })
             }
         }

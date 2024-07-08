@@ -9,7 +9,7 @@ const CompanyInfo = () => {
 
     return (
         <div className="flex items-center">
-            <Text className="text-sm leading-[22px] text-white">
+            <Text className="max-w-[278px] truncate text-sm leading-[22px] text-white">
                 {authState.userData?.companyName || 'Unknow'}
             </Text>
         </div>

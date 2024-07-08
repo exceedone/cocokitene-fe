@@ -175,7 +175,7 @@ const CompanyInformation = ({ form }: CompanyInfoProp) => {
                             { required: true, message: t('REQUIRE_PHONE') },
                             {
                                 pattern: new RegExp(/^[0-9]+$/),
-                                message: t('PLEASE_ENTER_ ONLY_NUMBER'),
+                                message: t('PLEASE_ENTER_ONLY_NUMBER'),
                             },
                         ]}
                         className="mb-0"
@@ -195,7 +195,7 @@ const CompanyInformation = ({ form }: CompanyInfoProp) => {
                             {
                                 pattern: new RegExp(/^\d{10}$/),
                                 message: t(
-                                    'PLEASE_ENTER_ ONLY_NUMBER_AND_LENGTH_EQUAL_10',
+                                    'PLEASE_ENTER_ONLY_NUMBER_AND_LENGTH_EQUAL_10',
                                 ),
                             },
                         ]}

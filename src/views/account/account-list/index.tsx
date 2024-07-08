@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthLogin } from '@/stores/auth/hooks'
 import { checkPermission } from '@/utils/auth'
 import { Permissions } from '@/constants/permission'
+import EmptyData from '@/views/service-plan/service-plan-list/empty-plan'
 
 const { Text } = Typography
 
@@ -36,6 +37,10 @@ const AccountList = () => {
         authState.userData?.permissionKeys,
         Permissions.EDIT_ACCOUNT,
     )
+
+    let locale = {
+        emptyText: <EmptyData />,
+    }
 
     const columns: ColumnsType<IAccountList> = [
         {
@@ -229,6 +234,7 @@ const AccountList = () => {
                     total: accountState.totalAccountItem,
                     onChange: handlePageChange,
                 }}
+                locale={locale}
             />
         </div>
     )

@@ -10,9 +10,17 @@ import BoardMeetingParticipants from '@/views/board-meeting/board-meeting-create
 import Candidates from '@/views/board-meeting/board-meeting-create/candidates'
 import withAuth from '@/components/component-auth'
 import { Permissions } from '@/constants/permission'
+import { useCreateBoardMeetingInformation } from '@/stores/board-meeting/hook'
+import { useEffect } from 'react'
 
 const BoardMeetingCreate = () => {
     const t = useTranslations()
+    const [, , resetData] = useCreateBoardMeetingInformation()
+
+    useEffect(() => {
+        resetData()
+    }, [])
+
     return (
         <div>
             <CreateTitle

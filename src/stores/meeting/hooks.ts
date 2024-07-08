@@ -21,6 +21,7 @@ import { getFileTypeByUrl } from '@/utils/file'
 import { MeetingResource } from '@/views/meeting/meeting-detail/documents'
 import { useCallback } from 'react'
 import { getAllMeetings, getAllPassMeetings, setFilter } from './listSlice'
+import { resetStatus } from './detailSlice'
 import {
     initUpdateMeeting,
     updateMeetingInformation,
@@ -56,6 +57,7 @@ export function useMeetingDetail(): [
     },
     // eslint-disable-next-line
     (meetingId: number) => void,
+    () => void,
 ] {
     const dispatch = useAppDispatch()
     const { meeting, status } = useAppSelector(
@@ -68,6 +70,9 @@ export function useMeetingDetail(): [
         },
         [dispatch],
     )
+    const resetStatusGetMeeting = useCallback(() => {
+        dispatch(resetStatus())
+    }, [dispatch])
 
     return [
         {
@@ -75,6 +80,7 @@ export function useMeetingDetail(): [
             status,
         },
         fetchMeetingDetail,
+        resetStatusGetMeeting
     ]
 }
 

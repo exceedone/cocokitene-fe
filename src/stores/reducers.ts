@@ -20,6 +20,7 @@ import boardMeetingListReducer from '@/stores/board-meeting/listSlice'
 import boardMeetingCreateReducer from '@/stores/board-meeting/createSlice'
 import boardMeetingDetailReducer from '@/stores/board-meeting/detailSlice'
 import boardMeetingUpdateReducer from '@/stores/board-meeting/updateSlice'
+import CheckDataMeetingSlice from '@/stores/check-data-meeting/slice'
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -43,7 +44,7 @@ const rootReducer = combineReducers({
     boardMeetingCreate: boardMeetingCreateReducer,
     boardMeetingDetail: boardMeetingDetailReducer,
     boardMeetingUpdate: boardMeetingUpdateReducer,
-
+    checkMeetingData: CheckDataMeetingSlice
 })
 
 export default rootReducer

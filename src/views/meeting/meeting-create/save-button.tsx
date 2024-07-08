@@ -69,6 +69,7 @@ const SaveCreateMeetingButton = () => {
                 notification.success({
                     message: t('CREATED'),
                     description: t('CREATED_MEETING_SUCCESSFULLY'),
+                    duration: 2,
                 })
 
                 resetData()
@@ -80,6 +81,7 @@ const SaveCreateMeetingButton = () => {
             notification.error({
                 message: 'Error',
                 description: 'Something went wrong!',
+                duration: 2,
             })
             setStatus(FETCH_STATUS.ERROR)
         }

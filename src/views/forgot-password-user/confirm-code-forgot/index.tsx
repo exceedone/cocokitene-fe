@@ -46,6 +46,7 @@ const ConfirmCodeForgotUser = () => {
             notification.success({
                 message: t('SUCCESS'),
                 description: response,
+                duration: 2,
             })
             setCountdown(accessTime)
             setIsLoading(false)
@@ -54,6 +55,7 @@ const ConfirmCodeForgotUser = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: error.response?.data.info.message,
+                    duration: 3,
                 })
             }
         }
@@ -80,7 +82,7 @@ const ConfirmCodeForgotUser = () => {
                 </div>
 
                 <div className="text-red-500">
-                    {countdown == 0 && t('LINK_HAS_EXPIRED.')}
+                    {countdown == 0 && t('LINK_HAS_EXPIRED')}
                 </div>
             </div>
 

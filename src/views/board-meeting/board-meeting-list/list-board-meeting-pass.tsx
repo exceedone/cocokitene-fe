@@ -8,6 +8,7 @@ import { MeetingTime, MeetingType } from '@/constants/meeting'
 import { Pagination } from 'antd'
 import EmptyMeeting from '@/views/meeting/meeting-list/empty-meeting'
 import { getAllPassBoardMeetings } from '@/stores/board-meeting/listSlice'
+import ModalCheckDataInMtg from '@/components/check-data-meeting'
 
 export interface ListPassBoardMeetingProps {
     data: IMeetingItem[]
@@ -54,6 +55,7 @@ const ListBoardMeetingPast = ({ data }: ListPassBoardMeetingProps) => {
                     />
                 )}
             </BoxArea>
+            <ModalCheckDataInMtg />
         </div>
     )
 }

@@ -17,7 +17,7 @@ const initialState: IPlanState = {
     planList: [],
     totalPlanItem: 0,
     page: 1,
-    limit: 10,
+    limit: 100,
     filter: {
         searchQuery: CONSTANT_EMPTY_STRING,
         sortOrder: SORT.DESC,
@@ -32,7 +32,7 @@ export const getAllPlan = createAsyncThunk<
     {
         rejectValue: FetchError
     }
->('plan/getAllPlan', async (param, { rejectWithValue }) => {
+>('plan/getPlanAll', async (param, { rejectWithValue }) => {
     try {
         const data = await servicePlan.getAllPlans(param)
         const mapData = data.items.map((item) => {
@@ -77,7 +77,7 @@ const planListSlice = createSlice({
             .addCase(getAllPlan.fulfilled, (state, action) => {
                 state.status = EActionStatus.Succeeded
                 state.planList = action.payload.items ?? []
-                state.totalPlanItem = action.payload?.meta?.totalItems
+                state.totalPlanItem = action.payload?.meta?.totalItems ?? 0
             })
             .addCase(getAllPlan.rejected, (state, action) => {
                 state.status = EActionStatus.Failed

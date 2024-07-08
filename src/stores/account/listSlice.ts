@@ -25,6 +25,8 @@ const initialState: IAccountState = {
     errorCode: '',
     errorMessage: '',
 }
+
+
 export const getAllAccount = createAsyncThunk<
     IGetAllDataReponse<IAccountList>,
     IGetAllAccountQuery,

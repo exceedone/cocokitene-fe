@@ -10,7 +10,7 @@ import { useBoardMeetingDetail } from '@/stores/board-meeting/hook'
 import { EActionStatus } from '@/stores/type'
 import Loader from '@/components/loader'
 import DetailTitle from '@/components/content-page-title/detail-title'
-import { Button } from 'antd'
+import { Button, notification } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 
 import BoardMeetingInformation from '@/views/board-meeting/board-meeting-detail/board-meeting-information'
@@ -41,14 +41,28 @@ const BoardMeetingDetail = () => {
         Permissions.SEND_MAIL_TO_BOARD,
     )
 
-    const [{ boardMeeting, status }, fetchBoardMeetingDetail] =
-        useBoardMeetingDetail()
+    const [
+        { boardMeeting, status },
+        fetchBoardMeetingDetail,
+        resetStateBoardMtg,
+    ] = useBoardMeetingDetail()
 
     useEffect(() => {
         if (boardMeetingId) {
             fetchBoardMeetingDetail(boardMeetingId)
         }
     }, [boardMeetingId, fetchBoardMeetingDetail])
+
+    useEffect(() => {
+        if (status == EActionStatus.Failed) {
+            notification.error({
+                message: 'Error',
+                description: t('MEETING_NOT_FOUND'),
+                duration: 3,
+            })
+            resetStateBoardMtg()
+        }
+    }, [status])
 
     if (!boardMeeting || status === EActionStatus.Pending) {
         return <Loader />

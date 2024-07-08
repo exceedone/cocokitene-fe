@@ -1,4 +1,5 @@
 import BoxArea from '@/components/box-area'
+import ModalCheckDataInMtg from '@/components/check-data-meeting'
 import { MeetingTime, MeetingType } from '@/constants/meeting'
 import { RootState, useAppDispatch } from '@/stores'
 import { getAllPassMeetings } from '@/stores/meeting/listSlice'
@@ -30,6 +31,7 @@ const ListPastMeeting = ({ data }: ListPastMeetingProps) => {
             }),
         )
     }
+
     return (
         <div className="list-meeting-past mt-6">
             <BoxArea title={t('MEETING_PAST_LIST')}>
@@ -53,6 +55,7 @@ const ListPastMeeting = ({ data }: ListPastMeetingProps) => {
                     />
                 )}
             </BoxArea>
+            <ModalCheckDataInMtg />
         </div>
     )
 }

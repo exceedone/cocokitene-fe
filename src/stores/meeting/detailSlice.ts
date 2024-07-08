@@ -53,7 +53,11 @@ export const getMeetingDetail = createAsyncThunk<
 const meetingDetailSlice = createSlice({
     name: 'meetingDetailSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        resetStatus(state) {
+            state.status = EActionStatus.Idle
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getMeetingDetail.pending, (state) => {
@@ -70,4 +74,5 @@ const meetingDetailSlice = createSlice({
     },
 })
 
+export const { resetStatus } = meetingDetailSlice.actions
 export default meetingDetailSlice.reducer

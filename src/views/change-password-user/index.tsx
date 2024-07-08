@@ -56,6 +56,7 @@ const ChangeUserPassword = () => {
             notification.success({
                 message: t('SUCCESS'),
                 description: t('CHANGE_PASSWORD_SUCCESS'),
+                duration: 2,
             })
             router.push('/dashboard')
         } catch (error) {
@@ -63,6 +64,7 @@ const ChangeUserPassword = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t('CHANGE_PASSWORD_FAILED'),
+                    duration: 3,
                 })
             }
         }

@@ -464,3 +464,14 @@ export interface ILastMessageSeen {
 export interface IUpdateLastMessageSeen {
     lastMessageIdSeen: number
 }
+export interface IDataHashMeeting {
+    id: number
+    basicInformationMeetingHash: string
+    fileMeetingHash: string
+    proposalMeetingHash: string
+    votedProposalHash: string
+    candidateHash: string
+    votedCandidateHash: string
+    participantHash: string
+    detailMeetingHash: string
+}

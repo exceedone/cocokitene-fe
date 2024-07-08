@@ -54,6 +54,8 @@ export interface IMeeting {
     meetings_meeting_link: string
     isJoined: number
     meetings_status: string
+    transaction_contract_address?:string
+    transaction_key_query?: string
 }
 
 export interface ListParamsFilter {

@@ -27,6 +27,8 @@ import {
     ListParamsFilter,
 } from '../meeting/types'
 import { getAllBoardMeetings, getAllPassBoardMeetings, setFilter } from './listSlice'
+import { resetStatus } from './detailSlice'
+
 
 export function useCreateBoardMeetingInformation(): [
     ICreateBoardMeeting,
@@ -98,6 +100,7 @@ export function useBoardMeetingDetail(): [
     },
     // eslint-disable-next-line
     (boardMeetingId: number) => void,
+    () => void,
 ] {
     const dispatch = useAppDispatch()
     const { boardMeeting, status } = useAppSelector(
@@ -111,12 +114,19 @@ export function useBoardMeetingDetail(): [
         [dispatch],
     )
 
+    const resetStateBoardMtg = useCallback(
+        () =>{
+            dispatch(resetStatus())
+        },[dispatch]
+    )
+
     return [
         {
             boardMeeting,
             status,
         },
         fetchBoardMeetingDetail,
+        resetStateBoardMtg,
     ]
 }
 

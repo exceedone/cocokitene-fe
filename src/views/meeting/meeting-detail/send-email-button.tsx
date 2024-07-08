@@ -27,6 +27,7 @@ const SendEmailButton = () => {
                     description: t(
                         'SEND_EMAIL_TO_SHAREHOLDER_MEETING_SUCCESSFULLY',
                     ),
+                    duration: 2,
                 })
                 setStatus(FETCH_STATUS.SUCCESS)
             }
@@ -35,6 +36,7 @@ const SendEmailButton = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t('SEND_EMAIL_TO_SHAREHOLDER_MEETING_FAILED'),
+                    duration: 3,
                 })
             }
             setStatus(FETCH_STATUS.ERROR)

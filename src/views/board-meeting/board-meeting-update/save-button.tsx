@@ -79,6 +79,7 @@ const SaveUpdateBoardMeetingButton = () => {
                 notification.success({
                     message: t('UPDATED'),
                     description: t('UPDATE_BOARD_MEETING_SUCCESSFULLY'),
+                    duration: 2,
                 })
                 setStatus(FETCH_STATUS.SUCCESS)
                 router.push(`/board-meeting/detail/${data.id}`)
@@ -87,6 +88,7 @@ const SaveUpdateBoardMeetingButton = () => {
             notification.error({
                 message: 'Error',
                 description: 'Something went wrong to update Board Meeting!!!',
+                duration: 3,
             })
             setStatus(FETCH_STATUS.ERROR)
         }

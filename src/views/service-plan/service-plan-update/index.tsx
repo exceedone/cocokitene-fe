@@ -55,6 +55,7 @@ const UpdatePlan = () => {
                     notification.error({
                         message: t('ERROR'),
                         description: t(error.response?.data.info.message),
+                        duration: 3,
                     })
                 }
 
@@ -82,8 +83,9 @@ const UpdatePlan = () => {
 
             if (updateAccountResponse) {
                 notification.success({
-                    message: t('UPDATE'),
+                    message: t('UPDATED'),
                     description: t('UPDATED_PLAN_SUCCESSFULLY'),
+                    duration: 2,
                 })
                 setStatus(FETCH_STATUS.SUCCESS)
                 router.push('/plan')
@@ -93,6 +95,7 @@ const UpdatePlan = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t(error.response?.data.info.message),
+                    duration: 3,
                 })
             }
             setStatus(FETCH_STATUS.ERROR)
@@ -162,7 +165,7 @@ const UpdatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}
@@ -185,7 +188,7 @@ const UpdatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}
@@ -206,7 +209,7 @@ const UpdatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}
@@ -227,7 +230,7 @@ const UpdatePlan = () => {
                                         {
                                             pattern: new RegExp(/^[0-9]+$/),
                                             message: t(
-                                                'PLEASE_ENTER_ ONLY_NUMBER',
+                                                'PLEASE_ENTER_ONLY_NUMBER',
                                             ),
                                         },
                                     ]}

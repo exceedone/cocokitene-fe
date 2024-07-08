@@ -64,6 +64,7 @@ const CompanyCreate = () => {
                 notification.success({
                     message: t('CREATED'),
                     description: t('CREATED_COMPANY_SUCCESSFULLY'),
+                    duration: 2,
                 })
 
                 router.push('/company')
@@ -75,6 +76,7 @@ const CompanyCreate = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t(error.response?.data.info.message),
+                    duration: 3,
                 })
             }
 

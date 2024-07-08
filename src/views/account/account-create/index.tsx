@@ -97,6 +97,7 @@ const CreateAccount = () => {
                 notification.success({
                     message: t('CREATED'),
                     description: t('CREATED_ACCOUNT_SUCCESSFULLY'),
+                    duration: 2,
                 })
                 router.push('/account')
                 form.resetFields()
@@ -107,6 +108,7 @@ const CreateAccount = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t(error.response?.data.info.message),
+                    duration: 3,
                 })
             }
             setStatus(FETCH_STATUS.ERROR)

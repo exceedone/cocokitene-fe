@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthLogin } from '@/stores/auth/hooks'
 import { checkPermission } from '@/utils/auth'
 import { Permissions } from '@/constants/permission'
+import EmptyData from '@/views/service-plan/service-plan-list/empty-plan'
 const { Text } = Typography
 
 const ShareholderList = () => {
@@ -31,6 +32,10 @@ const ShareholderList = () => {
         authState.userData?.permissionKeys,
         Permissions.EDIT_SHAREHOLDERS,
     )
+
+    let locale = {
+        emptyText: <EmptyData />,
+    }
 
     const columns: ColumnsType<IShareholderList> = [
         {
@@ -175,6 +180,7 @@ const ShareholderList = () => {
                     total: shareholderState.totalShareholderItem,
                     onChange: handlePageChane,
                 }}
+                locale={locale}
             />
         </div>
     )

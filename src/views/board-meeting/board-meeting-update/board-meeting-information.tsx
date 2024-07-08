@@ -306,7 +306,7 @@ const BoardMeetingInformation = () => {
                             <Input
                                 size="large"
                                 name="meetingLink"
-                                addonBefore="https://"
+                                // addonBefore="https://"
                                 value={data.meetingLink}
                                 onChange={onChange}
                             />

@@ -25,6 +25,7 @@ const SendMailForgotUser = () => {
                 notification.success({
                     message: t('SUCCESS'),
                     description: t('SUCCESS_SEND_EMAIL'),
+                    duration: 2,
                 })
             }
             setEmailForgotPassword(values?.email)
@@ -34,6 +35,7 @@ const SendMailForgotUser = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t('USER_NOT_EXITED'),
+                    duration: 3,
                 })
             }
         }

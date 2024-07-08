@@ -34,7 +34,8 @@ import { useAuthLogin } from '@/stores/auth/hooks'
 import serviceAccount from '@/services/account'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { useWatch } from 'antd/es/form/Form'
-
+import { Cookies } from 'react-cookie'
+const cookies = new Cookies()
 const tagRenderStatus = (props: any) => {
     const { label, value, closable, onClose } = props
     const t = useTranslations()
@@ -89,7 +90,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
 
     const quantity = useWatch('shareQuantity', form)
 
-    const t = useTranslations()
+    // const t = useTranslations()
     const { authState } = useAuthLogin()
 
     const filteredOptions = userRoleList?.filter(
@@ -114,7 +115,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
             }
             const userCompanyName = authState.userData?.id
                 ? (await serviceAccount.getDetailAccount(authState.userData.id))
-                      .company.companyName
+                    .company.companyName
                 : ''
             setCompanyName(userCompanyName)
         }
@@ -185,21 +186,45 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
     const [previewImage, setPreviewImage] = useState('')
     const [previewTitle, setPreviewTitle] = useState('')
     const [fileList, setFileList] = useState<UploadFile[]>([])
-
+    const t = useTranslations()
     const beforeUpload = (file: RcFile) => {
-        const isLt20M = file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024)
+        const isLt20M = file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024);
+        const langCurrent = cookies.get('NEXT_LOCALE')
         if (!isLt20M) {
-            message.error(`Image must smaller than ${MAX_AVATAR_FILE_SIZE}MB!`)
+            if (langCurrent === 'en') {
+
+                message.error(`Image must smaller than ${MAX_AVATAR_FILE_SIZE}MB!`);
+                return false;
+            } else {
+                message.error(`添付ファイルのサイズが最大値を越えています。${MAX_AVATAR_FILE_SIZE}Mbyte以内で登録してください`);
+                return false
+            }
+
+
         }
-        return isLt20M
+
+        const extension = file.name.split('.').slice(-1)[0]
+        const isAcceptedType = ACCEPT_AVATAR_TYPES.split(',').includes(`.${extension}`);
+        if (!isAcceptedType) {
+            if (langCurrent === 'en') {
+
+                message.error(`${ACCEPT_AVATAR_TYPES} ファイルのみアップロード可です`);
+                return false;
+            } else {
+                message.error(`${ACCEPT_AVATAR_TYPES} ファイルのみアップロード可です`);
+                return false
+            }
+        }
+
+        return true;
     }
 
     const onUpload =
         (name: 'avatarAccount', fileType: AccountFileType) =>
-        async ({ file }: RcCustomRequestOptions) => {
-            // console.log('file :', file)
-            getFileAvatar({ file: file, flag: true })
-        }
+            async ({ file }: RcCustomRequestOptions) => {
+                // console.log('file :', file)
+                getFileAvatar({ file: file, flag: true })
+            }
 
     useEffect(() => {
         if (fileList.length == 0) {
@@ -220,21 +245,25 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
         )
     }
 
-    const handleChange: UploadProps['onChange'] = ({
-        fileList: newFileList,
-    }) => {
-        if (newFileList.length == 0) {
-            setFileList(newFileList)
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        const filteredList = newFileList.filter(file => {
+            const isLt20M = file.size && file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024);
+            const extension = file.name.split('.').slice(-1)[0]
+            const isAcceptedType = ACCEPT_AVATAR_TYPES.split(',').includes(`.${extension}`);
+            return isLt20M && isAcceptedType;
+        });
+
+        if (filteredList.length === 0) {
+            setFileList(filteredList);
         } else {
             setFileList([
                 {
-                    ...newFileList[0],
+                    ...filteredList[0],
                     status: 'done',
                 },
-            ])
+            ]);
         }
-    }
-
+    };
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -285,7 +314,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                             // { required: true },
                             {
                                 pattern: new RegExp(/^[0-9]+$/),
-                                message: t('PLEASE_ENTER_ ONLY_NUMBER'),
+                                message: t('PLEASE_ENTER_ONLY_NUMBER'),
                             },
                         ]}
                         className="mb-0"
@@ -393,7 +422,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={9}/>
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={24}>

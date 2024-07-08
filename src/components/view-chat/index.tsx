@@ -833,8 +833,8 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                             </Row>
                         ) : (
                             <>
-                                <div className="relative mb-2 flex h-[7%] w-full items-center bg-[#5151e5] px-2">
-                                    <span className="text-xl font-medium text-[#ffffff]">
+                                <div className="relative flex h-[7%] w-full items-center bg-[#5151e5] px-2">
+                                    <span className="max-w-[90%] truncate text-xl font-medium text-[#ffffff]	">
                                         Chat {meetingInfo.title}
                                     </span>
                                     <MinusOutlined
@@ -1387,6 +1387,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                                 disabled={
                                                     !controlAlowChat.allowSendMess
                                                 }
+                                                maxLength={999}
                                             />
                                             <Button
                                                 type="primary"

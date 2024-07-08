@@ -17,6 +17,7 @@ const withAuthAdmin = <P extends object>(
                     notification.error({
                         message: t('ERROR_LOGIN_ADMIN'),
                         description: t('MESSAGE_FAILED_LOGIN_ADMIN'),
+                        duration: 3,
                     })
                 }
                 router.push('/login')

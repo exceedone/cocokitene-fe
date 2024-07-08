@@ -76,6 +76,7 @@ const SaveCreateBoardMeetingButton = () => {
                 notification.success({
                     message: t('CREATED'),
                     description: t('CREATE_BOARD_MEETING_SUCCESSFULLY'),
+                    duration: 2,
                 })
                 resetData()
                 setStatus(FETCH_STATUS.SUCCESS)
@@ -85,6 +86,7 @@ const SaveCreateBoardMeetingButton = () => {
             notification.error({
                 message: 'Error',
                 description: 'Something went wrong!',
+                duration: 2,
             })
             setStatus(FETCH_STATUS.ERROR)
         }

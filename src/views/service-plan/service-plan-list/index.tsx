@@ -2,6 +2,9 @@ import { useListPlan } from '@/stores/service-plan/hooks'
 import PlanItem from './plan-card'
 
 import Sliders from 'react-slick'
+import { EActionStatus } from '@/stores/type'
+import Loader from '@/components/loader'
+import EmptyServicePlan from './empty-plan'
 
 const PlanList = ({ add }: { add?: boolean }) => {
     const { planState } = useListPlan()
@@ -17,6 +20,14 @@ const PlanList = ({ add }: { add?: boolean }) => {
             return <div className="dot"></div>
         },
         dotsClass: 'slick-dots slick-thumb',
+    }
+
+    if (!planState || planState?.status === EActionStatus.Pending) {
+        return <Loader />
+    }
+
+    if (planState?.planList.length == 0) {
+        return <EmptyServicePlan />
     }
 
     return (

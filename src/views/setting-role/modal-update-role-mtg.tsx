@@ -62,6 +62,7 @@ const ModalUpdateRoleMtg = () => {
                     notification.error({
                         message: t('ERROR'),
                         description: error.response?.data.info.message,
+                        duration: 3,
                     })
                 }
 
@@ -126,6 +127,7 @@ const ModalUpdateRoleMtg = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: error?.response?.data.info.message,
+                    duration: 3,
                 })
             }
         }

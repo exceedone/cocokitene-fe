@@ -116,6 +116,7 @@ const DetailReportItem = ({
             notification.success({
                 message: t('VOTED_PROPOSAL'),
                 description: t('CHANGE_VOTE_RESULT_PROPOSAL_SUCCESSFULLY'),
+                duration: 2,
             })
         } catch (error) {
             setVoteStatus(FETCH_STATUS.ERROR)

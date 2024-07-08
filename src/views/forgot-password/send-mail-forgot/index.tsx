@@ -25,6 +25,7 @@ const SendMailForgot = () => {
                 notification.success({
                     message: t('SUCCESS'),
                     description: t('SUCCESS_SEND_EMAIL_TO_SYSTEM_ADMIN'),
+                    duration: 2,
                 })
             }
             setEmailForgotPassword(values?.email)
@@ -34,6 +35,7 @@ const SendMailForgot = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: t('SYSADMIN_NOT_EXITED'),
+                    duration: 3,
                 })
             }
         }

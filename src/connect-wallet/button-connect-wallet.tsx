@@ -171,7 +171,7 @@ const ButtonConnectWallet = ({
                                                                             /^\d{10}$/,
                                                                         ),
                                                                     message: t(
-                                                                        'PLEASE_ENTER_ ONLY_NUMBER_AND_LENGTH_EQUAL_10',
+                                                                        'PLEASE_ENTER_ONLY_NUMBER_AND_LENGTH_EQUAL_10',
                                                                     ),
                                                                 },
                                                             ]}

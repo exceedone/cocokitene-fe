@@ -46,6 +46,7 @@ const ConfirmCodeForgot = () => {
             notification.success({
                 message: t('SUCCESS'),
                 description: response,
+                duration: 2,
             })
             setCountdown(accessTime)
             setIsLoading(false)
@@ -54,6 +55,7 @@ const ConfirmCodeForgot = () => {
                 notification.error({
                     message: t('ERROR'),
                     description: error.response?.data.info.message,
+                    duration: 3,
                 })
             }
         }

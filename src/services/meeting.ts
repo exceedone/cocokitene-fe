@@ -2,6 +2,7 @@ import { IGetAllMeetingQuery, IMeeting } from '@/stores/meeting/types'
 import { get, patch, post } from './fetcher'
 import { ICreateMeetingPayload, IUpdateMeetingPayload } from './request.type'
 import {
+    IDataHashMeeting,
     IGetAllDataReponse,
     IMeetingDetailResponse,
     IMeetingParticipantsResponse,
@@ -65,6 +66,12 @@ const serviceMeeting = {
         )
         return response.data
     },
+    getDataHashMeeting: async (meetingId: number) => {
+        const response = await get<IDataHashMeeting>(
+            `/meetings/${meetingId}/dataHash`
+        )
+        return response.data
+    }
 }
 
 export default serviceMeeting

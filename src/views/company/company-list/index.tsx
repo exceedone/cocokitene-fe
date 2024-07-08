@@ -3,6 +3,7 @@ import { useListCompany } from '@/stores/company/hooks'
 import { ICompanyList } from '@/stores/company/type'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { getFirstCharacterUpperCase } from '@/utils/get-first-character'
+import EmptyData from '@/views/service-plan/service-plan-list/empty-plan'
 import { EditTwoTone, EyeTwoTone } from '@ant-design/icons'
 import { Avatar, Badge, Typography } from 'antd'
 import Table, { ColumnsType } from 'antd/es/table'
@@ -23,6 +24,10 @@ interface CompanyListProps {
 const CompanyList = ({ data }: CompanyListProps) => {
     const t = useTranslations()
     const router = useRouter()
+
+    let locale = {
+        emptyText: <EmptyData />,
+    }
 
     const columns: ColumnsType<ICompanyList> = [
         {
@@ -162,6 +167,7 @@ const CompanyList = ({ data }: CompanyListProps) => {
                     total: companyState.totalCompanyItem,
                     onChange: handlePageChange,
                 }}
+                locale={locale}
             />
         </div>
     )

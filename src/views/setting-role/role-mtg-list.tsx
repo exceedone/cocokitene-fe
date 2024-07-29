@@ -168,4 +168,4 @@ const RoleMtgList = () => {
     )
 }
 
-export default withAuth(RoleMtgList, Permissions.LIST_ROLE_MTG)
+export default withAuth(RoleMtgList, Permissions.SETTING_PERMISSION_FOR_ROLES)

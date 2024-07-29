@@ -37,11 +37,11 @@ export const getAllCompany = createAsyncThunk<
         const data = await serviceCompany.getAllCompanys(param)
         const mappedData = data.items.map((item, index) => {
             return {
-                id: item.companys_id,
+                id: item.company_id,
                 index: index + 1,
-                companyName: item.companys_company_name,
+                companyName: item.company_company_name,
                 servicePlan: item.planName,
-                representative: item.companys_representative_user,
+                representative: item.company_representative,
                 totalCreatedAccount: item.totalCreatedAccount,
                 totalCreatedMTGs: item.totalCreatedMTGs,
                 status: item.companyStatus,

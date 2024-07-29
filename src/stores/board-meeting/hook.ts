@@ -217,7 +217,7 @@ export function useReports(type: ResolutionType): {
 //     notVoteYet: number
 //     voteResult: VoteProposalOption
 //     id: number
-//
+
 // }[] {
 //     const boardMeetingDetail = useAppSelector(
 //         (state: RootState) => state.boardMeetingDetail.boardMeeting,
@@ -228,7 +228,7 @@ export function useReports(type: ResolutionType): {
 //         const notVoteYet = Number(report.notVoteYetQuantity)
 //         const voted = Number(report.votedQuantity)
 //         const unVoted = Number(report.unVotedQuantity)
-//
+
 //         return {
 //             id: report.id,
 //             title: report.title,

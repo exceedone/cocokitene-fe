@@ -8,6 +8,7 @@ import AmendmentResolutions from '@/views/meeting/meeting-update/amendment-resol
 import MeetingInformation from '@/views/meeting/meeting-update/meeting-information'
 import Participants from '@/views/meeting/meeting-update/participants'
 import Resolutions from '@/views/meeting/meeting-update/resolutions'
+import Candidate from '@/views/meeting/meeting-update/candidate'
 import SaveUpdateMeetingButton from '@/views/meeting/meeting-update/save-button'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
@@ -21,6 +22,8 @@ const MeetingUpdate = () => {
     const params = useParams()
 
     const meetingId = Number(params.id)
+
+    console.log('data.personnel: ', data.personnelVoting)
 
     useEffect(() => {
         if (meetingId) {
@@ -42,6 +45,7 @@ const MeetingUpdate = () => {
                 <MeetingInformation />
                 <Resolutions />
                 <AmendmentResolutions />
+                <Candidate />
                 <Participants />
             </div>
         </div>

@@ -18,6 +18,7 @@ const SaveCreateMeetingButton = () => {
     const onValidate = (data: ICreateMeeting) => {
         const payload = {
             ...data,
+            title: data.title.trim(),
             meetingLink:
                 data.meetingLink && !data.meetingLink.startsWith('https://')
                     ? `https://${data.meetingLink}`
@@ -27,12 +28,34 @@ const SaveCreateMeetingButton = () => {
                 roleName: p.roleName,
                 userIds: p.userParticipant.map((user) => user.users_id),
             })),
-            resolutions: data.resolutions.filter(
-                (r) => r.title.trim() || r.description.trim(),
+            resolutions: data.resolutions.map((resolution) => ({
+                ...resolution,
+                title: resolution.title.trim(),
+                description: resolution.description.trim(),
+            })),
+            amendmentResolutions: data.amendmentResolutions.map(
+                (amendment) => ({
+                    ...amendment,
+                    title: amendment.title.trim(),
+                    description: amendment.description.trim(),
+                    oldDescription: amendment.oldDescription?.trim(),
+                }),
             ),
-            amendmentResolutions: data.amendmentResolutions.filter(
-                (r) => r.title.trim() || r.description.trim(),
-            ),
+            personnelVoting: [
+                ...data.personnelVoting.confidence,
+                ...data.personnelVoting.notConfidence,
+            ].map((personnel) => ({
+                title: personnel.title.trim(),
+                type: personnel.type,
+                candidate: personnel.candidate
+                    .filter((candidate) => candidate.candidateName.trim())
+                    .map((candidate) => {
+                        return {
+                            ...candidate,
+                            candidateName: candidate.candidateName.trim(),
+                        }
+                    }),
+            })),
         }
 
         const rs: {
@@ -54,8 +77,37 @@ const SaveCreateMeetingButton = () => {
             rs.isValid = false
             rs.errors.meetingLink = 'meetingLink'
         }
+
+        //Check
+        if (
+            payload.resolutions.some((resolution) => !resolution.title.trim())
+        ) {
+            rs.isValid = false
+            rs.errors.resolutions = 'resolutions'
+        }
+
+        if (
+            payload.amendmentResolutions.some(
+                (amendment) => !amendment.title.trim(),
+            )
+        ) {
+            rs.isValid = false
+            rs.errors.amendmentResolutions = 'amendmentResolutions'
+        }
+
+        if (
+            payload.personnelVoting.some(
+                (personnel) =>
+                    !personnel.title.trim() || !personnel.candidate.length,
+            )
+        ) {
+            rs.isValid = false
+            rs.errors.personnelVoting = 'personnelVoting'
+        }
+
         return rs
     }
+
     const validate = onValidate(data)
 
     const onSave = () => {
@@ -65,6 +117,7 @@ const SaveCreateMeetingButton = () => {
         try {
             ;(async () => {
                 setStatus(FETCH_STATUS.LOADING)
+                console.log('payload: ', validate.payload)
                 const res = await serviceMeeting.createMeeting(validate.payload)
                 notification.success({
                     message: t('CREATED'),

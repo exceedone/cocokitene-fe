@@ -31,6 +31,7 @@ const ItemFutureMeeting = ({
     isJoined,
     meetings_status,
     meetings_note,
+    isParticipant,
 }: IMeetingItem) => {
     const router = useRouter()
     const t = useTranslations()
@@ -162,7 +163,8 @@ const ItemFutureMeeting = ({
                             : 'justify-end'
                     } gap-5 space-x-2 pr-5`}
                 >
-                    {meetings_status !== MeetingStatus.CANCELED ? (
+                    {meetings_status !== MeetingStatus.CANCELED &&
+                    isParticipant == 1 ? (
                         isJoined === 0 ? (
                             <Button
                                 type="primary"
@@ -225,7 +227,7 @@ const ItemFutureMeeting = ({
                 onOk={() => handleOk(meetings_id)}
                 onCancel={handleCancel}
                 okText={t('BTN_CONFIRM')}
-                cancelText={t('BTN_CANCLE')}
+                cancelText={t('BTN_CANCEL')}
             >
                 <p>{t('CONTENT_CONFIRM_MEETING_POPUP')}</p>
             </Modal>

@@ -14,7 +14,6 @@ import {
     UserStatusColor,
     UserStatusName,
 } from '@/constants/user-status'
-import serviceAccount from '@/services/account'
 import serviceShareholder from '@/services/shareholder'
 import serviceUpload from '@/services/upload'
 import serviceUserRole from '@/services/user-role'
@@ -133,13 +132,8 @@ const UpdateShareholder = () => {
                     shareholderId,
                 )
                 if (res) {
-                    const userCompanyName = authState.userData?.id
-                        ? (
-                              await serviceAccount.getDetailAccount(
-                                  authState.userData.id,
-                              )
-                          ).company.companyName
-                        : ''
+                    const userCompanyName =
+                        authState.userData?.companyName ?? ''
                     setInitShareholder({
                         companyName: userCompanyName,
                         email: res.email,
@@ -206,7 +200,7 @@ const UpdateShareholder = () => {
         if (shareholderId) {
             fetchData()
         }
-    }, [shareholderId])
+    }, [shareholderId, authState.userData])
     // upload image
     const beforeUpload = (file: RcFile) => {
         const isLt20M = file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024)

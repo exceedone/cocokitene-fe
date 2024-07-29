@@ -8,6 +8,7 @@ import {
 } from '@/constants/meeting'
 import { ElectionEnum } from '@/constants/election'
 import { UserMeetingStatusEnum } from '@/stores/attendance/type'
+import { IPersonnelVoting } from '@/services/response.type'
 
 export interface ICreateBoardMeeting {
     title: string
@@ -46,6 +47,7 @@ export interface IBoardMeetingReport {
 }
 
 export interface IBoardMeetingExecutive {
+    candidateID: number
     title: string
     type: number
     candidateName: string
@@ -87,7 +89,7 @@ export interface IBoardMeetingDetail {
     proposals: IBoardMeetingProposal[]
     managementAndFinancials: IBoardMeetingReport[]
     elections: IBoardMeetingReport[]
-    candidates: ICandidate[]
+    candidates: IPersonnelVoting[]
     participants: ParticipantDetailBoardMeeting[]
     boardsTotal: number
     boardsJoined: number
@@ -170,5 +172,6 @@ export interface IBoardMeetingUpdateCandidate {
     id?: number
     title: string
     type?: number
+    candidateId?: number
     candidateName: string
 }

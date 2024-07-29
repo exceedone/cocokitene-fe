@@ -176,4 +176,4 @@ const ChangeUserPassword = () => {
     )
 }
 
-export default withAuth(ChangeUserPassword, Permissions.EDIT_PROFILE)
+export default withAuth(ChangeUserPassword, Permissions.BASIC_PERMISSION)

@@ -32,7 +32,6 @@ const DetailCandidateItem = ({
     percentUnVoted,
     percentNotVoteYet,
     voteResult,
-
     id,
     voteErrorMessage = '',
 }: IDetailCandidateItem) => {
@@ -89,7 +88,7 @@ const DetailCandidateItem = ({
             })
             setVoteStatus(FETCH_STATUS.SUCCESS)
             notification.success({
-                message: t('VOTED_PROPOSAL'),
+                message: t('VOTED_CANDIDATE'),
                 description: t('CHANGE_VOTE_RESULT_CANDIDATE_SUCCESSFULLY'),
                 duration: 2,
             })

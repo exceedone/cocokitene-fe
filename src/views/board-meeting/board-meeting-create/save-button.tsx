@@ -18,20 +18,51 @@ const SaveCreateBoardMeetingButton = () => {
     const router = useRouter()
     const onValidate = (data: ICreateBoardMeeting) => {
         const payload = {
-            ...data,
+            title: data.title.trim(),
             meetingLink:
                 data.meetingLink && !data.meetingLink.startsWith('https://')
                     ? `https://${data.meetingLink}`
                     : data.meetingLink,
-            managementAndFinancials: data.managementAndFinancials.filter(
-                (r) => r.title.trim() || r.description.trim(),
+            startTime: data.startTime,
+            endTime: data.endTime,
+            endVotingTime: data.endVotingTime,
+            note: data.note,
+            meetingMinutes: data.meetingMinutes,
+            meetingInvitations: data.meetingInvitations,
+            // managementAndFinancials: data.managementAndFinancials.filter(
+            //     (r) => r.title.trim() || r.description.trim(),
+            // ),
+            // elections: data.elections.filter(
+            //     (r) => r.title.trim() || r.description.trim(),
+            // ),
+            // personnelVoting: data.candidates
+            //     .filter((r) => r.title.trim() || r.candidateName.trim())
+            //     .map((personnelVote) => ({
+            //         title: personnelVote.title,
+            //         type: personnelVote.type,
+            //         candidate: [{ candidateName: personnelVote.candidateName }],
+            //     })),
+            managementAndFinancials: data.managementAndFinancials.map(
+                (management) => ({
+                    ...management,
+                    title: management.title.trim(),
+                    description: management.description.trim(),
+                    oldDescription: management.oldDescription?.trim(),
+                }),
             ),
-            elections: data.elections.filter(
-                (r) => r.title.trim() || r.description.trim(),
-            ),
-            candidates: data.candidates.filter(
-                (r) => r.title.trim() || r.candidateName.trim(),
-            ),
+            elections: data.elections.map((election) => ({
+                ...election,
+                title: election.title.trim(),
+                description: election.description.trim(),
+                oldDescription: election.oldDescription?.trim(),
+            })),
+            personnelVoting: data.candidates.map((personnelVote) => ({
+                title: personnelVote.title.trim(),
+                type: personnelVote.type,
+                candidate: [
+                    { candidateName: personnelVote.candidateName.trim() },
+                ],
+            })),
             participants: data.participants?.map((participant) => {
                 return {
                     roleMtgId: participant.roleMtgId,
@@ -60,6 +91,35 @@ const SaveCreateBoardMeetingButton = () => {
             rs.isValid = false
             rs.errors.meetingLink = 'meetingLink'
         }
+
+        //Check
+        if (
+            payload.managementAndFinancials.some(
+                (management) => !management.title.trim(),
+            )
+        ) {
+            rs.isValid = false
+            rs.errors.resolutions = 'managementAndFinancials'
+        }
+
+        if (payload.elections.some((election) => !election.title.trim())) {
+            rs.isValid = false
+            rs.errors.resolutions = 'elections'
+        }
+
+        if (
+            payload.personnelVoting.some(
+                (personnel) =>
+                    !personnel.title.trim() ||
+                    personnel.candidate.some(
+                        (candidate) => !candidate.candidateName.trim(),
+                    ),
+            )
+        ) {
+            rs.isValid = false
+            rs.errors.resolutions = 'personnelVoting'
+        }
+
         return rs
     }
     const validate = onValidate(data)
@@ -70,6 +130,8 @@ const SaveCreateBoardMeetingButton = () => {
         try {
             ;(async () => {
                 setStatus(FETCH_STATUS.LOADING)
+                console.log('validate.payload: ', validate.payload)
+
                 const res = await serviceBoardMeeting.createBoardMeeting(
                     validate.payload,
                 )

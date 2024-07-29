@@ -96,7 +96,11 @@ const Elections = () => {
                     />
                 ))}
             </div>
-            <Button onClick={onAddNew} icon={<PlusOutlined />}>
+            <Button
+                onClick={onAddNew}
+                icon={<PlusOutlined />}
+                disabled={data.elections.length >= 10}
+            >
                 {t('ADD_NEW')}
             </Button>
         </BoxArea>

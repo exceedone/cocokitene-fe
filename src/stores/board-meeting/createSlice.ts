@@ -2,7 +2,6 @@ import {
     IBoardMeetingReport,
     ICreateBoardMeeting,
 } from '@/stores/board-meeting/types'
-import { ResolutionType } from '@/constants/resolution'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const initialState: ICreateBoardMeeting = {
@@ -15,29 +14,29 @@ const initialState: ICreateBoardMeeting = {
     meetingMinutes: [],
     meetingInvitations: [],
     managementAndFinancials: [
-        {
-            title: '',
-            description: '',
-            oldDescription: '',
-            files: [],
-            type: ResolutionType.MANAGEMENT_FINANCIAL,
-        },
+        // {
+        //     title: '',
+        //     description: '',
+        //     oldDescription: '',
+        //     files: [],
+        //     type: ResolutionType.MANAGEMENT_FINANCIAL,
+        // },
     ],
     elections: [
-        {
-            title: '',
-            description: '',
-            oldDescription: '',
-            files: [],
-            type: ResolutionType.ELECTION,
-        },
+        // {
+        //     title: '',
+        //     description: '',
+        //     oldDescription: '',
+        //     files: [],
+        //     type: ResolutionType.ELECTION,
+        // },
     ],
     candidates: [
-        {
-            title: '',
-            candidateName: '',
-            type: 1,
-        },
+        // {
+        //     title: '',
+        //     candidateName: '',
+        //     type: 1,
+        // },
     ],
     participants: [],
 }

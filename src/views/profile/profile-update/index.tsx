@@ -12,13 +12,11 @@ import {
     message,
     notification,
 } from 'antd'
-// import dayjs from 'dayjs'
 import { FETCH_STATUS } from '@/constants/common'
 import { useForm } from 'antd/es/form/Form'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Loader from '@/components/loader'
-import serviceAccount from '@/services/account'
 import { AxiosError } from 'axios'
 import { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface'
@@ -76,24 +74,15 @@ const UpdateMyProfile = () => {
         flag: boolean
     }>()
 
-    const params = useParams()
-    const myId: number = Number(params.id)
-
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = async (accountId: number) => {
             setInitStatus(FETCH_STATUS.LOADING)
             try {
-                const res = await serviceAccount.getDetailAccount(myId)
+                const res = await serviceProfile.getDetailProfile(accountId)
 
                 if (res) {
-                    const userCompanyName = authState.userData?.id
-                        ? (
-                              await serviceAccount.getDetailAccount(
-                                  authState.userData.id,
-                              )
-                          ).company.companyName
-                        : ''
-
+                    const userCompanyName =
+                        authState.userData?.companyName ?? ''
                     setInitAccount({
                         companyName: userCompanyName,
                         email: res.email,
@@ -127,10 +116,10 @@ const UpdateMyProfile = () => {
                 setInitStatus(FETCH_STATUS.ERROR)
             }
         }
-        if (myId) {
-            fetchData()
+        if (authState.userData?.id) {
+            fetchData(authState.userData.id)
         }
-    }, [myId])
+    }, [authState.userData?.id])
 
     // Upload Image
     const beforeUpload = (file: RcFile) => {
@@ -220,56 +209,56 @@ const UpdateMyProfile = () => {
         let urlAvatar: string = initAccount?.avatar || ''
 
         try {
-            if (fileAvatarInfo?.flag) {
-                const res = await serviceUpload.getPresignedUrlAvatar(
-                    [fileAvatarInfo?.file as File],
-                    AccountFileType.AVATAR,
-                    values.companyName + '_' + values.username + '-',
-                )
-                await serviceUpload.uploadFile(
-                    fileAvatarInfo?.file as File,
-                    res.uploadUrls[0],
-                )
-                urlAvatar = res.uploadUrls[0].split('?')[0]
-            } else {
-                if (fileList.length == 0) {
-                    urlAvatar = ''
+            if (authState.userData?.id) {
+                if (fileAvatarInfo?.flag) {
+                    const res = await serviceUpload.getPresignedUrlAvatar(
+                        [fileAvatarInfo?.file as File],
+                        AccountFileType.AVATAR,
+                        values.companyName + '_' + values.username + '-',
+                    )
+                    await serviceUpload.uploadFile(
+                        fileAvatarInfo?.file as File,
+                        res.uploadUrls[0],
+                    )
+                    urlAvatar = res.uploadUrls[0].split('?')[0]
+                } else {
+                    if (fileList.length == 0) {
+                        urlAvatar = ''
+                    }
                 }
-            }
 
-            const updateAccountResponse = await serviceProfile.updateProfile(
-                myId,
-                {
-                    username: values.username,
-                    email: values.email,
-                    walletAddress: walletAddress || null,
-                    phone: values.phone,
-                    avatar: urlAvatar,
-                },
-            )
+                const updateAccountResponse =
+                    await serviceProfile.updateProfile(authState.userData.id, {
+                        username: values.username,
+                        email: values.email,
+                        walletAddress: walletAddress || null,
+                        phone: values.phone,
+                        avatar: urlAvatar,
+                    })
 
-            if (updateAccountResponse) {
-                notification.success({
-                    message: t('UPDATED'),
-                    description: t('UPDATED_ACCOUNT_SUCCESSFULLY'),
-                    duration: 2,
-                })
+                if (updateAccountResponse) {
+                    notification.success({
+                        message: t('UPDATED'),
+                        description: t('UPDATED_ACCOUNT_SUCCESSFULLY'),
+                        duration: 2,
+                    })
 
-                setStatus(FETCH_STATUS.SUCCESS)
-                const newAuth: IAccount = {
-                    companyId: serviceUser.getInfoStorage()?.companyId || 1,
-                    companyName:
-                        serviceUser.getInfoStorage()?.companyName || '',
-                    email: values.email,
-                    id: myId,
-                    permissionKeys:
-                        serviceUser.getInfoStorage()?.permissionKeys || [],
-                    username: values.username,
-                    walletAddress: values.walletAddress || '',
-                    avatar: urlAvatar || '',
+                    setStatus(FETCH_STATUS.SUCCESS)
+                    const newAuth: IAccount = {
+                        companyId: serviceUser.getInfoStorage()?.companyId || 1,
+                        companyName:
+                            serviceUser.getInfoStorage()?.companyName || '',
+                        email: values.email,
+                        id: authState.userData.id,
+                        permissionKeys:
+                            serviceUser.getInfoStorage()?.permissionKeys || [],
+                        username: values.username,
+                        walletAddress: values.walletAddress || '',
+                        avatar: urlAvatar || '',
+                    }
+                    store?.dispatch(update(newAuth))
+                    router.push(`/profile`)
                 }
-                store?.dispatch(update(newAuth))
-                router.push(`/profile`)
             }
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -442,4 +431,4 @@ const UpdateMyProfile = () => {
     )
 }
 
-export default withAuth(UpdateMyProfile, Permissions.EDIT_PROFILE)
+export default withAuth(UpdateMyProfile, Permissions.BASIC_PERMISSION)

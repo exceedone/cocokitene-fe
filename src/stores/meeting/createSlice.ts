@@ -1,4 +1,4 @@
-import { ResolutionType } from '@/constants/resolution'
+// import { ResolutionType } from '@/constants/resolution'
 import { ICreateMeeting, IMeetingResolution } from '@/stores/meeting/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
@@ -12,22 +12,26 @@ const initialState: ICreateMeeting = {
     meetingMinutes: [],
     meetingInvitations: [],
     resolutions: [
-        {
-            title: '',
-            description: '',
-            files: [],
-            type: ResolutionType.RESOLUTION,
-        },
+        // {
+        //     title: '',
+        //     description: '',
+        //     files: [],
+        //     type: ResolutionType.RESOLUTION,
+        // },
     ],
     amendmentResolutions: [
-        {
-            title: '',
-            description: '',
-            files: [],
-            oldDescription: '',
-            type: ResolutionType.AMENDMENT_RESOLUTION,
-        },
+        // {
+        //     title: '',
+        //     description: '',
+        //     files: [],
+        //     oldDescription: '',
+        //     type: ResolutionType.AMENDMENT_RESOLUTION,
+        // },
     ],
+    personnelVoting:{
+        confidence: [],
+        notConfidence: [],
+    },
     participants: [],
 }
 

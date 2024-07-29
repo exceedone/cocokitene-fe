@@ -49,7 +49,7 @@ const CreateTitle = ({ pageName, saveButton }: ICreateTitle) => {
                 onOk={handleOk}
                 onCancel={handleCancel}
                 okText={t('BTN_CONFIRM')}
-                cancelText={t('BTN_CANCLE')}
+                cancelText={t('BTN_CANCEL')}
             >
                 <p>{t('CONTENT_CONFIRM_BACK')}</p>
             </Modal>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import withAuth from '@/components/component-auth'
-import { FETCH_STATUS } from '@/constants/common'
+import { CONSTANT_EMPTY_STRING, FETCH_STATUS } from '@/constants/common'
 import { Permissions } from '@/constants/permission'
 import { IUpdatePermissionRole } from '@/services/request.type'
 import serviceSettingRole from '@/services/setting-role'
@@ -70,6 +70,10 @@ const SettingRoleView = () => {
         getAllCombineRoleWithPermission({
             searchQuery: settingRoleState.filter.searchQuery,
         })
+
+        return () => {
+            setFilterAction({ searchQuery: CONSTANT_EMPTY_STRING })
+        }
     }, [])
 
     useEffect(() => {
@@ -324,6 +328,7 @@ const SettingRoleView = () => {
     const [choiceTab, setChoiceTab] = useState<boolean>(true)
 
     const handleToggleTab = (key: string) => {
+        setFilterAction({ searchQuery: CONSTANT_EMPTY_STRING })
         setChoiceTab(key === 'roleSys')
     }
 

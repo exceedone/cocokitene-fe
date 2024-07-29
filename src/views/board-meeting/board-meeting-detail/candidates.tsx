@@ -52,13 +52,19 @@ const Candidates = () => {
         return message
         // eslint-disable-next-line
     }, [boardMeeting, authState])
-    const appointMents = boardMeeting?.candidates?.filter(
-        (item) => item.typeElection.status === ElectionEnum.VOTE_OF_CONFIDENCE,
-    )
-    const dismissals = boardMeeting?.candidates?.filter(
-        (item) =>
-            item.typeElection.status === ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
-    )
+    const appointMents = boardMeeting?.candidates
+        ?.filter(
+            (item) =>
+                item.typeElection.status === ElectionEnum.VOTE_OF_CONFIDENCE,
+        )
+        .sort((a, b) => a.id - b.id)
+    const dismissals = boardMeeting?.candidates
+        ?.filter(
+            (item) =>
+                item.typeElection.status ===
+                ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+        )
+        .sort((a, b) => a.id - b.id)
     const bodyDismissals = useMemo(() => {
         if (dismissals?.length === 0) {
             return (
@@ -70,39 +76,42 @@ const Candidates = () => {
                 />
             )
         }
-        return dismissals?.map((candidate, index) => {
-            const notVoteYetQuantity = Number(candidate.notVoteYetQuantity)
-            const votedQuantity = Number(candidate.votedQuantity)
-            const unVotedQuantity = Number(candidate.unVotedQuantity)
-            const totalParticipantSeparate =
-                notVoteYetQuantity + votedQuantity + unVotedQuantity
-            const percentVoted =
-                totalParticipantSeparate === 0
-                    ? 0
-                    : (votedQuantity * 100) / totalParticipantSeparate
-            const percentUnVoted =
-                totalParticipantSeparate === 0
-                    ? 0
-                    : (unVotedQuantity * 100) / totalParticipantSeparate
-            const percentNotVoteYet =
-                totalParticipantSeparate === 0
-                    ? 0
-                    : (notVoteYetQuantity * 100) / totalParticipantSeparate
+        // return dismissals?.map((candidate, index) => {
+        return dismissals?.map((personnelVoting, index) => {
+            return personnelVoting.candidate.map((candidate, index) => {
+                const notVoteYetQuantity = Number(candidate.notVoteYetQuantity)
+                const votedQuantity = Number(candidate.votedQuantity)
+                const unVotedQuantity = Number(candidate.unVotedQuantity)
+                const totalParticipantSeparate =
+                    notVoteYetQuantity + votedQuantity + unVotedQuantity
+                const percentVoted =
+                    totalParticipantSeparate === 0
+                        ? 0
+                        : (votedQuantity * 100) / totalParticipantSeparate
+                const percentUnVoted =
+                    totalParticipantSeparate === 0
+                        ? 0
+                        : (unVotedQuantity * 100) / totalParticipantSeparate
+                const percentNotVoteYet =
+                    totalParticipantSeparate === 0
+                        ? 0
+                        : (notVoteYetQuantity * 100) / totalParticipantSeparate
 
-            return (
-                <DetailCandidateItem
-                    index={index + 1}
-                    key={candidate.id}
-                    content={candidate.candidateName}
-                    percentVoted={percentVoted}
-                    percentUnVoted={percentUnVoted}
-                    percentNotVoteYet={percentNotVoteYet}
-                    voteResult={candidate.voteResult}
-                    id={candidate.id}
-                    title={candidate.title}
-                    voteErrorMessage={notifiEnableVote}
-                />
-            )
+                return (
+                    <DetailCandidateItem
+                        index={index + 1}
+                        key={candidate.id}
+                        content={candidate.candidateName}
+                        percentVoted={percentVoted}
+                        percentUnVoted={percentUnVoted}
+                        percentNotVoteYet={percentNotVoteYet}
+                        voteResult={candidate.voteResult}
+                        id={candidate.id}
+                        title={personnelVoting.title}
+                        voteErrorMessage={notifiEnableVote}
+                    />
+                )
+            })
         })
     }, [notifiEnableVote, appointMents])
 
@@ -117,39 +126,41 @@ const Candidates = () => {
                 />
             )
         }
-        return appointMents?.map((candidate, index) => {
-            const notVoteYetQuantity = Number(candidate.notVoteYetQuantity)
-            const votedQuantity = Number(candidate.votedQuantity)
-            const unVotedQuantity = Number(candidate.unVotedQuantity)
-            const totalParticipantSeparate =
-                notVoteYetQuantity + votedQuantity + unVotedQuantity
-            const percentVoted =
-                totalParticipantSeparate === 0
-                    ? 0
-                    : (votedQuantity * 100) / totalParticipantSeparate
-            const percentUnVoted =
-                totalParticipantSeparate === 0
-                    ? 0
-                    : (unVotedQuantity * 100) / totalParticipantSeparate
-            const percentNotVoteYet =
-                totalParticipantSeparate === 0
-                    ? 0
-                    : (notVoteYetQuantity * 100) / totalParticipantSeparate
+        return appointMents?.map((personnelVoting, i) => {
+            return personnelVoting.candidate.map((candidate, index) => {
+                const notVoteYetQuantity = Number(candidate.notVoteYetQuantity)
+                const votedQuantity = Number(candidate.votedQuantity)
+                const unVotedQuantity = Number(candidate.unVotedQuantity)
+                const totalParticipantSeparate =
+                    notVoteYetQuantity + votedQuantity + unVotedQuantity
+                const percentVoted =
+                    totalParticipantSeparate === 0
+                        ? 0
+                        : (votedQuantity * 100) / totalParticipantSeparate
+                const percentUnVoted =
+                    totalParticipantSeparate === 0
+                        ? 0
+                        : (unVotedQuantity * 100) / totalParticipantSeparate
+                const percentNotVoteYet =
+                    totalParticipantSeparate === 0
+                        ? 0
+                        : (notVoteYetQuantity * 100) / totalParticipantSeparate
 
-            return (
-                <DetailCandidateItem
-                    index={index + 1}
-                    key={candidate.id}
-                    content={candidate.candidateName}
-                    percentVoted={percentVoted}
-                    percentUnVoted={percentUnVoted}
-                    percentNotVoteYet={percentNotVoteYet}
-                    voteResult={candidate.voteResult}
-                    id={candidate.id}
-                    title={candidate.title}
-                    voteErrorMessage={notifiEnableVote}
-                />
-            )
+                return (
+                    <DetailCandidateItem
+                        index={i + 1}
+                        key={candidate.id}
+                        content={candidate.candidateName}
+                        percentVoted={percentVoted}
+                        percentUnVoted={percentUnVoted}
+                        percentNotVoteYet={percentNotVoteYet}
+                        voteResult={candidate.voteResult}
+                        id={candidate.id}
+                        title={personnelVoting.title}
+                        voteErrorMessage={notifiEnableVote}
+                    />
+                )
+            })
         })
     }, [notifiEnableVote, appointMents])
 

@@ -218,7 +218,9 @@ const MeetingInformation = () => {
                 dt.endTime = new Date(dateString[1]).toISOString()
             }
         } else {
-            dt.endVotingTime = new Date(dateString as string).toISOString()
+            if (dateString) {
+                dt.endVotingTime = new Date(dateString as string).toISOString()
+            }
         }
 
         setData(dt)
@@ -266,7 +268,7 @@ const MeetingInformation = () => {
                     <Form layout="vertical">
                         <Form.Item
                             name="meetingLink"
-                            label={t('MEETING_LINK')}
+                            label={t('MEETING_LINKS')}
                             className="mb-0"
                             rules={[
                                 {

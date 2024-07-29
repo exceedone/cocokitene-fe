@@ -106,8 +106,6 @@ const DetailInformation = () => {
 
     const t = useTranslations()
 
-    // console.log('meeting:', meeting?.participants)
-
     useEffect(() => {
         // calculate quantityShare in Meeting of User
         const listShareholderParticipant = meeting?.participants

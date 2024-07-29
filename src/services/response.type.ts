@@ -101,16 +101,28 @@ export interface IBoardMeetingProposalResponse {
 
 export interface ICandidateResponse {
     id: number
-    title: string
+    // title: string
     candidateName: string
+    personnelVotingId: number
     // type: ElectionEnum
-    type: number
+    // type: number
     votedQuantity: number | null
     unVotedQuantity: number | null
     notVoteYetQuantity: number | null
     voteResult: VoteProposalOption
+    votedQuantityShare: number | null
+    // meetingId: number
+    creatorId: number
+}
+
+export interface IPersonnelVoting {
+    id: number
+    title: string
+    type: number
     meetingId: number
     creatorId: number
+    candidate: ICandidateResponse[]
+    typeElection: IElectionResponse
 }
 
 // export interface IUserMeetingResponse {
@@ -145,6 +157,7 @@ export interface IMeetingDetailResponse {
     type: MeetingType
     meetingFiles: IMeetingFileResponse[]
     proposals: IProposalResponse[]
+    personnelVoting: IPersonnelVoting[]
     participants: ParticipantDetailMeetingResponse[]
     shareholdersTotal: number
     shareholdersJoined: number
@@ -167,7 +180,7 @@ export interface IBoardMeetingDetailResponse {
     type: MeetingType
     meetingFiles: IBoardMeetingFileResponse[]
     proposals: IBoardMeetingProposalResponse[]
-    candidates: ICandidateResponse[]
+    personnelVoting: IPersonnelVoting[]
     participants: ParticipantDetailMeetingResponse[]
     boardsTotal: number
     boardsJoined: number

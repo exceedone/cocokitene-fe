@@ -46,10 +46,8 @@ const ItemPastMeeting = ({
         Permissions.DETAIL_MEETING,
     )
 
-    const permissionCheckData = checkPermission(
-        authState.userData?.permissionKeys,
-        Permissions.CHECK_DATA_MEETING,
-    )
+    const permissionCheckData =
+        !!transaction_key_query && !!transaction_contract_address
 
     const copyToClipboard = async () => {
         if (transaction_key_query) {

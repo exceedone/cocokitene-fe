@@ -32,6 +32,7 @@ export const getMeetingDetail = createAsyncThunk<
             creatorId: meetingDetail.creatorId,
             meetingFiles: meetingDetail.meetingFiles,
             proposals: meetingDetail.proposals,
+            personnelVoting: meetingDetail.personnelVoting,
             participants: meetingDetail.participants,
             type: meetingDetail.type,
             shareholdersTotal: meetingDetail.shareholdersTotal,
@@ -56,7 +57,7 @@ const meetingDetailSlice = createSlice({
     reducers: {
         resetStatus(state) {
             state.status = EActionStatus.Idle
-        }
+        },
     },
     extraReducers: (builder) => {
         builder

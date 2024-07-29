@@ -11,7 +11,7 @@ const serviceRoleMtg = {
         const payload = { page, limit, type }
         const response: { data: IGetAllDataReponse<IRoleMtgResponse> } =
             await get('/role-mtgs/types', payload)
-        return response.data.items
+        return response.data?.items
     },
 }
 

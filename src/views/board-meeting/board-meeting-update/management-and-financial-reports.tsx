@@ -107,7 +107,11 @@ const ManagementAndFinancialReports = () => {
                     />
                 ))}
             </div>
-            <Button onClick={onAddNew} icon={<PlusOutlined />}>
+            <Button
+                onClick={onAddNew}
+                icon={<PlusOutlined />}
+                disabled={data.managementAndFinancials.length >= 10}
+            >
                 {t('ADD_NEW')}
             </Button>
         </BoxArea>

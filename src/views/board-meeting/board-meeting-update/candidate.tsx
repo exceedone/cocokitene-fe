@@ -60,6 +60,7 @@ const Candidate = () => {
             candidates: [
                 ...data.candidates,
                 {
+                    id: Math.random(),
                     title: '',
                     candidateName: '',
                     type: defaultElection,
@@ -80,7 +81,7 @@ const Candidate = () => {
             <div className="mb-6 flex flex-col gap-6">
                 {data.candidates.map((x, index) => (
                     <UpdateCandidateItem
-                        key={index}
+                        key={x.id}
                         type={ResolutionType.EXECUTIVE_OFFICER}
                         index={index + 1}
                         title={data.candidates[index].title}
@@ -94,7 +95,11 @@ const Candidate = () => {
                 ))}
             </div>
 
-            <Button onClick={onAddNew} icon={<PlusOutlined />}>
+            <Button
+                onClick={onAddNew}
+                icon={<PlusOutlined />}
+                disabled={data.candidates.length >= 10}
+            >
                 {t('ADD_NEW')}
             </Button>
         </BoxArea>

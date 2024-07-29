@@ -19,6 +19,7 @@ const SaveUpdateBoardMeetingButton = () => {
     const onValidate = (data: IUpdateBoardMeeting) => {
         const payload = {
             ...data,
+            title: data.title.trim(),
             meetingLink:
                 data.meetingLink && !data.meetingLink.startsWith('https://')
                     ? `https://${data.meetingLink}`
@@ -28,16 +29,40 @@ const SaveUpdateBoardMeetingButton = () => {
                 roleName: p.roleName,
                 userIds: p.userParticipant.map((user) => user.users_id),
             })),
-            managementAndFinancials: data.managementAndFinancials.filter(
-                (report) => report.title.trim() || report.description.trim(),
+            // managementAndFinancials: data.managementAndFinancials.filter(
+            //     (report) => report.title.trim() || report.description.trim(),
+            // ),
+            managementAndFinancials: data.managementAndFinancials.map(
+                (management) => ({
+                    ...management,
+                    title: management.title.trim(),
+                    description: management.description.trim(),
+                    oldDescription: management.oldDescription?.trim(),
+                }),
             ),
-            elections: data.elections.filter(
-                (report) => report.title.trim() || report.description.trim(),
-            ),
-            candidates: data.candidates.filter(
-                (candidate) =>
-                    candidate.title.trim() || candidate.candidateName.trim(),
-            ),
+            // elections: data.elections.filter(
+            //     (report) => report.title.trim() || report.description.trim(),
+            // ),
+            elections: data.elections.map((election) => ({
+                ...election,
+                title: election.title.trim(),
+                description: election.description.trim(),
+                oldDescription: election.oldDescription?.trim(),
+            })),
+            personnelVoting: data.candidates.map((personnelVote) => ({
+                id:
+                    personnelVote.id && personnelVote.id > 1
+                        ? personnelVote.id
+                        : undefined,
+                title: personnelVote.title.trim(),
+                type: personnelVote.type,
+                candidate: [
+                    {
+                        id: personnelVote.candidateId,
+                        candidateName: personnelVote.candidateName.trim(),
+                    },
+                ],
+            })),
         }
 
         const rs: {
@@ -58,6 +83,33 @@ const SaveUpdateBoardMeetingButton = () => {
         if (!urlRegex.test(payload.meetingLink)) {
             rs.isValid = false
             rs.errors.meetingLink = 'meetingLink'
+        }
+
+        if (
+            payload.managementAndFinancials.some(
+                (management) => !management.title.trim(),
+            )
+        ) {
+            rs.isValid = false
+            rs.errors.resolutions = 'managementAndFinancials'
+        }
+
+        if (payload.elections.some((election) => !election.title.trim())) {
+            rs.isValid = false
+            rs.errors.resolutions = 'elections'
+        }
+
+        if (
+            payload.personnelVoting.some(
+                (personnel) =>
+                    !personnel.title.trim() ||
+                    personnel.candidate.some(
+                        (candidate) => !candidate.candidateName.trim(),
+                    ),
+            )
+        ) {
+            rs.isValid = false
+            rs.errors.resolutions = 'personnelVoting'
         }
 
         return rs

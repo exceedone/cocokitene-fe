@@ -8,7 +8,7 @@ import { checkPermission } from '@/utils/auth'
 import { Permissions } from '@/constants/permission'
 import { useListMeeting } from '@/stores/meeting/hooks'
 import { useEffect } from 'react'
-import { MeetingTime, MeetingType } from '@/constants/meeting'
+import { MeetingTime, MeetingType, SORT, SortField } from '@/constants/meeting'
 import { EActionStatus } from '@/stores/type'
 import ListTitle from '@/components/content-page-title/list-title'
 import { Button } from 'antd'
@@ -17,6 +17,7 @@ import ListBoardMeetingFuture from '@/views/board-meeting/board-meeting-list/lis
 import ListBoardMeetingPast from './board-meeting-list/list-board-meeting-pass'
 import withAuth from '@/components/component-auth'
 import { useListBoardMeeting } from '@/stores/board-meeting/hook'
+import { CONSTANT_EMPTY_STRING } from '@/constants/common'
 
 const BoardMeetingList = () => {
     const router = useRouter()
@@ -35,6 +36,17 @@ const BoardMeetingList = () => {
         getListPassBoardMeetingAction,
         setFilterAction,
     } = useListBoardMeeting()
+
+    useEffect(() => {
+        return () => {
+            setFilterAction({
+                searchQuery: CONSTANT_EMPTY_STRING,
+                sortOrder: SORT.DESC,
+                sortField: SortField.START_TIME,
+            })
+        }
+    }, [])
+
     useEffect(() => {
         getListFutureBoardMeetingAction({
             page: boardMeetingState.page,

@@ -10,6 +10,8 @@ import { checkPermission } from '@/utils/auth'
 import { Permissions } from '@/constants/permission'
 import withAuth from '@/components/component-auth'
 import AccountList from '@/views/account/account-list'
+import { CONSTANT_EMPTY_STRING } from '@/constants/common'
+import { SORT } from '@/constants/meeting'
 
 const AccountView = () => {
     const t = useTranslations()
@@ -21,6 +23,15 @@ const AccountView = () => {
         authState.userData?.permissionKeys,
         Permissions.CREATE_ACCOUNT,
     )
+
+    useEffect(() => {
+        return () => {
+            setFilterAction({
+                searchQuery: CONSTANT_EMPTY_STRING,
+                sortOrder: SORT.DESC,
+            })
+        }
+    }, [])
 
     useEffect(() => {
         getListAccountAction({

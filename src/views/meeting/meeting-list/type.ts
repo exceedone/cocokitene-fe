@@ -9,4 +9,5 @@ export interface IMeetingItem {
     meetings_status: string
     transaction_contract_address?: string
     transaction_key_query?: string
+    isParticipant: number
 }

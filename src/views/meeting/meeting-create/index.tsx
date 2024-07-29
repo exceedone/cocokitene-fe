@@ -10,6 +10,7 @@ import Resolutions from '@/views/meeting/meeting-create/resolutions'
 import SaveCreateMeetingButton from '@/views/meeting/meeting-create/save-button'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
+import Candidate from './candidate'
 
 const MeetingCreate = () => {
     const t = useTranslations()
@@ -29,6 +30,7 @@ const MeetingCreate = () => {
                 <MeetingInformation />
                 <Resolutions />
                 <AmendmentResolutions />
+                <Candidate />
                 <Participants />
             </div>
         </div>

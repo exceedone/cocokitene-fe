@@ -1,4 +1,3 @@
-import { useAccountDetail } from '@/stores/account/hook'
 import { useTranslations } from 'next-intl'
 import { IRowMyInforInfo, RowMyInforInfo } from './profile-rowinfo'
 import { Avatar, Col, Row } from 'antd'
@@ -11,13 +10,17 @@ import Color from 'color'
 import { AvatarBgHexColors } from '@/constants/common'
 import { getFirstCharacterUpperCase } from '@/utils/get-first-character'
 import RoleInfo from '@/components/role-info'
+import { IAccountDetail } from '@/stores/account/type'
 
-const MyProfileInfo = () => {
+interface IProfileDetail {
+    data: IAccountDetail | undefined
+}
+
+const MyProfileInfo = ({ data }: IProfileDetail) => {
     const t = useTranslations()
-    const [{ account }] = useAccountDetail()
 
     const backgroundAvatarColor = Color(
-        account?.defaultAvatarHashColor || AvatarBgHexColors.GOLDEN_PURPLE,
+        data?.defaultAvatarHashColor || AvatarBgHexColors.GOLDEN_PURPLE,
     )
         .lighten(0.6)
         .hex()
@@ -27,7 +30,7 @@ const MyProfileInfo = () => {
             label: 'COMPANY',
             content: (
                 <p className="truncate hover:text-clip">
-                    {account?.companyName || ''}
+                    {data?.companyName || ''}
                 </p>
             ),
             lg: 6,
@@ -35,9 +38,7 @@ const MyProfileInfo = () => {
         {
             label: 'PHONE',
             content: (
-                <p className="truncate hover:text-clip">
-                    {account?.phone || ''}
-                </p>
+                <p className="truncate hover:text-clip">{data?.phone || ''}</p>
             ),
             lg: 6,
         },
@@ -45,7 +46,7 @@ const MyProfileInfo = () => {
             label: 'ROLE',
             content: (
                 <div className="mt-[-2px] flex gap-1 truncate hover:text-clip">
-                    {account?.roles.map((item) => (
+                    {data?.roles.map((item) => (
                         <RoleInfo key={item.id} roleName={item.roleName} />
                     ))}
                 </div>
@@ -56,7 +57,7 @@ const MyProfileInfo = () => {
             label: 'WALLET_ADDRESS',
             content: (
                 <p className="max-w-[415px] truncate hover:text-clip">
-                    {account?.walletAddress || ''}
+                    {data?.walletAddress || ''}
                 </p>
             ),
             lg: 6,
@@ -66,13 +67,13 @@ const MyProfileInfo = () => {
     const dataAccountDetailRight: IRowMyInforInfo[] = [
         {
             label: 'USERNAME',
-            content: account?.userName && (
+            content: data?.userName && (
                 <div
                     className={`mt-[-1px] flex flex-wrap content-start items-center gap-[4px]`}
                 >
-                    {account?.avatar ? (
+                    {data?.avatar ? (
                         <Avatar
-                            src={account.avatar}
+                            src={data.avatar}
                             alt="avatar-alt"
                             size="small"
                             style={{
@@ -85,15 +86,15 @@ const MyProfileInfo = () => {
                                 backgroundColor: backgroundAvatarColor,
                                 verticalAlign: 'middle',
                                 color:
-                                    account?.defaultAvatarHashColor ||
+                                    data?.defaultAvatarHashColor ||
                                     AvatarBgHexColors.GOLDEN_PURPLE,
                             }}
                             size="small"
                         >
-                            {getFirstCharacterUpperCase(account.userName)}
+                            {getFirstCharacterUpperCase(data.userName)}
                         </Avatar>
                     )}
-                    <span>{account.userName}</span>
+                    <span>{data.userName}</span>
                 </div>
             ),
             lg: 3,
@@ -103,7 +104,7 @@ const MyProfileInfo = () => {
             label: 'EMAIL',
             content: (
                 <p className="max-w-[415px] truncate hover:text-clip">
-                    {account?.email || ''}
+                    {data?.email || ''}
                 </p>
             ),
             lg: 3,
@@ -112,24 +113,24 @@ const MyProfileInfo = () => {
             label: 'STATUS',
             content: (
                 <div className="ml-[2px] flex flex-wrap content-start items-center gap-1 text-sm text-black/[85%]">
-                    {account?.userStatus && (
+                    {data?.userStatus && (
                         <>
                             <div
                                 className={`h-[6px] w-[6px] rounded-full  ${
-                                    account?.userStatus == UserStatus.ACTIVE
+                                    data?.userStatus == UserStatus.ACTIVE
                                         ? 'bg-green-500'
-                                        : account?.userStatus ==
-                                            UserStatus.INACTIVE
-                                          ? 'bg-red-500'
-                                          : null
+                                        : data?.userStatus ==
+                                          UserStatus.INACTIVE
+                                        ? 'bg-red-500'
+                                        : null
                                 } `}
                             ></div>
                             <span
                                 style={{
-                                    color: UserStatusColor[account?.userStatus],
+                                    color: UserStatusColor[data?.userStatus],
                                 }}
                             >
-                                {t(UserStatusName[account?.userStatus])}
+                                {t(UserStatusName[data?.userStatus])}
                             </span>
                         </>
                     )}

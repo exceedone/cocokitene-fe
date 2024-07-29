@@ -170,9 +170,14 @@ const CreateReportItem = ({
 
     return (
         <div className="flex flex-row items-start gap-2">
-            <Text className="leading-10">
-                {t(ResolutionTitle[type])} {index}:
-            </Text>
+            <div>
+                <span className="mr-2 align-middle text-lg font-medium text-[#ff4d4f]">
+                    *
+                </span>
+                <Text className="leading-10">
+                    {t(ResolutionTitle[type])} {index}:
+                </Text>
+            </div>
 
             <div className="flex flex-grow flex-col gap-2">
                 <Input
@@ -181,6 +186,7 @@ const CreateReportItem = ({
                     size="large"
                     value={title}
                     onChange={onChange(onChangeTitle)}
+                    maxLength={50}
                 />
                 {type === ResolutionType.EXECUTIVE_OFFICER ? (
                     <Input

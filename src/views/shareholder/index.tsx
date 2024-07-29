@@ -6,11 +6,22 @@ import ListTitle from '@/components/content-page-title/list-title'
 import { Permissions } from '@/constants/permission'
 import withAuth from '@/components/component-auth'
 import ShareholderList from '@/views/shareholder/shareholder-list'
+import { CONSTANT_EMPTY_STRING } from '@/constants/common'
+import { SORT } from '@/constants/meeting'
 
 const ShareholderView = () => {
     const t = useTranslations()
     const { shareholderState, setFilterAction, getListShareholderAction } =
         useListShareholder()
+
+    useEffect(() => {
+        return () => {
+            setFilterAction({
+                searchQuery: CONSTANT_EMPTY_STRING,
+                sortOrder: SORT.DESC,
+            })
+        }
+    }, [])
 
     useEffect(() => {
         getListShareholderAction({

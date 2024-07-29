@@ -20,6 +20,7 @@ import { useEffect } from 'react'
 import { truncateString } from '@/utils/format-string'
 import MeetingChat from '@/components/view-chat'
 import { MeetingStatus } from '@/constants/meeting'
+import PersonnelVoting from './personnel-voting'
 
 const MeetingDetail = () => {
     const t = useTranslations()
@@ -62,11 +63,11 @@ const MeetingDetail = () => {
         }
     }, [status])
 
+    console.log('dataMeeting: ', meeting)
+
     if (!meeting || status === EActionStatus.Pending) {
         return <Loader />
     }
-
-    console.log('meeting: ', meeting)
 
     return (
         <div>
@@ -111,6 +112,7 @@ const MeetingDetail = () => {
                 <Documents />
                 <Resolutions />
                 <AmendmentResolutions />
+                <PersonnelVoting />
                 <Participants />
                 <MeetingChat meetingInfo={meeting} />
             </div>

@@ -849,14 +849,14 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                 <div
                                     className={`${
                                         initMessage ? 'h-[70%]' : 'h-[76%]'
-                                    }`}
+                                    } mt-2`}
                                 >
                                     {/* <div className="border-black-500 relative mx-auto h-full w-[95%] overflow-hidden border px-2 hover:overflow-y-auto"> */}
                                     <div
-                                        className="border-black-500 custom-class relative mx-auto h-full w-[95%] overflow-y-auto border px-2"
+                                        className="border-black-500 custom-class relative mx-auto h-full w-[95%] overflow-y-auto overscroll-contain border px-2"
                                         ref={chatRef}
                                     >
-                                        <div className="fixed right-[50%] top-[8%] z-10 flex w-[95%] translate-x-2/4 border border-gray-400 bg-[#A8C3EB] px-[12px]">
+                                        <div className="fixed right-[50%] top-[7%] z-10 flex w-[95%] translate-x-2/4 border border-gray-400 bg-[#A8C3EB] px-[12px]">
                                             <p className="mx-auto">
                                                 {t(
                                                     listPermissionChat.find(

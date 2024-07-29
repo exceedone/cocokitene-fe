@@ -24,10 +24,10 @@ export interface IGetAllDataReponse<T> {
 }
 
 export interface IListCompanyResponse {
-    companys_id: number
-    companys_company_name: string
+    company_id: number
+    company_company_name: string
     planName: string
-    companys_representative_user: string
+    company_representative: string
     totalCreatedAccount: string
     totalCreatedMTGs: string
     companyStatus: string

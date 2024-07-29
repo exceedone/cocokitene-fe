@@ -100,12 +100,20 @@ export const initUpdateBoardMeeting = createAsyncThunk<
         }
 
         const getCandidate = () =>
-            boardMeetingDetail.candidates.map((candidate) => ({
-                id: candidate.id,
-                title: candidate.title,
-                candidateName: candidate.candidateName,
-                type: candidate.type,
-            }))
+            boardMeetingDetail.personnelVoting
+                .map((voting) => {
+                    return voting.candidate.map((candidate) => ({
+                        id: voting.id,
+                        title: voting.title,
+                        type: voting.type,
+                        candidateId: candidate.id,
+                        candidateName: candidate.candidateName,
+                    }))
+                })
+                .flatMap((item) => item)
+                .sort((a, b) => a.id - b.id)
+
+        console.log('getCandidate: ', getCandidate())
 
         const getRoleMtgInMeetings = await serviceMeeting.getRoleMtgs(meetingId)
 

@@ -196,7 +196,9 @@ const BoardMeetingInformation = () => {
                 dt.endTime = new Date(dateString[1]).toISOString()
             }
         } else {
-            dt.endVotingTime = new Date(dateString as string).toISOString()
+            if (dateString) {
+                dt.endVotingTime = new Date(dateString as string).toISOString()
+            }
         }
         setData(dt)
     }

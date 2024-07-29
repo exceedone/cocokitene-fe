@@ -138,13 +138,8 @@ const UpdateAccount = () => {
                 const res = await serviceAccount.getDetailAccount(accountId)
 
                 if (res) {
-                    const userCompanyName = authState.userData?.id
-                        ? (
-                              await serviceAccount.getDetailAccount(
-                                  authState.userData.id,
-                              )
-                          ).company.companyName
-                        : ''
+                    const userCompanyName =
+                        authState.userData?.companyName ?? ''
 
                     setInitAccount({
                         companyName: userCompanyName,

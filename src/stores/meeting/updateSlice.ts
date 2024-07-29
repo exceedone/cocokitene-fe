@@ -2,10 +2,11 @@ import {
     IParticipants,
     IParticipantsWithRole,
 } from '@/components/participant-selector'
+import { ElectionEnum } from '@/constants/election'
 import { MeetingFileType, MeetingStatus } from '@/constants/meeting'
 import { ResolutionType } from '@/constants/resolution'
 import serviceMeeting from '@/services/meeting'
-import { IUpdateMeeting, IUpdateMeetingState } from '@/stores/meeting/types'
+import { IMeetingExecutive, IUpdateMeeting, IUpdateMeetingState } from '@/stores/meeting/types'
 import { EActionStatus, FetchError } from '@/stores/type'
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
@@ -31,30 +32,6 @@ const initialState: IUpdateMeetingState = {
                 files: [],
                 type: ResolutionType.RESOLUTION,
             },
-            // {
-            //     title: '',
-            //     description: '',
-            //     files: [],
-            //     type: ResolutionType.RESOLUTION,
-            // },
-            // {
-            //     title: '',
-            //     description: '',
-            //     files: [],
-            //     type: ResolutionType.RESOLUTION,
-            // },
-            // {
-            //     title: '',
-            //     description: '',
-            //     files: [],
-            //     type: ResolutionType.RESOLUTION,
-            // },
-            // {
-            //     title: '',
-            //     description: '',
-            //     files: [],
-            //     type: ResolutionType.RESOLUTION,
-            // },
         ],
         amendmentResolutions: [
             {
@@ -64,35 +41,11 @@ const initialState: IUpdateMeetingState = {
                 files: [],
                 type: ResolutionType.AMENDMENT_RESOLUTION,
             },
-            // {
-            //     title: '',
-            //     description: '',
-            //     oldDescription: '',
-            //     files: [],
-            //     type: ResolutionType.AMENDMENT_RESOLUTION,
-            // },
-            // {
-            //     title: '',
-            //     description: '',
-            //     oldDescription: '',
-            //     files: [],
-            //     type: ResolutionType.AMENDMENT_RESOLUTION,
-            // },
-            // {
-            //     title: '',
-            //     description: '',
-            //     oldDescription: '',
-            //     files: [],
-            //     type: ResolutionType.AMENDMENT_RESOLUTION,
-            // },
-            // {
-            //     title: '',
-            //     description: '',
-            //     oldDescription: '',
-            //     files: [],
-            //     type: ResolutionType.AMENDMENT_RESOLUTION,
-            // },
         ],
+        personnelVoting: {
+            confidence: [],
+            notConfidence: [],
+        },
         participants: [
             {
                 roleMtgId: 1,
@@ -156,6 +109,16 @@ export const initUpdateMeeting = createAsyncThunk<
 
         const getRoleMtgInMeetings = await serviceMeeting.getRoleMtgs(meetingId)
 
+        const getPersonnelVoting = ():IMeetingExecutive =>{
+            const personnelVotingConfidence = meetingDetail.personnelVoting.filter((personnelVote)=> personnelVote.typeElection.status == ElectionEnum.VOTE_OF_CONFIDENCE).sort((a,b)=> a.id-b.id)
+            const personnelVotingNotConfidence = meetingDetail.personnelVoting.filter((personnelVote) => personnelVote.typeElection.status == ElectionEnum.VOTE_OF_NOT_CONFIDENCE ).sort((a,b)=> a.id-b.id)
+            return {
+                confidence: [...personnelVotingConfidence],
+                notConfidence: [...personnelVotingNotConfidence],
+            }
+        }
+
+
         let participants: IParticipantsWithRole[] = []
         await Promise.all([
             getRoleMtgInMeetings.map(async (roleMtg) => {
@@ -210,13 +173,7 @@ export const initUpdateMeeting = createAsyncThunk<
             amendmentResolutions: getProposalsByType(
                 ResolutionType.AMENDMENT_RESOLUTION,
             ),
-            // hosts: getParticipantsByRole('hosts'),
-            // controlBoards: getParticipantsByRole('controlBoards'),
-            // directors: getParticipantsByRole('directors'),
-            // administrativeCouncils: getParticipantsByRole(
-            //     'administrativeCouncils',
-            // ),
-            // shareholders: getParticipantsByRole('shareholders'),
+            personnelVoting: getPersonnelVoting(),
             participants: participants,
         }
     } catch (error) {

@@ -11,6 +11,7 @@ import { IElectionResponse } from '@/services/response.type'
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { ElectionEnum } from '@/constants/election'
+import Loader from '@/components/loader'
 
 export interface ICandidateForm {
     title: string
@@ -23,24 +24,29 @@ const Candidates = () => {
     const [data, setData] = useCreateBoardMeetingInformation()
     const [electionList, setElectionList] = useState<IElectionResponse[]>()
     const [defaultElection, setDefaultElection] = useState<number>(1)
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         try {
             ;(async () => {
+                setLoading(true)
                 const electionList = await serviceElection.getAllElection({
                     page: 1,
                     limit: 10,
                 })
                 // console.log('electionList', electionList)
                 if (electionList) {
-                    setElectionList(electionList)
+                    setElectionList(
+                        electionList.sort((a, b) => +a.status - +b.status),
+                    )
                     setDefaultElection(
-                        electionList.filter(
+                        electionList.find(
                             (election) =>
                                 election.status ==
                                 ElectionEnum.VOTE_OF_CONFIDENCE,
-                        )[0].id,
+                        )?.id ?? 0,
                     )
+                    setLoading(false)
                 }
             })()
         } catch (error) {
@@ -67,6 +73,7 @@ const Candidates = () => {
             candidates: [
                 ...data.candidates,
                 {
+                    candidateID: Math.random(),
                     title: '',
                     candidateName: '',
                     type: defaultElection,
@@ -82,12 +89,16 @@ const Candidates = () => {
         })
     }
 
+    if (loading) {
+        return <Loader />
+    }
+
     return (
         <BoxArea title={t('EXECUTIVE_OFFICER_ELECTION')}>
             <div className="mb-6 flex flex-col gap-6">
                 {data.candidates.map((x, index) => (
                     <CreateReportItem
-                        key={index}
+                        key={x.candidateID}
                         type={ResolutionType.EXECUTIVE_OFFICER}
                         index={index + 1}
                         title={data.candidates[index].title}
@@ -101,7 +112,11 @@ const Candidates = () => {
                 ))}
             </div>
 
-            <Button onClick={onAddNew} icon={<PlusOutlined />}>
+            <Button
+                onClick={onAddNew}
+                icon={<PlusOutlined />}
+                disabled={data.candidates.length >= 10}
+            >
                 {t('ADD_NEW')}
             </Button>
         </BoxArea>

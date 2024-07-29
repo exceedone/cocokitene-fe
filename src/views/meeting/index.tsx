@@ -1,6 +1,7 @@
 import withAuth from '@/components/component-auth'
 import ListTitle from '@/components/content-page-title/list-title'
-import { MeetingTime, MeetingType } from '@/constants/meeting'
+import { CONSTANT_EMPTY_STRING } from '@/constants/common'
+import { MeetingTime, MeetingType, SORT, SortField } from '@/constants/meeting'
 import { Permissions } from '@/constants/permission'
 import { useNotification } from '@/hooks/use-notification'
 import { useAttendance } from '@/stores/attendance/hooks'
@@ -34,6 +35,16 @@ const MeetingList = () => {
         getListPassMeetingAction,
         setFilterAction,
     } = useListMeeting()
+
+    useEffect(() => {
+        return () => {
+            setFilterAction({
+                searchQuery: CONSTANT_EMPTY_STRING,
+                sortOrder: SORT.DESC,
+                sortField: SortField.START_TIME,
+            })
+        }
+    }, [])
 
     useEffect(() => {
         getListFutureMeetingAction({

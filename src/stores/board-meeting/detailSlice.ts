@@ -38,7 +38,7 @@ export const getBoardMeetingDetail = createAsyncThunk<
                 proposals: boardMeetingDetail.proposals,
                 type: boardMeetingDetail.type,
                 participants: boardMeetingDetail.participants,
-                candidates: boardMeetingDetail.candidates,
+                candidates: boardMeetingDetail.personnelVoting,
                 boardsTotal: boardMeetingDetail.boardsTotal,
                 boardsJoined: boardMeetingDetail.boardsJoined,
                 chatPermissionId: boardMeetingDetail.chatPermissionId,
@@ -60,7 +60,7 @@ const boardMeetingDetailSlice = createSlice({
     reducers: {
         resetStatus(state) {
             state.status = EActionStatus.Idle
-        }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -77,7 +77,6 @@ const boardMeetingDetailSlice = createSlice({
             })
     },
 })
-
 
 export const { resetStatus } = boardMeetingDetailSlice.actions
 export default boardMeetingDetailSlice.reducer

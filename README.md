@@ -67,11 +67,6 @@ Pull Requests are always welcome. Currently, I'd be happy if you actually implem
 Pull Requestはいつでも大歓迎です。現在は、新しい機能の要望よりも、その機能を実際に実装していただいた方が、嬉しいです。
 
 
-# Other pages
-Setup for Develop [En](document/en/Develop.md) / 開発方法 [日本語](document/ja/Develop.md)  
-Setup for Test [En](document/en/Test.md) / テスト実行方法 [日本語](document/ja/Test.md)  
-
-
 # issues
 Please write issues using English or Japanese.  / issuesには英語または日本語で記載してください。
 

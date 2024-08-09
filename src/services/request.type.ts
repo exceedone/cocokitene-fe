@@ -135,3 +135,14 @@ export interface IVotedCandidateInPersonnel {
         quantityShare: number| null,
     }[]
 }
+
+export interface IGetAllMeetingInDayPayload {
+    page: number
+    limit: number,
+    date: Date
+}
+
+export interface ISystemNotification {
+    title: string,
+    content: string,
+}

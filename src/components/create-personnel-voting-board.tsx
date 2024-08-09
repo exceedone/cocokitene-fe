@@ -3,7 +3,7 @@
 import { ElectionEnum } from '@/constants/election'
 import { ResolutionTitle, ResolutionType } from '@/constants/resolution'
 import { IElectionResponse } from '@/services/response.type'
-import { useUpdateMeetingInformation } from '@/stores/meeting/hooks'
+import { useCreateBoardMeetingInformation } from '@/stores/board-meeting/hook'
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Input, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
@@ -11,7 +11,7 @@ import { ChangeEvent } from 'react'
 
 const { Text } = Typography
 
-interface IUpdatePersonnelVoting {
+interface ICreatePersonnelVotingBoardMtg {
     type: ResolutionType
     index: number
     title: string
@@ -23,7 +23,7 @@ interface IUpdatePersonnelVoting {
     electionList: IElectionResponse[] | []
 }
 
-const UpdatePersonnelVoting = ({
+const CreatePersonnelVotingBoardMtg = ({
     type,
     index,
     title,
@@ -32,11 +32,10 @@ const UpdatePersonnelVoting = ({
     onChangeTitle,
     onDelete,
     electionList,
-}: IUpdatePersonnelVoting) => {
+}: ICreatePersonnelVotingBoardMtg) => {
     const t = useTranslations()
 
-    const [data, setUpdateMeetingInformation, status, initUpdateMeeting] =
-        useUpdateMeetingInformation()
+    const [data, setData] = useCreateBoardMeetingInformation()
 
     const onAddNewCandidate = (index: number) => {
         if (electionStatus == ElectionEnum.VOTE_OF_CONFIDENCE) {
@@ -50,7 +49,7 @@ const UpdatePersonnelVoting = ({
                     { candidateName: '' },
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -69,7 +68,7 @@ const UpdatePersonnelVoting = ({
                     { candidateName: '' },
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -94,7 +93,7 @@ const UpdatePersonnelVoting = ({
                     ),
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -114,7 +113,7 @@ const UpdatePersonnelVoting = ({
                     ),
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -140,14 +139,13 @@ const UpdatePersonnelVoting = ({
             ]
             const candidateEdit = [...personnelVotingConfident[index].candidate]
             candidateEdit[indexCandidate] = {
-                ...candidateEdit[indexCandidate],
                 candidateName: event.target.value,
             }
             personnelVotingConfident[index] = {
                 ...personnelVotingConfident[index],
                 candidate: [...candidateEdit],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -163,14 +161,13 @@ const UpdatePersonnelVoting = ({
                 ...personnelVotingNotConfident[index].candidate,
             ]
             candidateEdit[indexCandidate] = {
-                ...candidateEdit[indexCandidate],
                 candidateName: event.target.value,
             }
             personnelVotingNotConfident[index] = {
                 ...personnelVotingNotConfident[index],
                 candidate: [...candidateEdit],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -198,7 +195,7 @@ const UpdatePersonnelVoting = ({
                     value={title}
                     size="large"
                     onChange={onChange(onChangeTitle)}
-                    maxLength={50}
+                    maxLength={100}
                 />
                 {candidate.map((candidate, i) => {
                     return (
@@ -215,7 +212,7 @@ const UpdatePersonnelVoting = ({
                             {electionStatus ==
                                 ElectionEnum.VOTE_OF_CONFIDENCE && (
                                 <MinusOutlined
-                                    className={`mr-[-50px] h-10 text-gray-500`}
+                                    className={`mr-[-100px] h-10 text-gray-500`}
                                     disabled={i === 1}
                                     onClick={() => {
                                         onDeleteCandidate(index, i)
@@ -245,4 +242,4 @@ const UpdatePersonnelVoting = ({
     )
 }
 
-export default UpdatePersonnelVoting
+export default CreatePersonnelVotingBoardMtg

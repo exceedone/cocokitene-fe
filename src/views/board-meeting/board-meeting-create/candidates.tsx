@@ -6,12 +6,11 @@ import { useEffect, useState } from 'react'
 import serviceElection from '@/services/election'
 import BoxArea from '@/components/box-area'
 import { ResolutionType } from '@/constants/resolution'
-import CreateReportItem from '@/components/create-report-item'
 import { IElectionResponse } from '@/services/response.type'
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { ElectionEnum } from '@/constants/election'
-import Loader from '@/components/loader'
+import CreatePersonnelVotingBoardMtg from '@/components/create-personnel-voting-board'
 
 export interface ICandidateForm {
     title: string
@@ -22,31 +21,26 @@ export interface ICandidateForm {
 const Candidates = () => {
     const t = useTranslations()
     const [data, setData] = useCreateBoardMeetingInformation()
-    const [electionList, setElectionList] = useState<IElectionResponse[]>()
-    const [defaultElection, setDefaultElection] = useState<number>(1)
-    const [loading, setLoading] = useState<boolean>(true)
+    const [electionList, setElectionList] = useState<IElectionResponse[]>([])
 
     useEffect(() => {
         try {
             ;(async () => {
-                setLoading(true)
                 const electionList = await serviceElection.getAllElection({
                     page: 1,
                     limit: 10,
                 })
-                // console.log('electionList', electionList)
                 if (electionList) {
-                    setElectionList(
-                        electionList.sort((a, b) => +a.status - +b.status),
-                    )
-                    setDefaultElection(
-                        electionList.find(
-                            (election) =>
-                                election.status ==
-                                ElectionEnum.VOTE_OF_CONFIDENCE,
-                        )?.id ?? 0,
-                    )
-                    setLoading(false)
+                    setElectionList(electionList)
+                    setData({
+                        ...data,
+                        personnelVoting: {
+                            confidence: [...data.personnelVoting.confidence],
+                            notConfidence: [
+                                ...data.personnelVoting.notConfidence,
+                            ],
+                        },
+                    })
                 }
             })()
         } catch (error) {
@@ -54,71 +48,194 @@ const Candidates = () => {
         }
     }, [])
 
-    const onChange =
-        (name: 'title' | 'candidateName', index: number) => (value: string) => {
-            const candidates = [...data.candidates]
-            candidates[index] = {
-                ...candidates[index],
-                [name]: value,
+    const onChangeTitle =
+        (name: 'title', index: number, type: ElectionEnum) =>
+        (value: string) => {
+            if (type == ElectionEnum.VOTE_OF_CONFIDENCE) {
+                const personnelVotingConfidence = [
+                    ...data.personnelVoting.confidence,
+                ]
+                personnelVotingConfidence[index] = {
+                    ...personnelVotingConfidence[index],
+                    [name]: value,
+                }
+                setData({
+                    ...data,
+                    personnelVoting: {
+                        ...data.personnelVoting,
+                        confidence: personnelVotingConfidence,
+                    },
+                })
             }
-            setData({
-                ...data,
-                candidates,
-            })
+            if (type == ElectionEnum.VOTE_OF_NOT_CONFIDENCE) {
+                const personnelVotingNotConfidence = [
+                    ...data.personnelVoting.notConfidence,
+                ]
+                personnelVotingNotConfidence[index] = {
+                    ...personnelVotingNotConfidence[index],
+                    [name]: value,
+                }
+                setData({
+                    ...data,
+                    personnelVoting: {
+                        ...data.personnelVoting,
+                        notConfidence: personnelVotingNotConfidence,
+                    },
+                })
+            }
         }
 
-    const onAddNew = () => {
+    const onAddNewConfidence = () => {
         setData({
             ...data,
-            candidates: [
-                ...data.candidates,
-                {
-                    candidateID: Math.random(),
-                    title: '',
-                    candidateName: '',
-                    type: defaultElection,
+            personnelVoting: {
+                ...data.personnelVoting,
+                confidence: [
+                    ...data.personnelVoting.confidence,
+                    {
+                        title: '',
+                        type: electionList.filter(
+                            (election) =>
+                                election.status ==
+                                ElectionEnum.VOTE_OF_CONFIDENCE,
+                        )[0].id,
+                        candidate: [{ candidateName: '' }],
+                    },
+                ],
+            },
+        })
+    }
+
+    const onAddNewNotConfidence = () => {
+        setData({
+            ...data,
+            personnelVoting: {
+                ...data.personnelVoting,
+                notConfidence: [
+                    ...data.personnelVoting.notConfidence,
+                    {
+                        title: '',
+                        type: electionList.filter(
+                            (election) =>
+                                election.status ==
+                                ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+                        )[0].id,
+                        candidate: [{ candidateName: '' }],
+                    },
+                ],
+            },
+        })
+    }
+
+    const onDelete = (index: number, type: ElectionEnum) => () => {
+        console.log('index Delete: ', index)
+        if (type == ElectionEnum.VOTE_OF_CONFIDENCE) {
+            setData({
+                ...data,
+                personnelVoting: {
+                    ...data.personnelVoting,
+                    confidence: data.personnelVoting.confidence.filter(
+                        (voting, i) => i !== index,
+                    ),
                 },
-            ],
-        })
+            })
+        }
+        if (type == ElectionEnum.VOTE_OF_NOT_CONFIDENCE) {
+            setData({
+                ...data,
+                personnelVoting: {
+                    ...data.personnelVoting,
+                    notConfidence: data.personnelVoting.notConfidence.filter(
+                        (voting, i) => i !== index,
+                    ),
+                },
+            })
+        }
     }
 
-    const onDelete = (index: number) => () => {
-        setData({
-            ...data,
-            candidates: data.candidates.filter((r, i) => i !== index),
-        })
-    }
-
-    if (loading) {
-        return <Loader />
-    }
+    console.log('data.personnelVoting: ', data.personnelVoting)
 
     return (
         <BoxArea title={t('EXECUTIVE_OFFICER_ELECTION')}>
-            <div className="mb-6 flex flex-col gap-6">
-                {data.candidates.map((x, index) => (
-                    <CreateReportItem
-                        key={x.candidateID}
-                        type={ResolutionType.EXECUTIVE_OFFICER}
-                        index={index + 1}
-                        title={data.candidates[index].title}
-                        content={data.candidates[index].candidateName}
-                        onChangeTitle={onChange('title', index)}
-                        onChangeContent={onChange('candidateName', index)}
-                        onDelete={onDelete(index)}
-                        electionList={electionList}
-                        defaultElection={defaultElection}
-                    />
-                ))}
-            </div>
+            <BoxArea title={t('APPOINTMENT')}>
+                <div className="mb-6 flex flex-col gap-6">
+                    {data.personnelVoting.confidence.map((x, index) => {
+                        return (
+                            <CreatePersonnelVotingBoardMtg
+                                type={ResolutionType.EXECUTIVE_OFFICER}
+                                index={index}
+                                title={x.title}
+                                candidate={x.candidate}
+                                electionStatus={ElectionEnum.VOTE_OF_CONFIDENCE}
+                                onChangeTitle={onChangeTitle(
+                                    'title',
+                                    index,
+                                    ElectionEnum.VOTE_OF_CONFIDENCE,
+                                )}
+                                onDelete={onDelete(
+                                    index,
+                                    ElectionEnum.VOTE_OF_CONFIDENCE,
+                                )}
+                                electionList={electionList}
+                            />
+                        )
+                    })}
+                </div>
 
-            <Button
-                onClick={onAddNew}
-                icon={<PlusOutlined />}
-                disabled={data.candidates.length >= 10}
-            >
-                {t('ADD_NEW')}
-            </Button>
+                <Button
+                    onClick={onAddNewConfidence}
+                    icon={<PlusOutlined />}
+                    disabled={
+                        [
+                            ...data.personnelVoting.confidence,
+                            ...data.personnelVoting.notConfidence,
+                        ].length >= 10
+                    }
+                >
+                    {t('ADD_NEW')}
+                </Button>
+            </BoxArea>
+
+            <BoxArea title={t('DISMISSAL')}>
+                <div className="mb-6 flex flex-col gap-6">
+                    {data.personnelVoting.notConfidence.map((x, index) => {
+                        return (
+                            <CreatePersonnelVotingBoardMtg
+                                type={ResolutionType.EXECUTIVE_OFFICER}
+                                index={index}
+                                title={x.title}
+                                candidate={x.candidate}
+                                electionStatus={
+                                    ElectionEnum.VOTE_OF_NOT_CONFIDENCE
+                                }
+                                onChangeTitle={onChangeTitle(
+                                    'title',
+                                    index,
+                                    ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+                                )}
+                                onDelete={onDelete(
+                                    index,
+                                    ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+                                )}
+                                electionList={electionList}
+                            />
+                        )
+                    })}
+                </div>
+
+                <Button
+                    onClick={onAddNewNotConfidence}
+                    icon={<PlusOutlined />}
+                    disabled={
+                        [
+                            ...data.personnelVoting.confidence,
+                            ...data.personnelVoting.notConfidence,
+                        ].length >= 10
+                    }
+                >
+                    {t('ADD_NEW')}
+                </Button>
+            </BoxArea>
         </BoxArea>
     )
 }

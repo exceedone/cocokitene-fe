@@ -488,3 +488,33 @@ export interface IDataHashMeeting {
     participantHash: string
     detailMeetingHash: string
 }
+
+export interface IStatisticMeetingInMonth{
+    totalMeeting: number,
+    totalParticipant: number,
+    totalParticipantJoined: number,
+}
+
+export interface IStatisticMeetingInMonthResponse {
+    shareholderMeetingInMonth: IStatisticMeetingInMonth,
+    boardMeetingInMonth: IStatisticMeetingInMonth,
+}
+
+export interface ISystemNotificationResponse {
+    system_notification_id: number
+    system_notification_title: string
+    system_notification_content: string
+    system_notification_created_at: string
+    system_notification_updated_at: string
+    creator_id: number
+    creator_username: string,
+    creator_email: string,
+    updater_id: number|null,
+    updater_username: string|null,
+    updater_email: string|null,
+}
+
+export interface ISysNotificationListResponse {
+    items: ISystemNotificationResponse[]
+    meta: IMeta
+}

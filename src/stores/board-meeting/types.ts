@@ -9,6 +9,7 @@ import {
 import { ElectionEnum } from '@/constants/election'
 import { UserMeetingStatusEnum } from '@/stores/attendance/type'
 import { IPersonnelVoting } from '@/services/response.type'
+import { IMeetingExecutive } from '../meeting/types'
 
 export interface ICreateBoardMeeting {
     title: string
@@ -21,7 +22,7 @@ export interface ICreateBoardMeeting {
     meetingInvitations: IBoardMeetingDocument[]
     managementAndFinancials: IBoardMeetingReport[]
     elections: IBoardMeetingReport[]
-    candidates: IBoardMeetingExecutive[]
+    personnelVoting: IMeetingExecutive
     participants: IParticipantsWithRole[]
 }
 
@@ -158,7 +159,7 @@ export interface IUpdateBoardMeeting {
     meetingInvitations: IBoardMeetingDocument[]
     managementAndFinancials: IBoardMeetingReport[]
     elections: IBoardMeetingReport[]
-    candidates: IBoardMeetingUpdateCandidate[]
+    personnelVoting: IMeetingExecutive
     participants: IParticipantsWithRole[]
 }
 

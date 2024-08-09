@@ -120,3 +120,22 @@ export interface IPlanDetailResponse {
 }
 
 export interface IUpdatePlan extends ICreatePlan {}
+
+export interface IStatisticCompanyResponse {
+    companyStatuses: {
+        company_status_mst_id:number,
+        company_status_mst_status: CompanyStatus,
+        totalCompany: number,
+    }[],
+    userStatuses:{
+        user_statuses_id: number,
+        user_statuses_status: UserStatus,
+        totalUser: number
+    }[],
+    servicePlan:{
+        plan_mst_id:number,
+        plan_mst_plan_name: string,
+        totalCompany: number,
+    }[]
+
+}

@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import BoxArea from '@/components/box-area'
-import UpdateCandidateItem from '@/components/update-candidate-item'
+import UpdatePersonnelVotingBoard from '@/components/update-personnel-voting-board'
 import { ElectionEnum } from '@/constants/election'
 import { ResolutionType } from '@/constants/resolution'
 import serviceElection from '@/services/election'
@@ -15,8 +15,7 @@ import { useEffect, useState } from 'react'
 const Candidate = () => {
     const t = useTranslations()
     const [data, setData] = useUpdateBoardMeetingInformation()
-    const [electionList, setElectionList] = useState<IElectionResponse[]>()
-    const [defaultElection, setDefaultElection] = useState<number>()
+    const [electionList, setElectionList] = useState<IElectionResponse[]>([])
 
     useEffect(() => {
         try {
@@ -27,13 +26,6 @@ const Candidate = () => {
                 })
                 if (electionList) {
                     setElectionList(electionList)
-                    setDefaultElection(
-                        electionList.filter(
-                            (election) =>
-                                election.status ==
-                                ElectionEnum.VOTE_OF_CONFIDENCE,
-                        )[0].id,
-                    )
                 }
             })()
         } catch (error) {
@@ -41,67 +33,194 @@ const Candidate = () => {
         }
     }, [])
 
-    const onChange =
-        (name: 'title' | 'candidateName', index: number) => (value: string) => {
-            const candidates = [...data.candidates]
-            candidates[index] = {
-                ...candidates[index],
-                [name]: value,
+    const onChangeTitle =
+        (name: 'title', index: number, type: ElectionEnum) =>
+        (value: string) => {
+            if (type == ElectionEnum.VOTE_OF_CONFIDENCE) {
+                const personnelVotingConfidence = [
+                    ...data.personnelVoting.confidence,
+                ]
+                personnelVotingConfidence[index] = {
+                    ...personnelVotingConfidence[index],
+                    [name]: value,
+                }
+                setData({
+                    ...data,
+                    personnelVoting: {
+                        ...data.personnelVoting,
+                        confidence: personnelVotingConfidence,
+                    },
+                })
             }
-            setData({
-                ...data,
-                candidates,
-            })
+            if (type == ElectionEnum.VOTE_OF_NOT_CONFIDENCE) {
+                const personnelVotingNotConfidence = [
+                    ...data.personnelVoting.notConfidence,
+                ]
+                personnelVotingNotConfidence[index] = {
+                    ...personnelVotingNotConfidence[index],
+                    [name]: value,
+                }
+                setData({
+                    ...data,
+                    personnelVoting: {
+                        ...data.personnelVoting,
+                        notConfidence: personnelVotingNotConfidence,
+                    },
+                })
+            }
         }
 
-    const onAddNew = () => {
+    const onAddNewConfidence = () => {
         setData({
             ...data,
-            candidates: [
-                ...data.candidates,
-                {
-                    id: Math.random(),
-                    title: '',
-                    candidateName: '',
-                    type: defaultElection,
-                },
-            ],
+            personnelVoting: {
+                ...data.personnelVoting,
+                confidence: [
+                    ...data.personnelVoting.confidence,
+                    {
+                        title: '',
+                        type: electionList.filter(
+                            (election) =>
+                                election.status ==
+                                ElectionEnum.VOTE_OF_CONFIDENCE,
+                        )[0].id,
+                        candidate: [
+                            { candidateID: Math.random(), candidateName: '' },
+                        ],
+                    },
+                ],
+            },
         })
     }
 
-    const onDelete = (index: number) => () => {
+    const onAddNewNotConfidence = () => {
         setData({
             ...data,
-            candidates: data.candidates.filter((r, i) => i !== index),
+            personnelVoting: {
+                ...data.personnelVoting,
+                notConfidence: [
+                    ...data.personnelVoting.notConfidence,
+                    {
+                        title: '',
+                        type: electionList.filter(
+                            (election) =>
+                                election.status ==
+                                ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+                        )[0].id,
+                        candidate: [{ candidateName: '' }],
+                    },
+                ],
+            },
         })
+    }
+
+    const onDelete = (index: number, type: ElectionEnum) => () => {
+        console.log('index Delete: ', index)
+        if (type == ElectionEnum.VOTE_OF_CONFIDENCE) {
+            setData({
+                ...data,
+                personnelVoting: {
+                    ...data.personnelVoting,
+                    confidence: data.personnelVoting.confidence.filter(
+                        (voting, i) => i !== index,
+                    ),
+                },
+            })
+        }
+        if (type == ElectionEnum.VOTE_OF_NOT_CONFIDENCE) {
+            setData({
+                ...data,
+                personnelVoting: {
+                    ...data.personnelVoting,
+                    notConfidence: data.personnelVoting.notConfidence.filter(
+                        (voting, i) => i !== index,
+                    ),
+                },
+            })
+        }
     }
 
     return (
         <BoxArea title={t('EXECUTIVE_OFFICER_ELECTION')}>
-            <div className="mb-6 flex flex-col gap-6">
-                {data.candidates.map((x, index) => (
-                    <UpdateCandidateItem
-                        key={x.id}
-                        type={ResolutionType.EXECUTIVE_OFFICER}
-                        index={index + 1}
-                        title={data.candidates[index].title}
-                        content={data.candidates[index].candidateName}
-                        onChangeTitle={onChange('title', index)}
-                        onChangeContent={onChange('candidateName', index)}
-                        onDelete={onDelete(index)}
-                        electionList={electionList}
-                        electionId={data.candidates[index].type}
-                    />
-                ))}
-            </div>
+            <BoxArea title={t('APPOINTMENT')}>
+                <div className="mb-6 flex flex-col gap-6">
+                    {data.personnelVoting.confidence.map((x, index) => {
+                        return (
+                            <UpdatePersonnelVotingBoard
+                                type={ResolutionType.EXECUTIVE_OFFICER}
+                                index={index}
+                                title={x.title}
+                                candidate={x.candidate}
+                                electionStatus={ElectionEnum.VOTE_OF_CONFIDENCE}
+                                onChangeTitle={onChangeTitle(
+                                    'title',
+                                    index,
+                                    ElectionEnum.VOTE_OF_CONFIDENCE,
+                                )}
+                                onDelete={onDelete(
+                                    index,
+                                    ElectionEnum.VOTE_OF_CONFIDENCE,
+                                )}
+                                electionList={electionList}
+                            />
+                        )
+                    })}
+                </div>
 
-            <Button
-                onClick={onAddNew}
-                icon={<PlusOutlined />}
-                disabled={data.candidates.length >= 10}
-            >
-                {t('ADD_NEW')}
-            </Button>
+                <Button
+                    onClick={onAddNewConfidence}
+                    icon={<PlusOutlined />}
+                    disabled={
+                        [
+                            ...data.personnelVoting.confidence,
+                            ...data.personnelVoting.notConfidence,
+                        ].length >= 10
+                    }
+                >
+                    {t('ADD_NEW')}
+                </Button>
+            </BoxArea>
+
+            <BoxArea title={t('DISMISSAL')}>
+                <div className="mb-6 flex flex-col gap-6">
+                    {data.personnelVoting.notConfidence.map((x, index) => {
+                        return (
+                            <UpdatePersonnelVotingBoard
+                                type={ResolutionType.EXECUTIVE_OFFICER}
+                                index={index}
+                                title={x.title}
+                                candidate={x.candidate}
+                                electionStatus={
+                                    ElectionEnum.VOTE_OF_NOT_CONFIDENCE
+                                }
+                                onChangeTitle={onChangeTitle(
+                                    'title',
+                                    index,
+                                    ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+                                )}
+                                onDelete={onDelete(
+                                    index,
+                                    ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+                                )}
+                                electionList={electionList}
+                            />
+                        )
+                    })}
+                </div>
+
+                <Button
+                    onClick={onAddNewNotConfidence}
+                    icon={<PlusOutlined />}
+                    disabled={
+                        [
+                            ...data.personnelVoting.confidence,
+                            ...data.personnelVoting.notConfidence,
+                        ].length >= 10
+                    }
+                >
+                    {t('ADD_NEW')}
+                </Button>
+            </BoxArea>
         </BoxArea>
     )
 }

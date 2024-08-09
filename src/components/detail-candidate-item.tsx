@@ -12,6 +12,7 @@ import { FETCH_STATUS } from '@/constants/common'
 import { useTranslations } from 'next-intl'
 import { formatNumber } from '@/utils/format-number'
 import serviceCandidate from '@/services/candidate'
+import { MeetingType } from '@/constants/meeting'
 
 const { Text } = Typography
 interface IDetailCandidateItem extends Resolution {
@@ -22,6 +23,7 @@ interface IDetailCandidateItem extends Resolution {
     voteResult?: VoteProposalOption
     id: number
     voteErrorMessage?: string
+    meetingType: MeetingType
 }
 
 const DetailCandidateItem = ({
@@ -34,6 +36,7 @@ const DetailCandidateItem = ({
     voteResult,
     id,
     voteErrorMessage = '',
+    meetingType,
 }: IDetailCandidateItem) => {
     const [value, setValue] = useState(voteResult)
     const [votePercent, setVotePercent] = useState({
@@ -59,11 +62,21 @@ const DetailCandidateItem = ({
     const onChange = async (e: RadioChangeEvent) => {
         try {
             setVoteStatus(FETCH_STATUS.LOADING)
+            let candidate
+
+            if (meetingType === MeetingType.SHAREHOLDER_MEETING) {
+                candidate = await serviceCandidate.voteCandidateShareholderMtg(
+                    id,
+                    e.target.value,
+                )
+            } else {
+                candidate = await serviceCandidate.voteCandidateBoardMtg(
+                    id,
+                    e.target.value,
+                )
+            }
+
             setValue(e.target.value)
-            const candidate = await serviceCandidate.voteCandidate(
-                id,
-                e.target.value,
-            )
             const notVoteYetQuantity = Number(candidate.notVoteYetQuantity)
             const votedQuantity = Number(candidate.votedQuantity)
             const unVotedQuantity = Number(candidate.unVotedQuantity)

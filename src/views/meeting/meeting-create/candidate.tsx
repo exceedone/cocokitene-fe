@@ -33,29 +33,9 @@ const Candidate = () => {
                     setData({
                         ...data,
                         personnelVoting: {
-                            confidence: [
-                                ...data.personnelVoting.confidence,
-                                // {
-                                //     title: '',
-                                //     type: electionList.filter(
-                                //         (election) =>
-                                //             election.status ==
-                                //             ElectionEnum.VOTE_OF_CONFIDENCE,
-                                //     )[0].id,
-                                //     candidate: [{ candidateName: '' }],
-                                // },
-                            ],
+                            confidence: [...data.personnelVoting.confidence],
                             notConfidence: [
                                 ...data.personnelVoting.notConfidence,
-                                // {
-                                //     title: '',
-                                //     type: electionList.filter(
-                                //         (election) =>
-                                //             election.status ==
-                                //             ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
-                                //     )[0].id,
-                                //     candidate: [{ candidateName: '' }],
-                                // },
                             ],
                         },
                     })

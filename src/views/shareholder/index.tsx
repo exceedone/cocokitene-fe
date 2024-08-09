@@ -21,6 +21,7 @@ const ShareholderView = () => {
                 sortOrder: SORT.DESC,
             })
         }
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {

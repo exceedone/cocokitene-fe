@@ -3,7 +3,7 @@
 import { ElectionEnum } from '@/constants/election'
 import { ResolutionTitle, ResolutionType } from '@/constants/resolution'
 import { IElectionResponse } from '@/services/response.type'
-import { useUpdateMeetingInformation } from '@/stores/meeting/hooks'
+import { useUpdateBoardMeetingInformation } from '@/stores/board-meeting/hook'
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Input, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
@@ -11,7 +11,7 @@ import { ChangeEvent } from 'react'
 
 const { Text } = Typography
 
-interface IUpdatePersonnelVoting {
+interface IUpdatePersonnelVotingBoard {
     type: ResolutionType
     index: number
     title: string
@@ -23,7 +23,7 @@ interface IUpdatePersonnelVoting {
     electionList: IElectionResponse[] | []
 }
 
-const UpdatePersonnelVoting = ({
+const UpdatePersonnelVotingBoard = ({
     type,
     index,
     title,
@@ -32,11 +32,10 @@ const UpdatePersonnelVoting = ({
     onChangeTitle,
     onDelete,
     electionList,
-}: IUpdatePersonnelVoting) => {
+}: IUpdatePersonnelVotingBoard) => {
     const t = useTranslations()
 
-    const [data, setUpdateMeetingInformation, status, initUpdateMeeting] =
-        useUpdateMeetingInformation()
+    const [data, setData] = useUpdateBoardMeetingInformation()
 
     const onAddNewCandidate = (index: number) => {
         if (electionStatus == ElectionEnum.VOTE_OF_CONFIDENCE) {
@@ -50,7 +49,7 @@ const UpdatePersonnelVoting = ({
                     { candidateName: '' },
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -69,7 +68,7 @@ const UpdatePersonnelVoting = ({
                     { candidateName: '' },
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -80,8 +79,6 @@ const UpdatePersonnelVoting = ({
     }
 
     const onDeleteCandidate = (index: number, indexCandidate: number) => {
-        // console.log('index:', index)
-        // console.log('indexCandidate:', indexCandidate)
         if (electionStatus == ElectionEnum.VOTE_OF_CONFIDENCE) {
             const personnelVotingConfident = [
                 ...data.personnelVoting.confidence,
@@ -94,7 +91,7 @@ const UpdatePersonnelVoting = ({
                     ),
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -114,7 +111,7 @@ const UpdatePersonnelVoting = ({
                     ),
                 ],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -147,7 +144,7 @@ const UpdatePersonnelVoting = ({
                 ...personnelVotingConfident[index],
                 candidate: [...candidateEdit],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -170,7 +167,7 @@ const UpdatePersonnelVoting = ({
                 ...personnelVotingNotConfident[index],
                 candidate: [...candidateEdit],
             }
-            setUpdateMeetingInformation({
+            setData({
                 ...data,
                 personnelVoting: {
                     ...data.personnelVoting,
@@ -245,4 +242,4 @@ const UpdatePersonnelVoting = ({
     )
 }
 
-export default UpdatePersonnelVoting
+export default UpdatePersonnelVotingBoard

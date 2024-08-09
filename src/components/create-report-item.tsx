@@ -58,20 +58,6 @@ const CreateReportItem = ({
     const t = useTranslations()
     const [data, setData] = useCreateBoardMeetingInformation()
 
-    const handleElectionChange =
-        (name: 'type', index: number) => (value: number) => {
-            const candidates = [...data.candidates]
-            candidates[index - 1] = {
-                ...candidates[index - 1],
-                [name]: value,
-            }
-
-            setData({
-                ...data,
-                candidates: candidates,
-            })
-        }
-
     const onChange =
         // eslint-disable-next-line
 
@@ -188,21 +174,12 @@ const CreateReportItem = ({
                     onChange={onChange(onChangeTitle)}
                     maxLength={50}
                 />
-                {type === ResolutionType.EXECUTIVE_OFFICER ? (
-                    <Input
-                        className="placeholder:text-sm"
-                        placeholder={t('ENTER_CANDIDATE_NAME')}
-                        value={content}
-                        onChange={onChange(onChangeContent)}
-                    />
-                ) : (
-                    <TextArea
-                        className="placeholder:text-sm"
-                        placeholder={t('ENTER_REPORT_DETAIL')}
-                        value={content}
-                        onChange={onChange(onChangeContent)}
-                    />
-                )}
+                <TextArea
+                    className="placeholder:text-sm"
+                    placeholder={t('ENTER_REPORT_DETAIL')}
+                    value={content}
+                    onChange={onChange(onChangeContent)}
+                />
                 {/* <TextArea
                     className="placeholder:text-sm"
                     placeholder={
@@ -262,27 +239,6 @@ const CreateReportItem = ({
                             </div>
                         </>
                     )}
-                {type === ResolutionType.EXECUTIVE_OFFICER && (
-                    <Select
-                        size="large"
-                        placeholder={t('PLEASE_SELECT_ELECTION_TYPE')}
-                        style={{ width: '100%' }}
-                        defaultValue={defaultElection}
-                        options={electionList?.map((election) => ({
-                            value: election.id,
-                            label: (
-                                <span
-                                    style={{
-                                        color: ElectionColor[election.status],
-                                    }}
-                                >
-                                    {t(ElectionName[election.status])}
-                                </span>
-                            ),
-                        }))}
-                        onChange={handleElectionChange('type', index)}
-                    />
-                )}
             </div>
             <div></div>
             <DeleteOutlined

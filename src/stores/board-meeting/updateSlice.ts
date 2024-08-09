@@ -11,6 +11,8 @@ import {
     IParticipantsWithRole,
 } from '@/components/participant-selector'
 import { AxiosError } from 'axios'
+import { IMeetingExecutive } from '../meeting/types'
+import { ElectionEnum } from '@/constants/election'
 
 const initialState: IUpdateBoardMeetingState = {
     status: EActionStatus.Idle,
@@ -44,12 +46,10 @@ const initialState: IUpdateBoardMeetingState = {
                 type: ResolutionType.ELECTION,
             },
         ],
-        candidates: [
-            {
-                title: '',
-                candidateName: '',
-            },
-        ],
+        personnelVoting: {
+            confidence: [],
+            notConfidence: [],
+        },
         participants: [
             {
                 roleMtgId: 1,
@@ -99,21 +99,14 @@ export const initUpdateBoardMeeting = createAsyncThunk<
                 }))
         }
 
-        const getCandidate = () =>
-            boardMeetingDetail.personnelVoting
-                .map((voting) => {
-                    return voting.candidate.map((candidate) => ({
-                        id: voting.id,
-                        title: voting.title,
-                        type: voting.type,
-                        candidateId: candidate.id,
-                        candidateName: candidate.candidateName,
-                    }))
-                })
-                .flatMap((item) => item)
-                .sort((a, b) => a.id - b.id)
-
-        console.log('getCandidate: ', getCandidate())
+        const getPersonnelVoting = ():IMeetingExecutive =>{
+            const personnelVotingConfidence = boardMeetingDetail.personnelVoting.filter((personnelVote)=> personnelVote.typeElection.status == ElectionEnum.VOTE_OF_CONFIDENCE).sort((a,b)=> a.id-b.id)
+            const personnelVotingNotConfidence = boardMeetingDetail.personnelVoting.filter((personnelVote) => personnelVote.typeElection.status == ElectionEnum.VOTE_OF_NOT_CONFIDENCE ).sort((a,b)=> a.id-b.id)
+            return {
+                confidence: [...personnelVotingConfidence],
+                notConfidence: [...personnelVotingNotConfidence],
+            }
+        }
 
         const getRoleMtgInMeetings = await serviceMeeting.getRoleMtgs(meetingId)
 
@@ -175,7 +168,7 @@ export const initUpdateBoardMeeting = createAsyncThunk<
                 ResolutionType.MANAGEMENT_FINANCIAL,
             ),
             elections: getProposalsByType(ResolutionType.ELECTION),
-            candidates: getCandidate(),
+            personnelVoting: getPersonnelVoting(),
             participants: participants,
         }
     } catch (error) {

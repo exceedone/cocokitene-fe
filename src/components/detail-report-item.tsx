@@ -224,7 +224,7 @@ const DetailReportItem = ({
                     {title}
                 </Text>
             </div>
-            <div className="flex items-center gap-8">
+            <div className="flex w-[300px] items-center gap-8">
                 {percentVoted !== undefined &&
                     percentNotVoteYet !== undefined &&
                     percentUnVoted !== undefined && (

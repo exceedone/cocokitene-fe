@@ -31,7 +31,7 @@ const AccountView = () => {
                 sortOrder: SORT.DESC,
             })
         }
-    }, [])
+    }, [setFilterAction])
 
     useEffect(() => {
         getListAccountAction({

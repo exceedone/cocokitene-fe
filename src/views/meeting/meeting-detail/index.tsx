@@ -61,9 +61,8 @@ const MeetingDetail = () => {
             })
             resetStatusGetMeeting()
         }
+        // eslint-disable-next-line
     }, [status])
-
-    console.log('dataMeeting: ', meeting)
 
     if (!meeting || status === EActionStatus.Pending) {
         return <Loader />

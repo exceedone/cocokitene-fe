@@ -17,13 +17,13 @@ import BoardMeetingInformation from '@/views/board-meeting/board-meeting-detail/
 import BoardMeetingDocuments from '@/views/board-meeting/board-meeting-detail/board-meeting-documents'
 import ManagementAndFinancialReports from '@/views/board-meeting/board-meeting-detail/management-and-financial-reports'
 import Elections from '@/views/board-meeting/board-meeting-detail/elections'
-import Candidates from '@/views/board-meeting/board-meeting-detail/candidates'
 import BoardMeetingParticipants from '@/views/board-meeting/board-meeting-detail/board-meeting-participants'
 import BoardMeetingNote from '@/views/board-meeting/board-meeting-detail/board-meeting-note'
 import withAuth from '@/components/component-auth'
 import SendEmailButton from './send-email-button'
 import MeetingChat from '@/components/view-chat'
 import { MeetingStatus } from '@/constants/meeting'
+import PersonnelVoting from './personnel-voting'
 
 const BoardMeetingDetail = () => {
     const t = useTranslations()
@@ -105,7 +105,7 @@ const BoardMeetingDetail = () => {
                 <BoardMeetingDocuments />
                 <ManagementAndFinancialReports />
                 <Elections />
-                <Candidates />
+                <PersonnelVoting />
                 <BoardMeetingParticipants />
                 <MeetingChat meetingInfo={boardMeeting} />
             </div>

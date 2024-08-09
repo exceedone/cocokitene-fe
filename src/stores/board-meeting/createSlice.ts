@@ -31,13 +31,10 @@ const initialState: ICreateBoardMeeting = {
         //     type: ResolutionType.ELECTION,
         // },
     ],
-    candidates: [
-        // {
-        //     title: '',
-        //     candidateName: '',
-        //     type: 1,
-        // },
-    ],
+    personnelVoting: {
+        confidence: [],
+        notConfidence: [],
+    },
     participants: [],
 }
 
@@ -60,7 +57,7 @@ export const boardMeetingCreateSlice = createSlice({
             state.managementAndFinancials =
                 action.payload.managementAndFinancials
             state.elections = action.payload.elections
-            state.candidates = action.payload.candidates
+            state.personnelVoting = action.payload.personnelVoting
             // state.hosts = action.payload.hosts
             // state.controlBoards = action.payload.controlBoards
             // state.directors = action.payload.directors

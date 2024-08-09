@@ -44,7 +44,7 @@ const MeetingList = () => {
                 sortField: SortField.START_TIME,
             })
         }
-    }, [])
+    }, [setFilterAction])
 
     useEffect(() => {
         getListFutureMeetingAction({

@@ -59,11 +59,11 @@ export const SIDEBAR_ITEMS: ISidebarItem[] = [
 ]
 
 export const SIDEBAR_ITEMS_SYSTEM: ISidebarItem[] = [
-    // {
-    //     icon: DashboardOutlined,
-    //     label: 'DASHBOARD',
-    //     key: '/dashboard-system',
-    // },
+    {
+        icon: DashboardOutlined,
+        label: 'DASHBOARD',
+        key: '/dashboard-system',
+    },
     {
         icon: RadarChartOutlined,
         label: 'LIST_COMPANY',

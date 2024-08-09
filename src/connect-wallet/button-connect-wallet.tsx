@@ -75,9 +75,12 @@ const ButtonConnectWallet = ({
             }
 
             if (authState.status === EActionStatus.Failed) {
-                if (authState.errorMessage == 'USER_STATUS_INACTIVE') {
+                if (
+                    authState.errorMessage == 'USER_STATUS_INACTIVE' ||
+                    authState.errorMessage == 'COMPANY_STATUS_INACTIVE'
+                ) {
                     openNotification({
-                        message: t('USER_STATUS_INACTIVE'),
+                        message: t(authState.errorMessage),
                         placement: 'topRight',
                         type: 'error',
                     })

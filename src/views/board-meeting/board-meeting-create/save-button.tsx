@@ -29,19 +29,6 @@ const SaveCreateBoardMeetingButton = () => {
             note: data.note,
             meetingMinutes: data.meetingMinutes,
             meetingInvitations: data.meetingInvitations,
-            // managementAndFinancials: data.managementAndFinancials.filter(
-            //     (r) => r.title.trim() || r.description.trim(),
-            // ),
-            // elections: data.elections.filter(
-            //     (r) => r.title.trim() || r.description.trim(),
-            // ),
-            // personnelVoting: data.candidates
-            //     .filter((r) => r.title.trim() || r.candidateName.trim())
-            //     .map((personnelVote) => ({
-            //         title: personnelVote.title,
-            //         type: personnelVote.type,
-            //         candidate: [{ candidateName: personnelVote.candidateName }],
-            //     })),
             managementAndFinancials: data.managementAndFinancials.map(
                 (management) => ({
                     ...management,
@@ -56,12 +43,20 @@ const SaveCreateBoardMeetingButton = () => {
                 description: election.description.trim(),
                 oldDescription: election.oldDescription?.trim(),
             })),
-            personnelVoting: data.candidates.map((personnelVote) => ({
-                title: personnelVote.title.trim(),
-                type: personnelVote.type,
-                candidate: [
-                    { candidateName: personnelVote.candidateName.trim() },
-                ],
+            personnelVoting: [
+                ...data.personnelVoting.confidence,
+                ...data.personnelVoting.notConfidence,
+            ].map((personnel) => ({
+                title: personnel.title.trim(),
+                type: personnel.type,
+                candidate: personnel.candidate
+                    .filter((candidate) => candidate.candidateName.trim())
+                    .map((candidate) => {
+                        return {
+                            ...candidate,
+                            candidateName: candidate.candidateName.trim(),
+                        }
+                    }),
             })),
             participants: data.participants?.map((participant) => {
                 return {

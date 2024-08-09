@@ -49,19 +49,20 @@ const SaveUpdateBoardMeetingButton = () => {
                 description: election.description.trim(),
                 oldDescription: election.oldDescription?.trim(),
             })),
-            personnelVoting: data.candidates.map((personnelVote) => ({
-                id:
-                    personnelVote.id && personnelVote.id > 1
-                        ? personnelVote.id
-                        : undefined,
-                title: personnelVote.title.trim(),
-                type: personnelVote.type,
-                candidate: [
-                    {
-                        id: personnelVote.candidateId,
-                        candidateName: personnelVote.candidateName.trim(),
-                    },
-                ],
+            personnelVoting: [
+                ...data.personnelVoting.confidence,
+                ...data.personnelVoting.notConfidence,
+            ].map((personnel) => ({
+                title: personnel.title.trim(),
+                type: personnel.type,
+                candidate: personnel.candidate
+                    .filter((candidate) => candidate.candidateName.trim())
+                    .map((candidate) => {
+                        return {
+                            ...candidate,
+                            candidateName: candidate.candidateName.trim(),
+                        }
+                    }),
             })),
         }
 

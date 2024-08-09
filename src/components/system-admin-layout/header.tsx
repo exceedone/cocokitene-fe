@@ -15,7 +15,7 @@ const Header = () => {
     return (
         <Layout.Header className="fixed z-10 h-12 w-full bg-primary px-4 py-0 text-white">
             <div className="flex h-full items-center justify-between">
-                <Link href="/company">
+                <Link href="/dashboard-system">
                     <LogoAppIcon />
                 </Link>
 

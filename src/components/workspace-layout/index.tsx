@@ -12,20 +12,31 @@ export interface IWorkspaceLayout {
 }
 
 const WorkspaceLayout = (props: IWorkspaceLayout) => {
-    const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
+        // if (typeof window !== 'undefined') {
+        //     // Client-side-only code
+        //     return !(window.innerWidth > 1280)
+        // }
+        return true
+    })
+
+    const [isOpenDraw, setIsOpenDraw] = useState<boolean>(false)
     const { authState } = useAuthLogin()
     const [mounted, setMounted] = useState(false)
+
     useEffect(() => {
         setMounted(true)
     }, [])
     return (
         <Layout className="min-h-screen">
-            <Header />
+            <Header setIsOpenDraw={setIsOpenDraw} />
             <Layout className="mt-12">
                 {mounted && authState.isAuthenticated && (
                     <Sidebar
                         isCollapsed={isCollapsed}
+                        isOpenDraw={isOpenDraw}
                         setIsCollapsed={setIsCollapsed}
+                        setIsOpenDraw={setIsOpenDraw}
                     />
                 )}
 

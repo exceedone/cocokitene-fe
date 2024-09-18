@@ -8,19 +8,15 @@ export interface IRowInfo {
 
 export const RowInfo = ({ label, content }: IRowInfo) => {
     return (
-        <Row className="min-h-[38px] min-w-[556px]">
-            <Col
-                xs={8}
-                lg={8}
-                className="h-[22px] max-w-[145px] whitespace-nowrap"
-            >
+        <Row className="min-h-[40px] py-2" wrap={false}>
+            <Col className="w-[150px] whitespace-nowrap">
                 {label && (
-                    <p className="w-[100%] text-sm text-black-45">{label}:</p>
+                    <div className="w-[100%] text-sm text-black-45">
+                        {label}:
+                    </div>
                 )}
             </Col>
-            <Col xs={16} lg={16} className="text-sm text-black/[85%]">
-                {content}
-            </Col>
+            <Col className="flex-1 text-sm text-black/[85%]">{content}</Col>
         </Row>
     )
 }

@@ -56,7 +56,7 @@ export interface IMeeting {
     meetings_meeting_link: string
     isJoined: number
     meetings_status: string
-    transaction_contract_address?:string
+    transaction_contract_address?: string
     transaction_key_query?: string
     isParticipant: number
 }
@@ -214,7 +214,6 @@ export interface IUpdateMeetingState {
     error: FetchError | undefined
 }
 
-
 export interface IMeetingExecutive {
     confidence: IMeetingPersonnelVote[]
     notConfidence: IMeetingPersonnelVote[]
@@ -223,7 +222,20 @@ export interface IMeetingPersonnelVote {
     title: string
     type: number
     candidate: {
-        candidateID?:number
+        candidateID?: number
         candidateName: string
     }[]
+}
+
+export interface IResolution {
+    title: string
+    content: string
+    oldContent?: string
+    percentVoted: number
+    percentUnVoted: number
+    percentNotVoteYet: number
+    voteResult: VoteProposalOption
+    creator: IProposalCreator
+    id: number
+    proposalFiles: IProposalFile[]
 }

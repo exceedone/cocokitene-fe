@@ -10,7 +10,7 @@ import { useBoardMeetingDetail } from '@/stores/board-meeting/hook'
 import { EActionStatus } from '@/stores/type'
 import Loader from '@/components/loader'
 import DetailTitle from '@/components/content-page-title/detail-title'
-import { Button, notification } from 'antd'
+import { Button, Grid, notification } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 
 import BoardMeetingInformation from '@/views/board-meeting/board-meeting-detail/board-meeting-information'
@@ -24,9 +24,11 @@ import SendEmailButton from './send-email-button'
 import MeetingChat from '@/components/view-chat'
 import { MeetingStatus } from '@/constants/meeting'
 import PersonnelVoting from './personnel-voting'
+const { useBreakpoint } = Grid
 
 const BoardMeetingDetail = () => {
     const t = useTranslations()
+    const screens = useBreakpoint()
     const params = useParams()
     const router = useRouter()
     const boardMeetingId = Number(params.id)
@@ -74,32 +76,33 @@ const BoardMeetingDetail = () => {
                 urlBack={'/board-meeting'}
                 pageName={boardMeeting.title}
                 editButton={
-                    permissionEditBoardMeeting &&
-                    boardMeeting.status !== MeetingStatus.CANCELED &&
-                    boardMeeting.status !== MeetingStatus.HAPPENED && (
-                        <Button
-                            icon={<EditOutlined />}
-                            type="default"
-                            size="large"
-                            onClick={() =>
-                                router.push(
-                                    `/board-meeting/update/${boardMeetingId}`,
-                                )
-                            }
-                        >
-                            {t('EDIT')}
-                        </Button>
-                    )
-                }
-                extraButton={
-                    permissionSendMailBoard &&
-                    boardMeeting.status !== MeetingStatus.CANCELED &&
-                    boardMeeting.status !== MeetingStatus.HAPPENED && (
-                        <SendEmailButton />
-                    )
+                    <div className="flex items-end gap-2">
+                        {permissionEditBoardMeeting &&
+                            boardMeeting.status !== MeetingStatus.CANCELED &&
+                            boardMeeting.status !== MeetingStatus.HAPPENED && (
+                                <Button
+                                    icon={<EditOutlined />}
+                                    type="default"
+                                    size={screens.lg ? 'large' : 'middle'}
+                                    className="max-[470px]:px-2"
+                                    onClick={() =>
+                                        router.push(
+                                            `/board-meeting/update/${boardMeetingId}`,
+                                        )
+                                    }
+                                >
+                                    {t('EDIT')}
+                                </Button>
+                            )}
+                        {permissionSendMailBoard &&
+                            boardMeeting.status !== MeetingStatus.CANCELED &&
+                            boardMeeting.status !== MeetingStatus.HAPPENED && (
+                                <SendEmailButton />
+                            )}
+                    </div>
                 }
             />
-            <div className="flex flex-col gap-6 p-6">
+            <div className="flex flex-col gap-6 p-6 max-sm:px-2">
                 <BoardMeetingInformation />
                 <BoardMeetingNote />
                 <BoardMeetingDocuments />

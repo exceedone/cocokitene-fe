@@ -31,13 +31,17 @@ const ListFutureMeeting = ({ data }: ListFutureMeetingProps) => {
         )
     }
     return (
-        <div className="list-meeting-future">
+        <div className="">
             <BoxArea title={t('MEETING_FUTURE_LIST')}>
                 {data && data.length > 0 ? (
                     <>
-                        {data.map((item, index) => (
-                            <ItemFutureMeeting key={index} {...item} />
-                        ))}
+                        <div className="overflow-auto">
+                            <div className="min-w-[845px]">
+                                {data.map((item, index) => (
+                                    <ItemFutureMeeting key={index} {...item} />
+                                ))}
+                            </div>
+                        </div>
                         <div className="mt-6 flex justify-end">
                             <Pagination
                                 pageSize={limit}

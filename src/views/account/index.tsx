@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import ListTitle from '@/components/content-page-title/list-title'
-import { Button } from 'antd'
+import { Button, Grid } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useListAccount } from '@/stores/account/hook'
 import { useAuthLogin } from '@/stores/auth/hooks'
@@ -12,9 +12,11 @@ import withAuth from '@/components/component-auth'
 import AccountList from '@/views/account/account-list'
 import { CONSTANT_EMPTY_STRING } from '@/constants/common'
 import { SORT } from '@/constants/meeting'
+const { useBreakpoint } = Grid
 
 const AccountView = () => {
     const t = useTranslations()
+    const screens = useBreakpoint()
     const router = useRouter()
     const { accountState, getListAccountAction, setFilterAction } =
         useListAccount()
@@ -58,7 +60,8 @@ const AccountView = () => {
                         <Button
                             type="primary"
                             icon={<PlusOutlined />}
-                            size="large"
+                            size={screens.lg ? 'large' : 'middle'}
+                            className="max-[470px]:px-2"
                             onClick={() => {
                                 router.push('/account/create')
                             }}
@@ -71,7 +74,7 @@ const AccountView = () => {
                 onChangeInput={handleInputChange}
                 onChangeSelect={handleSelectChange}
             />
-            <div className="p-6">
+            <div className="p-6 max-sm:px-0">
                 <AccountList />
             </div>
         </div>

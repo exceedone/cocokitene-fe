@@ -8,10 +8,10 @@ const { Title } = Typography
 const AboutSection = () => {
     const t = useTranslations()
     return (
-        <div className="absolute left-1/2 top-[40%] z-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute left-1/2 top-[40%] z-20 w-[90%] -translate-x-1/2 -translate-y-1/2">
             <Title
                 level={1}
-                className="max-w-2xl text-center font-medium text-yellow-sunrise"
+                className="mx-auto w-[80%] text-center  font-medium text-yellow-sunrise max-[640px]:text-2xl md:max-w-2xl"
             >
                 {/* <span className="text-yellow-sunrise">
                     {t('EFFICIENTLY')} {t('STORE')}

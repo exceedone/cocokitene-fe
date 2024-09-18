@@ -13,7 +13,7 @@ import { formatTimeMeeting } from '@/utils/date'
 import { truncateString } from '@/utils/format-string'
 import { IMeetingItem } from '@/views/meeting/meeting-list/type'
 import { CheckOutlined, CopyTwoTone, EyeTwoTone } from '@ant-design/icons'
-import { Button, Col, Row, Tooltip, Typography } from 'antd'
+import { Badge, Button, Col, Row, Tooltip, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -64,7 +64,7 @@ const ItemPastMeeting = ({
                     document.body.removeChild(textArea)
                 }
                 setCopySuccess(true)
-                // Reset the message after 1 second
+                // Reset the message after 1,5 second
                 setTimeout(() => setCopySuccess(false), 1500)
             } catch (error) {
                 console.log('Failed to copy text:', error)
@@ -74,10 +74,10 @@ const ItemPastMeeting = ({
 
     return (
         <Row
-            className="border-true-gray-300 mb-2 rounded-lg border p-2"
+            className="border-true-gray-300 m-0 mb-2 rounded-lg border p-2"
             gutter={[16, 16]}
         >
-            <Col span={6} className="flex items-center space-x-2">
+            <Col span={6} className="flex items-center space-x-2 px-0">
                 <Image
                     src="/images/logo-meeting-future.png"
                     alt="service-image-alt"
@@ -112,75 +112,81 @@ const ItemPastMeeting = ({
                     overlayClassName="lg:max-2xl:max-w-[370px] 2xl:max-w-[500px]"
                     color={'rgba(81, 81, 229, 1)'}
                 >
-                    <Text className="overflow-hidden overflow-ellipsis whitespace-nowrap ">
-                        {meetings_title}
-                    </Text>
+                    {/* <Text className="overflow-hidden overflow-ellipsis whitespace-nowrap "> */}
+                    <Text className="line-clamp-2">{meetings_title}</Text>
                 </Tooltip>
             </Col>
-            <Col span={3} className="my-auto">
-                {transaction_key_query && (
-                    <div className="flex items-center gap-2">
-                        <Text className="">{transaction_key_query}</Text>
-                        {copySuccess ? (
-                            <CheckOutlined
-                                style={{ color: '#03fc3d', fontSize: '18px' }}
-                            />
-                        ) : (
-                            <CopyTwoTone
-                                className="cursor-pointer"
-                                twoToneColor="#5151e5"
-                                style={{ fontSize: '18px' }}
-                                onClick={copyToClipboard}
-                            />
-                        )}
-                    </div>
-                )}
+            <Col span={4} xl={5} className="my-auto h-full p-1">
+                <div className="flex justify-around gap-5 max-xl:flex-col max-xl:items-center max-xl:gap-1">
+                    {transaction_key_query && (
+                        <div className="flex items-center gap-[2px]">
+                            <Text className="xl:break-keep">
+                                {transaction_key_query}
+                            </Text>
+                            {copySuccess ? (
+                                <CheckOutlined
+                                    style={{
+                                        color: '#03fc3d',
+                                        fontSize: '18px',
+                                    }}
+                                />
+                            ) : (
+                                <CopyTwoTone
+                                    className="cursor-pointer"
+                                    twoToneColor="#5151e5"
+                                    style={{ fontSize: '18px' }}
+                                    onClick={copyToClipboard}
+                                />
+                            )}
+                        </div>
+                    )}
+                    {transaction_contract_address && (
+                        <Link
+                            href={`${process.env.NEXT_PUBLIC_TRANSACTION_LINK}${transaction_contract_address}${process.env.NEXT_PUBLIC_PROXY_CONTRACT}`}
+                            target="_blank"
+                            className="inline"
+                        >
+                            <span className="break-words text-blue-500 hover:underline">
+                                {t('TRANSACTION_LINK')}
+                            </span>
+                        </Link>
+                    )}
+                </div>
             </Col>
             <Col span={2} className="flex items-center">
-                {transaction_contract_address && (
-                    <Link
-                        href={`${process.env.NEXT_PUBLIC_TRANSACTION_LINK}${transaction_contract_address}${process.env.NEXT_PUBLIC_PROXY_CONTRACT}`}
-                        target="_blank"
-                    >
-                        <Text className="text-blue-500 hover:underline">
-                            {t('TRANSACTION_LINK')}
-                        </Text>
-                    </Link>
-                )}
-            </Col>
-            <Col span={3} className="flex items-center pl-4">
                 <Link
                     href={meetings_meeting_link.toString()}
                     passHref
                     legacyBehavior
                 >
                     <a target="_blank" rel="noopener noreferrer">
-                        <Text className="text-blue-500 hover:underline">
+                        <div className="text-blue-500 hover:underline">
                             {t('MEETING_LINKS')}
-                        </Text>
+                        </div>
                     </a>
                 </Link>
             </Col>
-            <Col span={2} className="flex items-center pl-3">
+            <Col span={3} xl={2} className="flex items-center px-0">
                 {enumToArray(MeetingStatus).map((status, key) => {
                     if (status === meetings_status) {
                         return (
-                            <li
+                            <Badge
+                                color={MeetingStatusColor[status]}
+                                text={t(MeetingStatusName[status])}
+                                className="mx-auto"
                                 key={key}
-                                style={{
-                                    color: MeetingStatusColor[status],
-                                }}
-                            >
-                                {t(MeetingStatusName[status])}
-                            </li>
+                            />
                         )
                     }
                 })}
             </Col>
-            <Col span={2} className="flex items-center justify-between">
+            <Col
+                span={2}
+                className="flex items-center justify-center space-x-2 px-1"
+            >
                 {permissionCheckData && (
                     <Button
-                        className="w-[73px]"
+                        className="w-[62px] px-0 xl:w-[73px]"
                         type="primary"
                         // icon={<PlusOutlined />}
                         // size="Default"
@@ -197,7 +203,10 @@ const ItemPastMeeting = ({
                     </Button>
                 )}
             </Col>
-            <Col span={1} className="flex items-center justify-end pr-5">
+            <Col
+                span={2}
+                className="flex items-center justify-end pr-3 2xl:pr-7"
+            >
                 {permissionDetail && (
                     <EyeTwoTone
                         style={{ fontSize: '18px' }}

@@ -68,9 +68,9 @@ const ContactSection = () => {
     const groupContactClass = 'flex gap-2 font-normal'
 
     return (
-        <div id="contact" className="bg-gray-sunset">
-            <div className="bg-covert relative mx-auto my-0 min-h-[790px] max-w-[1250px] bg-landing-registration-bg bg-no-repeat">
-                <div className="registration-form__wrapper absolute right-0 top-1/2 w-[560px] -translate-y-1/2 bg-white p-10 drop-shadow-md">
+        <div id="contact" className="sm:bg-gray-sunset">
+            <div className="bg-covert relative mx-auto my-0 min-h-[790px] max-w-[1250px] bg-no-repeat max-lg:bg-login-bg lg:bg-landing-registration-bg">
+                <div className="registration-form__wrapper absolute top-1/2 w-[100%] -translate-y-1/2 bg-white p-8 max-lg:left-1/2 max-lg:-translate-x-1/2 sm:drop-shadow-md md:right-0 md:mr-7 md:w-[560px]">
                     <Title className="text-center font-bold" level={2}>
                         {t('SEND_YOUR_REGISTRATION')}
                     </Title>
@@ -87,8 +87,8 @@ const ContactSection = () => {
                             layout="vertical"
                             form={form}
                         >
-                            <Row gutter={24}>
-                                <Col span={12}>
+                            <Row gutter={[24, 0]}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item
                                         label={t('YOUR_NAME')}
                                         name="username"
@@ -101,10 +101,10 @@ const ContactSection = () => {
                                             },
                                         ]}
                                     >
-                                        <Input size="large" />
+                                        <Input />
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item
                                         label={t('EMAIL')}
                                         name="email"
@@ -123,12 +123,12 @@ const ContactSection = () => {
                                             },
                                         ]}
                                     >
-                                        <Input size="large" />
+                                        <Input />
                                     </Form.Item>
                                 </Col>
                             </Row>
-                            <Row gutter={24}>
-                                <Col span={12}>
+                            <Row gutter={[24, 0]}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item
                                         label={t('COMPANY')}
                                         name="company"
@@ -141,10 +141,10 @@ const ContactSection = () => {
                                             },
                                         ]}
                                     >
-                                        <Input size="large" />
+                                        <Input />
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item
                                         label={t('PHONE_NUMBER')}
                                         name="phone"
@@ -163,19 +163,23 @@ const ContactSection = () => {
                                             },
                                         ]}
                                     >
-                                        <Input size="large" />
+                                        <Input />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row gutter={24}>
-                                <Col span={24}>
+                                <Col xs={24}>
                                     <Form.Item label={t('NOTE')} name="note">
-                                        <Input size="large" />
+                                        <Input />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row gutter={24}>
-                                <Col span={24} className="text-center">
+                                <Col
+                                    xs={24}
+                                    sm={12}
+                                    className="mx-auto text-center"
+                                >
                                     <Form.Item>
                                         <Button
                                             type="primary"
@@ -192,19 +196,21 @@ const ContactSection = () => {
                             </Row>
                         </Form>
                     </div>
-                    <div className="contact-information flex flex-col gap-3">
-                        <Title level={5} className="font-bold">
-                            {t('CONTACT_INFORMATION')}
-                        </Title>
-                        <div className={groupContactClass}>
+                    <div className="contact-information flex flex-wrap gap-3 sm:flex-col">
+                        <div className="w-full">
+                            <Title level={5} className="font-bold">
+                                {t('CONTACT_INFORMATION')}
+                            </Title>
+                        </div>
+                        <div className={`${groupContactClass} w-full`}>
                             <EnvironmentTwoTone />
                             <Text>{t('CONTACT_ADDRESS')}</Text>
                         </div>
-                        <div className={groupContactClass}>
+                        <div className={`${groupContactClass} w-full`}>
                             <MailTwoTone />
                             <Text>info@exceedone.co.jp</Text>
                         </div>
-                        <div className={groupContactClass}>
+                        <div className={`${groupContactClass} mr-5`}>
                             <MobileTwoTone />
                             <Text>03-5625-0900</Text>
                         </div>

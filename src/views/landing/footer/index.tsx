@@ -17,13 +17,13 @@ const LandingFooter = () => {
 
     return (
         <div id="landing-footer" className=" bg-primary">
-            <div className="footer-content mx-auto my-0 flex max-w-[1200px] justify-between py-2">
+            <div className="footer-content mx-auto my-0 flex max-w-[1200px] justify-between px-4 py-2 max-[639px]:flex-col">
                 <div className="footer__left">
                     <Text className={baseTextClass}>
                         {t('FOOTER_COPY_RIGHT')}
                     </Text>
                 </div>
-                <div className="footer__right flex items-center justify-center gap-3">
+                <div className="footer__right flex items-center justify-center gap-3 max-[640px]:justify-end">
                     <Text className={baseTextClass}>
                         {t('TERM_OF_SERVICE')}
                     </Text>

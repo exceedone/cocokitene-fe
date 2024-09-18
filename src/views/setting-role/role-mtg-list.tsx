@@ -79,7 +79,7 @@ const RoleMtgList = () => {
                     </div>
                 )
             },
-            width: '20%',
+            width: '28%',
         },
         {
             title: t('DESCRIPTION'),
@@ -95,7 +95,7 @@ const RoleMtgList = () => {
                     </>
                 )
             },
-            width: '48%',
+            width: '40%',
         },
         {
             title: t('TYPE'),
@@ -161,6 +161,7 @@ const RoleMtgList = () => {
                         total: settingRoleMtgState.totalRoleMtgItem,
                         onChange: handlePageChange,
                     }}
+                    scroll={{ x: 845 }}
                 />
             </div>
             <ModalUpdateRoleMtg />

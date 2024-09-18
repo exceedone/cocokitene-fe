@@ -26,8 +26,8 @@ export const formatTimeMeeting = (
     const startDate = moment(meetingsStartTime).utc(false).format('YYYY-MM-DD')
     const endDate = moment(meetingsEndTime).utc(false).format('YYYY-MM-DD')
 
-    const startTime = moment(meetingsStartTime).utc(true).format('HH:mm:ss')
-    const endTime = moment(meetingsEndTime).utc(true).format('HH:mm:ss')
+    const startTime = moment(meetingsStartTime).utc(true).format('HH:mm')
+    const endTime = moment(meetingsEndTime).utc(true).format('HH:mm')
     const timeRange = `${startDate} ${startTime} ~ ${endDate} ${endTime}`
     return timeRange
 }

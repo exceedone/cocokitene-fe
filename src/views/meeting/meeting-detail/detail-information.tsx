@@ -26,17 +26,17 @@ export const BoxGeneralInformation = ({
     totalNumber,
 }: IBoxGeneralInformation) => {
     return (
-        <div className="bg-white p-6">
-            <div className="flex items-end justify-between ">
-                <div className="flex items-end justify-center gap-2">
-                    {icon}
+        <div className="bg-white p-6 max-[470px]:px-3">
+            <div className="flex items-end justify-between gap-2">
+                <div className="flex justify-center gap-2">
+                    <div className="h-4 w-4">{icon}</div>
                     <Text className="leading-none">{title}</Text>
                 </div>
                 <div>
-                    <div className="flex items-baseline gap-2">
+                    <div className="flex flex-nowrap items-baseline gap-2">
                         <Title
                             level={2}
-                            className="mb-0 font-medium leading-none"
+                            className="mb-0 break-keep font-medium leading-none	"
                         >
                             {realNumber}
                         </Title>
@@ -48,7 +48,7 @@ export const BoxGeneralInformation = ({
                         </Title>
                         <Title
                             level={4}
-                            className="mb-0 mt-0 font-medium leading-none"
+                            className="mb-0 mt-0 break-keep font-medium leading-none"
                         >
                             {totalNumber}
                         </Title>
@@ -77,10 +77,10 @@ export const BoxInformationQuantityShareOfParticipant = ({
     quantityShare: number
 }) => {
     return (
-        <div className="h-full bg-white p-6">
-            <div className="flex items-end justify-between ">
-                <div className="flex items-end justify-center gap-2">
-                    {icon}
+        <div className="h-full bg-white p-6 max-[470px]:px-3">
+            <div className="flex items-end justify-between gap-2">
+                <div className="flex justify-center gap-2">
+                    <div className="h-4 w-4">{icon}</div>
                     <Text className="leading-none">{title}</Text>
                 </div>
                 <div>
@@ -133,7 +133,7 @@ const DetailInformation = () => {
     return (
         <>
             <Row gutter={[16, 24]}>
-                <Col xs={24} lg={10}>
+                <Col xs={24} xl={10}>
                     <BoxGeneralInformation
                         icon={<LikeIcon fill1="#EFEFFF" fill2="#5151E5" />}
                         title={t('TOTAL_SHARES_BY_SHAREHOLDERS_JOINED')}
@@ -141,7 +141,7 @@ const DetailInformation = () => {
                         totalNumber={meeting.totalMeetingShares}
                     />
                 </Col>
-                <Col xs={12} lg={7}>
+                <Col xs={24} sm={12} xl={7}>
                     <BoxGeneralInformation
                         icon={
                             <ShareholdersIcon fill1="#EFEFFF" fill2="#5151E5" />
@@ -151,16 +151,20 @@ const DetailInformation = () => {
                         totalNumber={meeting.shareholdersTotal}
                     />
                 </Col>
-                <Col xs={12} lg={7}>
+                <Col xs={24} sm={12} xl={7}>
                     <BoxInformationQuantityShareOfParticipant
-                        icon={<PieChartOutlined style={{ color: '#5151e5' }} />}
+                        icon={
+                            <PieChartOutlined
+                                style={{ fontSize: '16px', color: '#5151e5' }}
+                            />
+                        }
                         title={t('QUANTITY_SHARE_AT_MEETING')}
                         quantityShare={quantityShare}
                     />
                 </Col>
                 <Col xs={24} lg={24}>
                     <BoxArea title={t('MEETING_INFORMATION')}>
-                        <div className="flex gap-6">
+                        <div className="flex flex-wrap gap-x-6 gap-y-2">
                             <div className="flex gap-3">
                                 <Text className="text-black-45">
                                     {t('START_TIME')}:

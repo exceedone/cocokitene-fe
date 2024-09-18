@@ -12,6 +12,9 @@ import { Button } from 'antd'
 import { EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { ScreenDashBoard } from '@/constants/dash-board'
 import { truncateString } from '@/utils/format-string'
+import { Grid } from 'antd'
+
+const { useBreakpoint } = Grid
 
 interface DataNotificationSys {
     key: React.Key
@@ -36,6 +39,7 @@ const NotificationSystem = ({
     const [loadingFetchData, setLoadingFetchData] = useState<boolean>(false)
 
     const t = useTranslations()
+    const screens = useBreakpoint()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,29 +71,30 @@ const NotificationSystem = ({
 
     const columns: ColumnsType<DataNotificationSys> = [
         {
-            title: t('NO'),
+            // title: t('NO'),
+            title: <div className="">{t('NO')}</div>,
             dataIndex: 'key',
             className: 'text-center',
-            width: '5%',
+            responsive: ['xl'],
+            width: 40,
         },
         {
-            title: t('DURATION'),
+            title: t('CREATE_AT'),
             dataIndex: 'date',
             render: (_, record) => {
                 return (
-                    <div className="flex items-center gap-2 truncate">
-                        {record.date}
-                    </div>
+                    <div className="flex items-center gap-2">{record.date}</div>
                 )
             },
-            width: '25%',
+            responsive: ['lg'],
+            width: 130,
         },
         {
             title: t('TITLE_SYSTEM_NOTI'),
             dataIndex: 'title',
             render: (_, record) => {
                 return (
-                    <div className="w-[95%] truncate">
+                    <div className="truncate">
                         {truncateString({
                             text: record.title,
                             start: 78,
@@ -98,7 +103,8 @@ const NotificationSystem = ({
                     </div>
                 )
             },
-            width: '55%',
+            // width: '55%',
+            ellipsis: true,
         },
         {
             render: (_, record) => {
@@ -141,7 +147,7 @@ const NotificationSystem = ({
                     </div>
                 )
             },
-            width: '20%',
+            width: 100,
         },
     ]
 
@@ -170,7 +176,9 @@ const NotificationSystem = ({
     return (
         <div className="flex flex-col gap-3 p-2">
             <div className="flex justify-between">
-                <span className="text-xl">{t('SYSTEM_NOTIFICATION')}</span>
+                <span className="text-xl font-medium">
+                    {t('SYSTEM_NOTIFICATION')}
+                </span>
                 <Button
                     className="flex items-center"
                     onClick={() => {
@@ -195,6 +203,7 @@ const NotificationSystem = ({
                     locale={locale}
                     loading={loadingFetchData}
                     onChange={handlePageChange}
+                    showHeader={screens.sm}
                 />
             </div>
         </div>

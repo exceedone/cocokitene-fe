@@ -47,6 +47,7 @@ const UpdateTitle = ({ pageName, saveButton }: IUpdateTitle) => {
                 onCancel={handleCancel}
                 okText={t('BTN_CONFIRM')}
                 cancelText={t('BTN_CANCEL')}
+                closable={false}
             >
                 <p>{t('CONTENT_CONFIRM_BACK')}</p>
             </Modal>

@@ -3,7 +3,7 @@ import {
     IBoardProposalCreator,
     IBoardProposalFile,
 } from '@/stores/board-meeting/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import Color from 'color'
 import {
@@ -34,6 +34,7 @@ interface IDetailReportItem extends Resolution {
     proposalFiles?: IBoardProposalFile[]
     id: number
     voteErrorMessage?: string
+    isBoard: boolean
 }
 
 const DetailReportItem = ({
@@ -44,12 +45,12 @@ const DetailReportItem = ({
     percentVoted,
     percentUnVoted,
     percentNotVoteYet,
-
     voteResult,
     creator,
     proposalFiles,
     id,
     voteErrorMessage = '',
+    isBoard,
 }: IDetailReportItem) => {
     const [value, setValue] = useState(voteResult)
     const [openModal, setOpenModal] = useState<boolean>(false)
@@ -60,6 +61,14 @@ const DetailReportItem = ({
     })
     const [voteStatus, setVoteStatus] = useState(FETCH_STATUS.IDLE)
     const t = useTranslations()
+
+    useEffect(() => {
+        setVotePercent({
+            percentUnVoted,
+            percentVoted,
+            percentNotVoteYet,
+        })
+    }, [percentUnVoted, percentVoted, percentNotVoteYet])
 
     const toggleModelDetailReport = () => {
         setOpenModal(!openModal)
@@ -123,7 +132,7 @@ const DetailReportItem = ({
         }
     }
     return (
-        <div className="flex items-center justify-between border-b border-b-neutral/4 py-3">
+        <div className="flex items-center justify-between gap-8 border-b border-b-neutral/4 py-3">
             <Modal
                 title={title}
                 open={openModal}
@@ -212,34 +221,48 @@ const DetailReportItem = ({
                 </div>
             </Modal>
 
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-1 items-center justify-center gap-4 max-[470px]:gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full border-neutral/5 bg-neutral/2">
                     <Text className="text-bold">{index}</Text>
                 </div>
                 <Text
                     title={content}
-                    className="cursor-pointer text-primary underline decoration-1"
+                    className="flex-1 cursor-pointer text-primary underline decoration-1"
                     onClick={toggleModelDetailReport}
                 >
                     {title}
                 </Text>
             </div>
-            <div className="flex w-[300px] items-center gap-8">
+            <div
+                className={`flex ${
+                    percentVoted !== undefined &&
+                    percentNotVoteYet !== undefined &&
+                    percentUnVoted !== undefined
+                        ? 'flex-1'
+                        : ''
+                } items-center justify-end gap-8`}
+            >
                 {percentVoted !== undefined &&
                     percentNotVoteYet !== undefined &&
                     percentUnVoted !== undefined && (
                         <Tooltip placement="top" title={t(voteErrorMessage)}>
                             <Radio.Group
                                 onChange={onVoteConfirm}
-                                value={value}
+                                value={isBoard && value}
                                 disabled={
                                     voteStatus === FETCH_STATUS.LOADING ||
                                     !!voteErrorMessage
                                 }
+                                className="flex justify-end max-sm:flex-col"
                             >
-                                <Radio value={VoteProposalOption.VOTE}>
+                                <Radio
+                                    value={VoteProposalOption.VOTE}
+                                    className="max-sm:w-28"
+                                >
                                     <div className="flex flex-col">
-                                        <div>{t('VOTED')}</div>
+                                        <div style={{ whiteSpace: 'nowrap' }}>
+                                            {t('VOTED')}
+                                        </div>
                                         <Text className="text-polar-green">
                                             {formatNumber(
                                                 votePercent.percentVoted,
@@ -251,9 +274,14 @@ const DetailReportItem = ({
                                         </Text>
                                     </div>
                                 </Radio>
-                                <Radio value={VoteProposalOption.UN_VOTE}>
+                                <Radio
+                                    value={VoteProposalOption.UN_VOTE}
+                                    className="max-sm:w-28"
+                                >
                                     <div className="flex flex-col">
-                                        <div>{t('UNVOTED')}</div>
+                                        <div style={{ whiteSpace: 'nowrap' }}>
+                                            {t('UNVOTED')}
+                                        </div>
                                         <Text className="text-polar-green">
                                             {formatNumber(
                                                 votePercent.percentUnVoted,
@@ -265,9 +293,14 @@ const DetailReportItem = ({
                                         </Text>
                                     </div>
                                 </Radio>
-                                <Radio value={VoteProposalOption.NO_IDEA}>
+                                <Radio
+                                    value={VoteProposalOption.NO_IDEA}
+                                    className="max-sm:w-28"
+                                >
                                     <div className="flex flex-col">
-                                        <div>{t('NO_IDEA')}</div>
+                                        <div style={{ whiteSpace: 'nowrap' }}>
+                                            {t('NO_IDEA')}
+                                        </div>
                                         <Text className="text-polar-green">
                                             {formatNumber(
                                                 votePercent.percentNotVoteYet,

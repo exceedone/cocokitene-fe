@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { useAttendance } from '@/stores/attendance/hooks'
 import { useNotification } from '@/hooks/use-notification'
-import { Button, Col, Modal, Row, Tooltip, Typography } from 'antd'
+import { Badge, Button, Col, Modal, Row, Tooltip, Typography } from 'antd'
 import { calculateTimeDifference, formatTimeMeeting } from '@/utils/date'
 import Image from 'next/image'
 import { truncateString } from '@/utils/format-string'
@@ -77,8 +77,11 @@ const ItemFutureBoardMeeting = ({
     return (
         <>
             {contextHolder}
-            <Row className="mb-2 rounded-lg border p-2" gutter={[16, 16]}>
-                <Col span={6} className="flex items-center space-x-2">
+            <Row
+                className="border-true-gray-300 m-0 mb-2 w-full rounded-lg border p-2"
+                gutter={[16, 16]}
+            >
+                <Col span={6} className="flex items-center space-x-2 px-0">
                     <Image
                         src="/images/logo-meeting-future.png"
                         alt="service-image-alt"
@@ -116,8 +119,8 @@ const ItemFutureBoardMeeting = ({
                         <Text>{meetings_title}</Text>
                     </Tooltip>
                 </Col>
-                <Col span={5}></Col>
-                <Col span={3} className="flex items-center pl-4">
+                <Col span={4} xl={5}></Col>
+                <Col span={2} className="flex items-center ">
                     <Link
                         href={meetings_meeting_link.toString()}
                         passHref
@@ -125,34 +128,40 @@ const ItemFutureBoardMeeting = ({
                     >
                         <a target="_blank" rel="noopener noreferrer">
                             <Text className="text-blue-500 hover:underline">
-                                {t('BOARD_MEETING_LINK')}
+                                {t('MEETING_LINKS')}
                             </Text>
                         </a>
                     </Link>
                 </Col>
-                <Col span={2} className="flex items-center">
+                <Col span={3} xl={2} className="flex items-center px-0">
                     {enumToArray(MeetingStatus).map((status, key) => {
                         if (status === meetings_status) {
                             return (
-                                <li
+                                // <li
+                                //     key={key}
+                                //     style={{
+                                //         color: MeetingStatusColor[status],
+                                //     }}
+                                // >
+                                //     {t(MeetingStatusName[status])}
+                                // </li>
+                                <Badge
+                                    color={MeetingStatusColor[status]}
+                                    text={t(MeetingStatusName[status])}
+                                    className="mx-auto"
                                     key={key}
-                                    style={{
-                                        color: MeetingStatusColor[status],
-                                    }}
-                                >
-                                    {t(MeetingStatusName[status])}
-                                </li>
+                                />
                             )
                         }
                     })}
                 </Col>
                 <Col
                     span={2}
-                    className={`flex items-center ${
+                    className={`flex items-center  ${
                         meetings_status !== MeetingStatus.CANCELED
-                            ? 'justify-between'
+                            ? 'justify-center'
                             : 'justify-end'
-                    } gap-5 space-x-2 pr-5`}
+                    } space-x-2 px-1`}
                 >
                     {meetings_status !== MeetingStatus.CANCELED &&
                     isParticipant == 1 ? (
@@ -160,7 +169,7 @@ const ItemFutureBoardMeeting = ({
                             <Button
                                 type="primary"
                                 size="middle"
-                                className="w-[73px]"
+                                className="w-[62px] px-0 xl:w-[73px]"
                                 onClick={() => showModal(meetings_start_time)}
                             >
                                 {t('BTN_JOIN')}
@@ -170,7 +179,7 @@ const ItemFutureBoardMeeting = ({
                                 type="primary"
                                 size="middle"
                                 disabled
-                                className="w-[73px]"
+                                className="w-[62px] px-0 xl:w-[73px]"
                             >
                                 {t('JOINED')}
                             </Button>
@@ -180,10 +189,10 @@ const ItemFutureBoardMeeting = ({
                     )}
                 </Col>
                 <Col
-                    span={1}
-                    className="flex items-center justify-end gap-5 space-x-2 pr-5"
+                    span={2}
+                    className="flex items-center justify-end px-0 pr-3 2xl:pr-7"
                 >
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                         {permissionEdit &&
                             meetings_status !== MeetingStatus.CANCELED && (
                                 <EditTwoTone

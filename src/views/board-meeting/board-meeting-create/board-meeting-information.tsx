@@ -23,6 +23,7 @@ import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker'
 import { UploadOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import { useParams } from 'next/navigation'
 
 const { Text } = Typography
 const { TextArea } = Input
@@ -30,6 +31,8 @@ const { RangePicker } = DatePicker
 
 const BoardMeetingInformation = () => {
     const t = useTranslations()
+    const params = useParams()
+    const locale = params.locale
     const [data, setData] = useCreateBoardMeetingInformation()
 
     const [fileData, setFileData] = useState<{
@@ -246,7 +249,7 @@ const BoardMeetingInformation = () => {
                                 size="large"
                                 value={data.title}
                                 onChange={onChange}
-                                maxLength={255}
+                                maxLength={100}
                             />
                         </Form.Item>
                     </Form>
@@ -276,6 +279,7 @@ const BoardMeetingInformation = () => {
                                 addonBefore="https://"
                                 value={data.meetingLink}
                                 onChange={onChange}
+                                maxLength={100}
                             />
                         </Form.Item>
                     </Form>
@@ -285,8 +289,17 @@ const BoardMeetingInformation = () => {
                     <Form layout="horizontal">
                         <Form.Item
                             name="invitation"
-                            label={t('BOARD_MEETING_INVITATION') + ':'}
+                            label={
+                                <div
+                                    className={`${
+                                        locale == 'ja' ? 'w-20' : 'w-40'
+                                    }`}
+                                >
+                                    {t('BOARD_MEETING_INVITATION')}
+                                </div>
+                            }
                             className="mb-0"
+                            labelAlign="left"
                         >
                             <Upload
                                 onChange={onFileChange(
@@ -339,8 +352,17 @@ const BoardMeetingInformation = () => {
                     <Form layout="horizontal">
                         <Form.Item
                             name="invitation"
-                            label={t('BOARD_MEETING_MINUTES') + ':'}
+                            label={
+                                <div
+                                    className={`${
+                                        locale == 'ja' ? 'w-20' : 'w-40'
+                                    }`}
+                                >
+                                    {t('BOARD_MEETING_MINUTES')}
+                                </div>
+                            }
                             className="mb-0"
+                            labelAlign="left"
                         >
                             <Upload
                                 onChange={onFileChange(
@@ -468,7 +490,7 @@ const BoardMeetingInformation = () => {
                                 size="large"
                                 value={data.note}
                                 onChange={onChange}
-                                maxLength={5000}
+                                maxLength={4000}
                             />
                         </Form.Item>
                     </Form>

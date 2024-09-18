@@ -32,15 +32,6 @@ const Candidates = () => {
                 })
                 if (electionList) {
                     setElectionList(electionList)
-                    setData({
-                        ...data,
-                        personnelVoting: {
-                            confidence: [...data.personnelVoting.confidence],
-                            notConfidence: [
-                                ...data.personnelVoting.notConfidence,
-                            ],
-                        },
-                    })
                 }
             })()
         } catch (error) {
@@ -128,7 +119,6 @@ const Candidates = () => {
     }
 
     const onDelete = (index: number, type: ElectionEnum) => () => {
-        console.log('index Delete: ', index)
         if (type == ElectionEnum.VOTE_OF_CONFIDENCE) {
             setData({
                 ...data,
@@ -152,8 +142,6 @@ const Candidates = () => {
             })
         }
     }
-
-    console.log('data.personnelVoting: ', data.personnelVoting)
 
     return (
         <BoxArea title={t('EXECUTIVE_OFFICER_ELECTION')}>

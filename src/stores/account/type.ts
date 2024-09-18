@@ -26,6 +26,7 @@ export interface IAccountList {
     index: number
     username: string
     avatar: string
+    email:string
     companyId: number
     walletAddress: string
     defaultAvatarHashColor: string | null

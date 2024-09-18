@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react'
 import serviceRoleMtg from '@/services/role-mtg'
 import { TypeRoleMeeting } from '@/constants/role-mtg'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
+import { MeetingRole } from '@/stores/attendance/type'
+import { useAuthLogin } from '@/stores/auth/hooks'
 
 export interface IRoleBoardMtg {
     id: number
@@ -17,6 +19,7 @@ export interface IRoleBoardMtg {
 
 const BoardMeetingParticipants = () => {
     const t = useTranslations()
+    const { authState } = useAuthLogin()
     const [data, setData] = useCreateBoardMeetingInformation()
     const [roleBoardMtgList, setRoleBoardMtgList] = useState<IRoleBoardMtg[]>(
         [],
@@ -34,6 +37,36 @@ const BoardMeetingParticipants = () => {
         }
         fetchInitialData()
     }, [])
+
+    useEffect(() => {
+        const roleMtgHost = roleBoardMtgList.find(
+            (roleMtg) =>
+                roleMtg.roleName.toUpperCase() ==
+                MeetingRole.HOST.toUpperCase(),
+        )
+        if (roleMtgHost && authState.userData) {
+            setData({
+                ...data,
+                participants: [
+                    ...data.participants,
+                    {
+                        roleMtgId: roleMtgHost.id,
+                        roleName: roleMtgHost.roleName,
+                        userParticipant: [
+                            {
+                                users_id: authState.userData.id,
+                                users_email: authState.userData.email,
+                                users_defaultAvatarHashColor:
+                                    authState.userData.defaultAvatarHashColor,
+                                disable_delete: true,
+                            },
+                        ],
+                    },
+                ],
+            })
+        }
+        // eslint-disable-next-line
+    }, [roleBoardMtgList, authState])
 
     const onSelect =
         (key: string, roleMtgId: number) => (participant: IParticipants) => {
@@ -94,7 +127,16 @@ const BoardMeetingParticipants = () => {
                         if (participant.roleName === key) {
                             return {
                                 ...participant,
-                                userParticipant: [...participants],
+                                userParticipant: participants.map(
+                                    (participant) => ({
+                                        ...participant,
+                                        disable_delete:
+                                            key.toLocaleUpperCase() ==
+                                                MeetingRole.HOST.toLocaleUpperCase() &&
+                                            participant.users_id ==
+                                                authState.userData?.id,
+                                    }),
+                                ),
                             }
                         }
                         return participant
@@ -119,21 +161,26 @@ const BoardMeetingParticipants = () => {
             }
         }
     const onDelete = (key: string) => (participant: IParticipants) => {
-        const updatedParticipants = data.participants.map((item) => {
-            if (item.roleName == key) {
-                return {
-                    ...item,
-                    userParticipant: item.userParticipant.filter(
-                        (user) => user.users_id !== participant.users_id,
-                    ),
+        if (
+            key.toUpperCase() !== MeetingRole.HOST.toUpperCase() ||
+            participant.users_id !== authState.userData?.id
+        ) {
+            const updatedParticipants = data.participants.map((item) => {
+                if (item.roleName == key) {
+                    return {
+                        ...item,
+                        userParticipant: item.userParticipant.filter(
+                            (user) => user.users_id !== participant.users_id,
+                        ),
+                    }
                 }
-            }
-            return item
-        })
-        setData({
-            ...data,
-            participants: updatedParticipants,
-        })
+                return item
+            })
+            setData({
+                ...data,
+                participants: updatedParticipants,
+            })
+        }
     }
 
     return (

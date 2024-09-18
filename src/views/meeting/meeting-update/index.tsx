@@ -23,8 +23,6 @@ const MeetingUpdate = () => {
 
     const meetingId = Number(params.id)
 
-    console.log('data.personnel: ', data.personnelVoting)
-
     useEffect(() => {
         if (meetingId) {
             initUpdateMeeting(meetingId)

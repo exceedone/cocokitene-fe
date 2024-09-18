@@ -93,10 +93,18 @@ const ModalRegisterRoleMtg = () => {
                             },
                         ]}
                     >
-                        <Input size="large" placeholder={t('ROLE_MTG_NAME')} />
+                        <Input
+                            size="large"
+                            placeholder={t('ROLE_MTG_NAME')}
+                            maxLength={50}
+                        />
                     </Form.Item>
                     <Form.Item name="description" label={t('DESCRIPTION')}>
-                        <Input size="large" placeholder={t('DESCRIPTION')} />
+                        <Input
+                            size="large"
+                            placeholder={t('DESCRIPTION')}
+                            maxLength={255}
+                        />
                     </Form.Item>
 
                     <Form.Item

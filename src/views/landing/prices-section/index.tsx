@@ -1,11 +1,10 @@
 'use client'
 
-import Loader from '@/components/loader'
 import { useListPlan } from '@/stores/service-plan/hooks'
 import { EActionStatus } from '@/stores/type'
 
 import PlanList from '@/views/service-plan/service-plan-list'
-import { Typography } from 'antd'
+import { Spin, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 
@@ -25,7 +24,12 @@ const PricesSection = () => {
     }, [planState.filter])
 
     if (!planState || planState?.status === EActionStatus.Pending) {
-        return <Loader />
+        // return <Loader />
+        return (
+            <div>
+                <Spin tip="Loading..." />
+            </div>
+        )
     }
 
     return (
@@ -39,8 +43,11 @@ const PricesSection = () => {
                         {t('PRICING_SUB_TITLE')}
                     </Text>
                 </div>
-                <div id="pricing-list" className="flex justify-center gap-6">
-                    <PlanList add={true} />
+                <div
+                    id="pricing-list"
+                    className="flex justify-center gap-6 px-10"
+                >
+                    <PlanList ad={true} />
                 </div>
             </div>
         </div>

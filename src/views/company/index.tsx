@@ -3,13 +3,15 @@ import ListTitle from '@/components/content-page-title/list-title'
 import { useListCompany } from '@/stores/company/hooks'
 import CompanyList from '@/views/company/company-list'
 import { PlusOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button, Grid } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+const { useBreakpoint } = Grid
 
 const CompanyView = () => {
     const t = useTranslations()
+    const screens = useBreakpoint()
     const router = useRouter()
     const { companyState, getListCompanyAction, setFilterAction } =
         useListCompany()
@@ -38,7 +40,8 @@ const CompanyView = () => {
                     <Button
                         type="primary"
                         icon={<PlusOutlined />}
-                        size="large"
+                        size={screens.lg ? 'large' : 'middle'}
+                        className="max-[470px]:px-2"
                         onClick={() => {
                             router.push('/company/create')
                         }}
@@ -50,7 +53,7 @@ const CompanyView = () => {
                 onChangeInput={handleInputChange}
                 onChangeSelect={handleSelectChange}
             />
-            <div className="p-6">
+            <div className="p-6 max-sm:px-0">
                 <CompanyList data={companyState.companyList} />
             </div>
         </div>

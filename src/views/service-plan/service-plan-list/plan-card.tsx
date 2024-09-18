@@ -16,7 +16,7 @@ export interface IPlanItem {
     maxShareholderAccount: number
     className: string
     isRecommended: boolean
-    add?: boolean
+    ad?: boolean
 }
 
 const PlanCard = ({
@@ -29,7 +29,7 @@ const PlanCard = ({
     maxShareholderAccount,
     className,
     isRecommended,
-    add,
+    ad,
 }: IPlanItem) => {
     const t = useTranslations()
     const router = useRouter()
@@ -59,7 +59,7 @@ const PlanCard = ({
         <div
             id="plan-item-wrapper"
             className={` relative flex flex-col border-[1px] border-blue-700 bg-white  ${className} ${
-                add ? 'h-[340px]' : 'h-[420px]'
+                ad ? 'h-[340px]' : 'h-[420px]'
             }`}
             onMouseEnter={handleEnter}
             onMouseLeave={handleLeave}
@@ -92,7 +92,7 @@ const PlanCard = ({
                         }`}
                         level={1}
                     >
-                        {price}$
+                        {price}¥
                     </Title>
                     <Text
                         className={`font-medium text-primary ${
@@ -124,7 +124,7 @@ const PlanCard = ({
                         {description}
                     </Text>
                 </div>
-                {add ? (
+                {ad ? (
                     <></>
                 ) : (
                     <Button

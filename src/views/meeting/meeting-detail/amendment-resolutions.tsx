@@ -7,32 +7,123 @@ import { useAuthLogin } from '@/stores/auth/hooks'
 import { useResolutions, useMeetingDetail } from '@/stores/meeting/hooks'
 import { Empty } from 'antd'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
-import { IMeetingDetail } from '@/stores/meeting/types'
+import { useEffect, useMemo, useState } from 'react'
+import { IMeetingDetail, IResolution } from '@/stores/meeting/types'
 import { RoleMtgEnum } from '@/constants/role-mtg'
+import { useParams } from 'next/navigation'
+import { io } from 'socket.io-client'
 
 const AmendmentResolutions = () => {
     const amendmentResolutions = useResolutions(
         ResolutionType.AMENDMENT_RESOLUTION,
     )
-
+    const t = useTranslations()
     const [{ meeting }] = useMeetingDetail()
     const { authState } = useAuthLogin()
-    const t = useTranslations()
+    const params = useParams()
+    const meetingId = Number(params.id)
+
+    const [amendmentResolutionData, setAmendmentResolutionData] =
+        useState<IResolution[]>(amendmentResolutions)
+
+    const [socketAmendmentResolution, setSocketAmendmentResolution] =
+        useState<any>(undefined)
+
+    useEffect(() => {
+        const socketIO = io(String(process.env.NEXT_PUBLIC_API_SOCKET))
+
+        socketIO.on(
+            `voting-resolution-shareholder-meeting/${meetingId}`,
+            (response) => {
+                console.log('response--------: ', response)
+                if (response.type == ResolutionType.AMENDMENT_RESOLUTION) {
+                    if (response.voterId !== authState.userData?.id) {
+                        setAmendmentResolutionData((prev) => {
+                            const amendmentResolutionInfo = prev.map(
+                                (resolution) => {
+                                    const votedQuantity = Number(
+                                        response.votedQuantity,
+                                    )
+                                    const unVotedQuantity = Number(
+                                        response.unVotedQuantity,
+                                    )
+                                    const notVoteYetQuantity = Number(
+                                        response.notVoteYetQuantity,
+                                    )
+                                    const totalShareholders =
+                                        notVoteYetQuantity +
+                                        votedQuantity +
+                                        unVotedQuantity
+
+                                    if (resolution.id == response.id) {
+                                        return {
+                                            ...resolution,
+                                            percentVoted:
+                                                totalShareholders === 0
+                                                    ? 0
+                                                    : (votedQuantity * 100) /
+                                                      totalShareholders,
+                                            percentUnVoted:
+                                                totalShareholders === 0
+                                                    ? 0
+                                                    : (unVotedQuantity * 100) /
+                                                      totalShareholders,
+                                            percentNotVoteYet:
+                                                totalShareholders === 0
+                                                    ? 0
+                                                    : (notVoteYetQuantity *
+                                                          100) /
+                                                      totalShareholders,
+                                        }
+                                    }
+                                    return resolution
+                                },
+                            )
+                            return amendmentResolutionInfo
+                        })
+                    }
+                }
+            },
+        )
+
+        setSocketAmendmentResolution(socketIO)
+
+        return () => {
+            if (socketAmendmentResolution) {
+                socketAmendmentResolution.disconnect()
+                console.log('Disconnect socketVoting AmendmentResolutions!!!')
+            }
+        }
+        // eslint-disable-next-line
+    }, [meetingId])
+
     const checkShareholderAuthAndStatusParticipant = (
         meeting: IMeetingDetail,
+        checkJoined: boolean = true,
     ): boolean => {
         return meeting.participants.some((item) => {
             if (item.roleMtgName === RoleMtgEnum.SHAREHOLDER) {
-                return item.userParticipants.some(
-                    (option) =>
-                        option.userId === authState.userData?.id &&
-                        option.status === UserMeetingStatusEnum.PARTICIPATE,
-                )
+                return item.userParticipants.some((option) => {
+                    if (checkJoined) {
+                        return (
+                            option.userId === authState.userData?.id &&
+                            option.status === UserMeetingStatusEnum.PARTICIPATE
+                        )
+                    }
+                    return option.userId === authState.userData?.id
+                })
             }
             return false
         })
     }
+
+    const isShareholder = useMemo(() => {
+        if (meeting) {
+            return checkShareholderAuthAndStatusParticipant(meeting, false)
+        }
+        return false
+        // eslint-disable-next-line
+    }, [meeting, authState])
 
     const notifiEnableVote = useMemo(() => {
         let message: string = ''
@@ -56,7 +147,7 @@ const AmendmentResolutions = () => {
     }, [meeting, authState])
 
     const body = useMemo(() => {
-        if (amendmentResolutions.length === 0) {
+        if (amendmentResolutionData.length === 0) {
             return (
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -67,7 +158,7 @@ const AmendmentResolutions = () => {
             )
         }
 
-        return amendmentResolutions.map((amendmentResolution, index) => (
+        return amendmentResolutionData.map((amendmentResolution, index) => (
             <DetailResolutionItem
                 id={amendmentResolution.id}
                 key={index}
@@ -82,9 +173,10 @@ const AmendmentResolutions = () => {
                 percentNotVoteYet={amendmentResolution.percentNotVoteYet}
                 proposalFiles={amendmentResolution.proposalFiles}
                 voteErrorMessage={notifiEnableVote}
+                isVoter={isShareholder}
             />
         ))
-    }, [amendmentResolutions, notifiEnableVote])
+    }, [amendmentResolutionData, notifiEnableVote, isShareholder])
 
     return (
         <BoxArea title={t('AMENDMENT_RESOLUTIONS')}>

@@ -518,3 +518,11 @@ export interface ISysNotificationListResponse {
     items: ISystemNotificationResponse[]
     meta: IMeta
 }
+
+export interface IMeetingInMonthResponse {
+    meetings_id: number,
+    meetings_start_time: string, 
+    meetings_end_time: string,
+    meetings_company_id: number,
+    meetings_type: MeetingType
+}

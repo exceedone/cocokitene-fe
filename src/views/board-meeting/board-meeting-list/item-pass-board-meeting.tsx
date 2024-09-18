@@ -63,7 +63,7 @@ const ItemPassBoardMeeting = ({
                     document.body.removeChild(textArea)
                 }
                 setCopySuccess(true)
-                // Reset the message after 1 second
+                // Reset the message after 1,5 second
                 setTimeout(() => setCopySuccess(false), 1500)
             } catch (error) {
                 console.log('Failed to copy text:', error)
@@ -72,8 +72,11 @@ const ItemPassBoardMeeting = ({
     }
 
     return (
-        <Row gutter={[16, 16]} className="mb-2 rounded-lg border p-2">
-            <Col span={6} className="flex items-center space-x-2">
+        <Row
+            gutter={[16, 16]}
+            className="border-true-gray-300 m-0 mb-2 rounded-lg border p-2"
+        >
+            <Col span={6} className="flex items-center space-x-2 px-0">
                 <Image
                     src="/images/logo-meeting-future.png"
                     alt="service-image-alt"
@@ -108,29 +111,44 @@ const ItemPassBoardMeeting = ({
                     overlayClassName=" lg:max-2xl:max-w-[370px] 2xl:max-w-[500px]"
                     color={'rgba(81, 81, 229, 1)'}
                 >
-                    <Text>{meetings_title}</Text>
+                    <Text className="line-clamp-2">{meetings_title}</Text>
                 </Tooltip>
             </Col>
-            <Col span={3} className="my-auto">
-                {transaction_key_query && (
-                    <div className="flex items-center gap-2">
-                        <Text className="">{transaction_key_query}</Text>
-                        {copySuccess ? (
-                            <CheckOutlined
-                                style={{ color: '#03fc3d', fontSize: '18px' }}
-                            />
-                        ) : (
-                            <CopyTwoTone
-                                className="cursor-pointer"
-                                twoToneColor="#5151e5"
-                                style={{ fontSize: '18px' }}
-                                onClick={copyToClipboard}
-                            />
-                        )}
-                    </div>
-                )}
+            <Col span={4} xl={5} className="my-auto h-full p-1">
+                <div className="flex justify-around gap-5 max-xl:flex-col max-xl:items-center max-xl:gap-1">
+                    {transaction_key_query && (
+                        <div className="flex items-center gap-[2px]">
+                            <Text className="">{transaction_key_query}</Text>
+                            {copySuccess ? (
+                                <CheckOutlined
+                                    style={{
+                                        color: '#03fc3d',
+                                        fontSize: '18px',
+                                    }}
+                                />
+                            ) : (
+                                <CopyTwoTone
+                                    className="cursor-pointer"
+                                    twoToneColor="#5151e5"
+                                    style={{ fontSize: '18px' }}
+                                    onClick={copyToClipboard}
+                                />
+                            )}
+                        </div>
+                    )}
+                    {transaction_contract_address && (
+                        <Link
+                            href={`${process.env.NEXT_PUBLIC_TRANSACTION_LINK}${transaction_contract_address}${process.env.NEXT_PUBLIC_PROXY_CONTRACT}`}
+                            target="_blank"
+                        >
+                            <Text className="text-blue-500 hover:underline">
+                                {t('TRANSACTION_LINK')}
+                            </Text>
+                        </Link>
+                    )}
+                </div>
             </Col>
-            <Col span={2} className="flex items-center">
+            {/* <Col span={2} className="flex items-center">
                 {transaction_contract_address && (
                     <Link
                         href={`${process.env.NEXT_PUBLIC_TRANSACTION_LINK}${transaction_contract_address}${process.env.NEXT_PUBLIC_PROXY_CONTRACT}`}
@@ -141,8 +159,8 @@ const ItemPassBoardMeeting = ({
                         </Text>
                     </Link>
                 )}
-            </Col>
-            <Col span={3} className="flex items-center pl-4">
+            </Col> */}
+            <Col span={2} className="flex items-center">
                 <Link
                     href={meetings_meeting_link.toString()}
                     passHref
@@ -150,12 +168,12 @@ const ItemPassBoardMeeting = ({
                 >
                     <a target="_blank" rel="noopener noreferrer">
                         <Text className="text-blue-500 hover:underline">
-                            {t('BOARD_MEETING_LINK')}
+                            {t('MEETING_LINKS')}
                         </Text>
                     </a>
                 </Link>
             </Col>
-            <Col span={2} className="flex items-center pl-3">
+            <Col span={3} xl={2} className="flex items-center px-0">
                 {enumToArray(MeetingStatus).map((status, key) => {
                     if (status === meetings_status) {
                         return (
@@ -169,10 +187,13 @@ const ItemPassBoardMeeting = ({
                     }
                 })}
             </Col>
-            <Col span={2} className="flex items-center justify-between">
+            <Col
+                span={2}
+                className="flex items-center justify-center space-x-2 px-1"
+            >
                 {permissionCheckData && (
                     <Button
-                        className="w-[73px]"
+                        className="w-[62px] px-0 xl:w-[73px]"
                         type="primary"
                         // icon={<PlusOutlined />}
                         // size="Default"
@@ -189,7 +210,10 @@ const ItemPassBoardMeeting = ({
                     </Button>
                 )}
             </Col>
-            <Col span={1} className="flex items-center justify-end pr-5">
+            <Col
+                span={2}
+                className="flex items-center justify-end pr-3 2xl:pr-7"
+            >
                 {permissionDetail && (
                     <EyeTwoTone
                         style={{ fontSize: '18px' }}

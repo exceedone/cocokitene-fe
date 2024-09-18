@@ -100,6 +100,7 @@ const Elections = () => {
                 onClick={onAddNew}
                 icon={<PlusOutlined />}
                 disabled={data.elections.length >= 10}
+                className="ml-6"
             >
                 {t('ADD_NEW')}
             </Button>

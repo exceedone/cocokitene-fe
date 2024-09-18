@@ -46,8 +46,9 @@ const ModalUpdateRoleMtg = () => {
         const fetchData = async () => {
             setInitStatus(EActionStatus.Pending)
             try {
-                const res =
-                    await serviceSettingRoleMtg.getDetailRoleMtg(roleMtgId)
+                const res = await serviceSettingRoleMtg.getDetailRoleMtg(
+                    roleMtgId,
+                )
                 if (res) {
                     setInitRoleMtg({
                         roleName: t(res.roleName),
@@ -177,12 +178,14 @@ const ModalUpdateRoleMtg = () => {
                             <Input
                                 size="large"
                                 placeholder={t('ROLE_MTG_NAME')}
+                                maxLength={50}
                             />
                         </Form.Item>
                         <Form.Item name="description" label={t('DESCRIPTION')}>
                             <Input
                                 size="large"
                                 placeholder={t('DESCRIPTION')}
+                                maxLength={255}
                             />
                         </Form.Item>
 

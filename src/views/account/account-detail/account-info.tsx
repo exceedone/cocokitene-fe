@@ -1,7 +1,7 @@
 import { useAccountDetail } from '@/stores/account/hook'
 import { useTranslations } from 'next-intl'
 import { IRowAccountInfo, RowAccountInfo } from './account-rowinfo'
-import { Avatar, Col, Row } from 'antd'
+import { Avatar, Col, Row, Typography } from 'antd'
 import {
     UserStatus,
     UserStatusColor,
@@ -12,6 +12,8 @@ import { AvatarBgHexColors } from '@/constants/common'
 import { getFirstCharacterUpperCase } from '@/utils/get-first-character'
 import RoleInfo from '@/components/role-info'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
+
+const { Text } = Typography
 
 const AccountInfo = () => {
     const t = useTranslations()
@@ -27,25 +29,23 @@ const AccountInfo = () => {
         {
             label: 'COMPANY',
             content: (
-                <p className="truncate hover:text-clip">
+                <Text className="flex-1 break-words">
                     {account?.companyName || ''}
-                </p>
+                </Text>
             ),
             lg: 6,
         },
         {
             label: 'PHONE',
             content: (
-                <p className="truncate hover:text-clip">
-                    {account?.phone || ''}
-                </p>
+                <Text className="flex-1 break-all">{account?.phone || ''}</Text>
             ),
             lg: 6,
         },
         {
             label: 'ROLE',
             content: (
-                <div className="mt-[-2px] flex gap-1 truncate hover:text-clip">
+                <div className="mt-[-2px] flex flex-wrap gap-1 truncate hover:text-clip">
                     {account?.roles.map((item) => (
                         <RoleInfo
                             key={item.id}
@@ -61,9 +61,9 @@ const AccountInfo = () => {
         {
             label: 'WALLET_ADDRESS',
             content: (
-                <p className="max-w-[415px] truncate hover:text-clip">
+                <Text className="flex-1 break-all">
                     {account?.walletAddress || ''}
-                </p>
+                </Text>
             ),
             lg: 6,
         },
@@ -84,6 +84,7 @@ const AccountInfo = () => {
                             style={{
                                 verticalAlign: 'middle',
                             }}
+                            className="mb-auto"
                         />
                     ) : (
                         <Avatar
@@ -95,11 +96,12 @@ const AccountInfo = () => {
                                     AvatarBgHexColors.GOLDEN_PURPLE,
                             }}
                             size="small"
+                            className="mb-auto"
                         >
                             {getFirstCharacterUpperCase(account.userName)}
                         </Avatar>
                     )}
-                    <span>{account.userName}</span>
+                    <Text className="flex-1">{account.userName}</Text>
                 </div>
             ),
             lg: 3,
@@ -108,9 +110,7 @@ const AccountInfo = () => {
         {
             label: 'EMAIL',
             content: (
-                <p className="max-w-[415px] truncate hover:text-clip">
-                    {account?.email || ''}
-                </p>
+                <Text className="flex-1 break-all">{account?.email || ''}</Text>
             ),
             lg: 3,
         },
@@ -125,9 +125,9 @@ const AccountInfo = () => {
                                     account?.userStatus == UserStatus.ACTIVE
                                         ? 'bg-green-500'
                                         : account?.userStatus ==
-                                            UserStatus.INACTIVE
-                                          ? 'bg-red-500'
-                                          : null
+                                          UserStatus.INACTIVE
+                                        ? 'bg-red-500'
+                                        : null
                                 } `}
                             ></div>
                             <span
@@ -145,22 +145,18 @@ const AccountInfo = () => {
         },
         {
             label: 'QUANTITY',
-            content: (
-                <p className="max-w-[415px] truncate hover:text-clip">
-                    {account?.shareQuantity || ''}
-                </p>
-            ),
+            content: <p className="flex-1">{account?.shareQuantity || ''}</p>,
             lg: 3,
         },
     ]
 
     return (
-        <div className="bg-white p-6 px-6 py-4 shadow-01">
-            <Row gutter={[0, 0]} className="min-w-[1184px]">
-                <Col xs={24} lg={12}>
+        <div className="bg-white p-6 px-6 py-4 shadow-01 max-[470px]:px-2">
+            <Row gutter={[16, 0]}>
+                <Col md={24} lg={12} className="" span={24}>
                     {dataAccountDetailLeft.map((item, index) => {
                         return (
-                            <Col xs={24} key={index}>
+                            <Col key={index} className="max-sm:px-0">
                                 <RowAccountInfo
                                     label={t(item.label)}
                                     content={item.content}
@@ -171,10 +167,10 @@ const AccountInfo = () => {
                         )
                     })}
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col md={24} lg={12} className="" span={24}>
                     {dataAccountDetailRight.map((item, index) => {
                         return (
-                            <Col xs={24} key={index}>
+                            <Col key={index} className="max-sm:px-0">
                                 <RowAccountInfo
                                     label={t(item.label)}
                                     content={item.content}

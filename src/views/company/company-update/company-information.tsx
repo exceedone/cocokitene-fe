@@ -77,7 +77,7 @@ const CompanyInformation = () => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={50} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -92,7 +92,7 @@ const CompanyInformation = () => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={255} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -102,7 +102,7 @@ const CompanyInformation = () => {
                         rules={[{ required: false }]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={50} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -115,7 +115,7 @@ const CompanyInformation = () => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={255} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -146,7 +146,7 @@ const CompanyInformation = () => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={11} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -172,7 +172,7 @@ const CompanyInformation = () => {
                 </Col>
                 <Col xs={24} lg={12}>
                     <Form.Item name="fax" label={t('FAX')} className="mb-0">
-                        <Input size="large" />
+                        <Input size="large" maxLength={12} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -182,7 +182,7 @@ const CompanyInformation = () => {
                         rules={[{ required: false }]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={50} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -197,7 +197,7 @@ const CompanyInformation = () => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={50} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -290,7 +290,7 @@ const CompanyInformation = () => {
                         ]}
                         className="mb-0"
                     >
-                        <TextArea size="large" />
+                        <TextArea size="large" maxLength={4000} />
                     </Form.Item>
                 </Col>
             </Row>

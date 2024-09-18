@@ -1,28 +1,88 @@
 /* eslint-disable */
 
 import BoxArea from '@/components/box-area'
-import DetailCandidateItem from '@/components/detail-candidate-item'
 import DetailPersonnelVotingItem from '@/components/detail-personnel-voting'
 import { ElectionEnum } from '@/constants/election'
 import { MeetingType, titleTooltip } from '@/constants/meeting'
 import { RoleMtgEnum } from '@/constants/role-mtg'
+import { IPersonnelVoting } from '@/services/response.type'
 import { UserMeetingStatusEnum } from '@/stores/attendance/type'
 import { useAuthLogin } from '@/stores/auth/hooks'
 import { useMeetingDetail } from '@/stores/meeting/hooks'
 import { IMeetingDetail } from '@/stores/meeting/types'
 import { Empty } from 'antd'
 import { useTranslations } from 'next-intl'
+import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { io } from 'socket.io-client'
 
 const PersonnelVoting = () => {
     const t = useTranslations()
+    const params = useParams()
+    const shareholderMeetingId = Number(params.id)
 
     const [{ meeting }] = useMeetingDetail()
     const { authState } = useAuthLogin()
 
     const [quantityShare, setQuantityShare] = useState<number>(0)
 
-    console.log('meeting data: ', meeting)
+    const [
+        personnelVotingShareholderMeetingData,
+        setPersonnelVotingShareholderMeetingData,
+    ] = useState<IPersonnelVoting[]>()
+    const [socketVoting, setSocketVoting] = useState<any>(undefined)
+
+    useEffect(() => {
+        setPersonnelVotingShareholderMeetingData(meeting?.personnelVoting)
+    }, [meeting?.personnelVoting])
+
+    useEffect(() => {
+        const socketIO = io(String(process.env.NEXT_PUBLIC_API_SOCKET))
+
+        socketIO.on(
+            `voting-candidate-shareholder-meeting/${shareholderMeetingId}`,
+            (response) => {
+                if (response.voterId !== authState.userData?.id) {
+                    setPersonnelVotingShareholderMeetingData((prev) => {
+                        const personnelVotingData = prev?.map((personnel) => {
+                            if (personnel.id == response.personnelVoting.id) {
+                                return {
+                                    ...personnel,
+                                    candidate: personnel.candidate.map(
+                                        (candidate) => {
+                                            if (candidate.id == response.id) {
+                                                return {
+                                                    ...candidate,
+                                                    votedQuantity:
+                                                        response.votedQuantity,
+                                                    unVotedQuantity:
+                                                        response.unVotedQuantity,
+                                                    notVoteYetQuantity:
+                                                        response.notVoteYetQuantity,
+                                                }
+                                            }
+                                            return candidate
+                                        },
+                                    ),
+                                }
+                            }
+                            return personnel
+                        })
+                        return personnelVotingData
+                    })
+                }
+            },
+        )
+
+        setSocketVoting(socketIO)
+
+        return () => {
+            if (socketVoting) {
+                socketVoting.disconnect()
+                console.log('Disconnect socketVoting!!!')
+            }
+        }
+    }, [shareholderMeetingId])
 
     useEffect(() => {
         // calculate quantityShare in Meeting of User
@@ -48,18 +108,30 @@ const PersonnelVoting = () => {
 
     const checkShareholderAuthAndStatusParticipant = (
         meeting: IMeetingDetail,
+        checkJoined: boolean = true,
     ): boolean => {
         return meeting.participants.some((item) => {
             if (item.roleMtgName === RoleMtgEnum.SHAREHOLDER) {
-                return item.userParticipants.some(
-                    (option) =>
-                        option.userId === authState.userData?.id &&
-                        option.status === UserMeetingStatusEnum.PARTICIPATE,
-                )
+                return item.userParticipants.some((option) => {
+                    if (checkJoined) {
+                        return (
+                            option.userId === authState.userData?.id &&
+                            option.status === UserMeetingStatusEnum.PARTICIPATE
+                        )
+                    }
+                    return option.userId === authState.userData?.id
+                })
             }
             return false
         })
     }
+
+    const isShareholder = useMemo(() => {
+        if (meeting) {
+            return checkShareholderAuthAndStatusParticipant(meeting, false)
+        }
+        return false
+    }, [meeting, authState])
 
     const notifiEnableVote = useMemo(() => {
         let message: string = ''
@@ -83,26 +155,26 @@ const PersonnelVoting = () => {
     }, [meeting, authState])
 
     const appointPersonnelVote = useMemo(() => {
-        return meeting?.personnelVoting
-            .filter((personnelVote) => {
+        return personnelVotingShareholderMeetingData
+            ?.filter((personnelVote) => {
                 return (
                     personnelVote.typeElection.status ===
                     ElectionEnum.VOTE_OF_CONFIDENCE
                 )
             })
             .sort((a, b) => a.id - b.id)
-    }, [meeting?.personnelVoting])
+    }, [personnelVotingShareholderMeetingData])
 
     const dismissPersonnelVote = useMemo(() => {
-        return meeting?.personnelVoting
-            .filter((personnelVote) => {
+        return personnelVotingShareholderMeetingData
+            ?.filter((personnelVote) => {
                 return (
                     personnelVote.typeElection.status ===
                     ElectionEnum.VOTE_OF_NOT_CONFIDENCE
                 )
             })
             .sort((a, b) => a.id - b.id)
-    }, [meeting?.personnelVoting])
+    }, [personnelVotingShareholderMeetingData])
 
     const bodyAppointPersonnelVoting = useMemo(() => {
         if (appointPersonnelVote?.length === 0) {
@@ -126,6 +198,7 @@ const PersonnelVoting = () => {
                     meetingType={
                         meeting?.type ?? MeetingType.SHAREHOLDER_MEETING
                     }
+                    isVoter={isShareholder}
                 />
             )
         })
@@ -143,54 +216,32 @@ const PersonnelVoting = () => {
             )
         }
         return dismissPersonnelVote?.map((personnelVote, index) => {
-            return personnelVote.candidate.map((candidate, i) => {
-                const notVoteYetQuantity = Number(candidate.notVoteYetQuantity)
-                const votedQuantity = Number(candidate.votedQuantity)
-                const unVotedQuantity = Number(candidate.unVotedQuantity)
-                const totalParticipantSeparate =
-                    notVoteYetQuantity + votedQuantity + unVotedQuantity
-                const percentVoted =
-                    totalParticipantSeparate === 0
-                        ? 0
-                        : (votedQuantity * 100) / totalParticipantSeparate
-                const percentUnVoted =
-                    totalParticipantSeparate === 0
-                        ? 0
-                        : (unVotedQuantity * 100) / totalParticipantSeparate
-                const percentNotVoteYet =
-                    totalParticipantSeparate === 0
-                        ? 0
-                        : (notVoteYetQuantity * 100) / totalParticipantSeparate
-
-                return (
-                    <DetailCandidateItem
-                        index={index + 1}
-                        key={candidate.id}
-                        content={candidate.candidateName}
-                        percentVoted={percentVoted}
-                        percentUnVoted={percentUnVoted}
-                        percentNotVoteYet={percentNotVoteYet}
-                        voteResult={candidate.voteResult}
-                        id={candidate.id}
-                        title={personnelVote.title}
-                        voteErrorMessage={notifiEnableVote}
-                        meetingType={meeting?.type ?? MeetingType.SHAREHOLDER_MEETING}
-                    />
-                )
-            })
+            return (
+                <DetailPersonnelVotingItem
+                    key={personnelVote.id}
+                    index={index}
+                    title={personnelVote.title}
+                    candidate={personnelVote.candidate}
+                    voteErrorMessage={notifiEnableVote}
+                    meetingType={
+                        meeting?.type ?? MeetingType.SHAREHOLDER_MEETING
+                    }
+                    isVoter={isShareholder}
+                />
+            )
         })
     }, [dismissPersonnelVote, quantityShare, notifiEnableVote])
 
     return (
         <BoxArea title={t('EXECUTIVE_OFFICER_ELECTION')}>
             <BoxArea title={t('APPOINTMENT')}>
-                <div className="mb-6 flex flex-col gap-6">
+                <div className="mb-6 flex flex-col gap-6 max-md:mr-[-24px]">
                     {bodyAppointPersonnelVoting}
                 </div>
             </BoxArea>
 
             <BoxArea title={t('DISMISSAL')}>
-                <div className="mb-6 flex flex-col gap-6">
+                <div className="mb-6 flex flex-col gap-6 max-md:mr-[-24px]">
                     {bodyDismissPersonnelVoting}
                 </div>
             </BoxArea>

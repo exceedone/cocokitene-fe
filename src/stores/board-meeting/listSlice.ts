@@ -17,7 +17,7 @@ const initialState: IMeetingState = {
     meetingFutureList: [],
     meetingPassList: [],
     page: 1,
-    limit: 10,
+    limit: 4,
     totalFutureMeetingItem: 0,
     totalPassMeetingItem: 0,
     filter: {

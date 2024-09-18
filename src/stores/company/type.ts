@@ -39,6 +39,8 @@ export interface ICompanyDetail {
     taxCompany: string
     fax: string | null
     businessType: string
+    totalCreateMeeting: string,
+    totalCreatedAccount: string
     status: {
         id: number
         status: string

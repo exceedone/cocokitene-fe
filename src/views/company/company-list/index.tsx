@@ -33,38 +33,27 @@ const CompanyList = ({ data }: CompanyListProps) => {
         {
             title: t('NO'),
             dataIndex: 'index',
-            width: '60px',
+            width: 55,
             className: 'text-center',
+            responsive: ['md'],
         },
         {
             title: t('COMPANY_NAME'),
             dataIndex: 'companyName',
+            render: (_, record) => {
+                return <Text>{record.companyName}</Text>
+            },
+            width: '40%',
+            className: 'min-w-[248px]',
         },
         {
             title: t('SERVICE_PLAN'),
             dataIndex: 'servicePlan',
-            // render: (_, record) => {
-            //     const indexItem = SERVICE_PLAN_ITEMS.find(
-            //         (item) => item.value === record.servicePlan,
-            //     )
-            //     const planOptions: {
-            //         [key: number]: { text: string; textColorClass: string }
-            //     } = {
-            //         1: { text: t('FREE'), textColorClass: 'text-black' },
-            //         2: { text: t('TRIAL'), textColorClass: 'text-orange-500' },
-            //         3: {
-            //             text: t('PAY_OF_MONTH'),
-            //             textColorClass: 'text-green-500',
-            //         },
-            //         4: { text: 'Error', textColorClass: 'text-red-500' },
-            //     }
-
-            //     const { text, textColorClass } =
-            //         planOptions[indexItem?.key ?? 4]
-
-            //     return <span className={textColorClass}>{text}</span>
-            // },
-            width: '10%',
+            render: (_, record) => {
+                return <Text>{record.servicePlan}</Text>
+            },
+            width: '15%',
+            className: 'min-w-[109px] px-2',
         },
         {
             title: t('REPRESENTATIVE'),
@@ -72,36 +61,41 @@ const CompanyList = ({ data }: CompanyListProps) => {
             render: (_, record) => {
                 return (
                     <div className="flex items-center gap-2">
-                        <Avatar
-                            style={{
-                                backgroundColor: backgroundAvatarColor,
-                                verticalAlign: 'middle',
-                                color: AvatarBgHexColors.GOLDEN_PURPLE,
-                            }}
-                            size="small"
-                        >
-                            {getFirstCharacterUpperCase(record.representative)}
-                        </Avatar>
-                        <Text
-                            title={record.representative}
-                            className="cursor-pointer"
-                        >
+                        <div className="w-6">
+                            <Avatar
+                                style={{
+                                    backgroundColor: backgroundAvatarColor,
+                                    verticalAlign: 'middle',
+                                    color: AvatarBgHexColors.GOLDEN_PURPLE,
+                                }}
+                                size="small"
+                                className="w-[24px] flex-initial"
+                            >
+                                {getFirstCharacterUpperCase(
+                                    record.representative,
+                                )}
+                            </Avatar>
+                        </div>
+                        <Text title={record.representative} className="">
                             {record.representative}
                         </Text>
                     </div>
                 )
             },
-            width: '18%',
+            width: '15%',
+            className: 'min-w-[126px]',
         },
         {
             title: t('TOTAL_CREATED_ACCOUNT'),
             dataIndex: 'totalCreatedAccount',
-            width: '9%',
+            width: '10%',
+            className: 'px-2 min-w-[78px]',
         },
         {
             title: t('TOTAL_CREATED_MTGS'),
             dataIndex: 'totalCreatedMTGs',
-            width: '9%',
+            width: '10%',
+            className: 'min-w-[85px]',
         },
         {
             title: t('STATUS'),
@@ -115,13 +109,14 @@ const CompanyList = ({ data }: CompanyListProps) => {
                     )}{' '}
                 </>
             ),
-            width: '8%',
+            width: '15%',
+            className: 'px-[6px] max-[470px]:px-0 min-w-[79px]',
         },
         {
             title: '',
             key: 'action',
             render: (_, record) => (
-                <div className="flex gap-3">
+                <div className="flex gap-3 max-lg:gap-2">
                     <EditTwoTone
                         style={{ fontSize: '18px' }}
                         twoToneColor="#5151e5"
@@ -138,7 +133,8 @@ const CompanyList = ({ data }: CompanyListProps) => {
                     />
                 </div>
             ),
-            width: '8%',
+            width: '15%',
+            className: 'px-3 min-w-[68px]',
         },
     ]
     const { companyState, getListCompanyAction } = useListCompany()
@@ -156,7 +152,7 @@ const CompanyList = ({ data }: CompanyListProps) => {
     }))
 
     return (
-        <div className="bg-white p-6 ">
+        <div className="bg-white p-6 max-[470px]:px-1">
             <Table
                 columns={columns}
                 dataSource={dataFinal}
@@ -168,6 +164,7 @@ const CompanyList = ({ data }: CompanyListProps) => {
                     onChange: handlePageChange,
                 }}
                 locale={locale}
+                scroll={{ x: 845, y: 'calc(100vh - 337px)' }}
             />
         </div>
     )

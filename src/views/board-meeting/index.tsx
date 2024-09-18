@@ -11,17 +11,19 @@ import { useEffect } from 'react'
 import { MeetingTime, MeetingType, SORT, SortField } from '@/constants/meeting'
 import { EActionStatus } from '@/stores/type'
 import ListTitle from '@/components/content-page-title/list-title'
-import { Button } from 'antd'
+import { Button, Grid } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import ListBoardMeetingFuture from '@/views/board-meeting/board-meeting-list/list-board-meeting-future'
 import ListBoardMeetingPast from './board-meeting-list/list-board-meeting-pass'
 import withAuth from '@/components/component-auth'
 import { useListBoardMeeting } from '@/stores/board-meeting/hook'
 import { CONSTANT_EMPTY_STRING } from '@/constants/common'
+const { useBreakpoint } = Grid
 
 const BoardMeetingList = () => {
     const router = useRouter()
     const t = useTranslations()
+    const screens = useBreakpoint()
     const { attendanceState, resetStateAttendance } = useAttendance()
     const { openNotification, contextHolder } = useNotification()
     const { authState } = useAuthLogin()
@@ -129,7 +131,8 @@ const BoardMeetingList = () => {
                         <Button
                             type="primary"
                             icon={<PlusOutlined />}
-                            size="large"
+                            size={screens.lg ? 'large' : 'middle'}
+                            className="max-[470px]:px-2"
                             onClick={() => {
                                 router.push('/board-meeting/create')
                             }}
@@ -142,7 +145,7 @@ const BoardMeetingList = () => {
                 onChangeInput={handleInputChange}
                 onChangeSelect={handleSelectChange}
             />
-            <div className="p-6">
+            <div className="p-6 max-sm:px-0">
                 <ListBoardMeetingFuture
                     data={boardMeetingState.meetingFutureList}
                 />

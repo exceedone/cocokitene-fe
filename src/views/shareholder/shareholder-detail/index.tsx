@@ -64,7 +64,7 @@ const ShareholderDetail = () => {
                     )
                 }
             />
-            <div className="p-6">
+            <div className="p-6 max-sm:px-0">
                 <ShareholderInfo />
             </div>
         </div>

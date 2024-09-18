@@ -26,7 +26,7 @@ const ParticipantDetail = ({
     isLoading,
 }: IParticipantDetail) => {
     return (
-        <div className={`flex  flex-col gap-4`}>
+        <div className={`flex max-w-[320px] flex-col gap-4`}>
             <Text className="text-sm">
                 {convertSnakeCaseToTitleCase(title)}
             </Text>

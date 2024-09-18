@@ -12,6 +12,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import EmptyData from '../service-plan/service-plan-list/empty-plan'
 import serviceDashBoard from '@/services/dash-board'
 import { IStatisticMeetingInMonthResponse } from '@/services/response.type'
+import Sliders from 'react-slick'
 
 import { Pie } from '@ant-design/plots'
 import { Spin } from 'antd'
@@ -50,8 +51,6 @@ const NotificationUser = ({ date }: { date: Date }) => {
     }, [date])
 
     const dataColumn: NotificationMeetingUser[] = useMemo(() => {
-        console.log('dataMeeting: ', dataMeeting)
-
         return dataMeeting.map((meeting, i) => {
             const differenceDate = calculateTimeDifference(
                 meeting.meetings_start_time,
@@ -84,8 +83,9 @@ const NotificationUser = ({ date }: { date: Date }) => {
         {
             title: t('NO'),
             dataIndex: 'key',
-            width: '5%',
             className: 'text-center',
+            responsive: ['lg'],
+            width: 40,
         },
         {
             title: t('MEETING_NAME'),
@@ -105,10 +105,10 @@ const NotificationUser = ({ date }: { date: Date }) => {
             render: (_, record) => {
                 return <div className="break-words">{record.duration}</div>
             },
-            width: '25%',
+            width: '30%',
         },
         {
-            title: t('MEETING_TAKE_PLACE'),
+            title: t('STATUS'),
             dataIndex: 'title',
             render: (_, record) => {
                 return (
@@ -128,7 +128,9 @@ const NotificationUser = ({ date }: { date: Date }) => {
         <div className="flex min-h-[350px] flex-col gap-3 border p-2 shadow-lg">
             <span className="text-lg">
                 {t('MEETING_SCHEDULE', {
-                    date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
+                    date: `${date.getFullYear()}-${
+                        date.getMonth() + 1
+                    }-${date.getDate()}`,
                 })}
             </span>
             <div className="min-h-[300px]">
@@ -155,6 +157,34 @@ const NotificationSuperAdmin = ({ date }: { date: Date }) => {
         useState<IStatisticMeetingInMonthResponse>()
     const [loadingFetchData, setLoadingFetchData] = useState<boolean>(true)
 
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        className: 'center',
+        customPaging: function () {
+            return <div className="dot mt-3"></div>
+        },
+        dotsClass: 'slick-dots slick-thumb',
+        responsive: [
+            {
+                breakpoint: 960,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
+            },
+            {
+                breakpoint: 1280,
+                settings: {
+                    slidesToShow: 2,
+                },
+            },
+        ],
+    }
+
     useEffect(() => {
         const fetchDataMeeting = async () => {
             setLoadingFetchData(true)
@@ -172,18 +202,17 @@ const NotificationSuperAdmin = ({ date }: { date: Date }) => {
 
     const configPie = useCallback(
         (data: { type: string; value: number }[]) => {
-            const shareholderMeeting = data[0].value ?? 0
-            const boardMeeting = data[1].value ?? 0
-            const totalMeeting = shareholderMeeting + boardMeeting
+            const totalMeeting = (data[0].value ?? 0) + (data[1].value ?? 0)
 
             return {
                 data: data,
                 tooltip: false,
                 angleField: 'value',
                 colorField: 'type',
-                marginRight: 180,
-                innerRadius: 0.65,
-                width: 450,
+                marginRight: 16,
+                innerRadius: 0.55,
+                radius: 0.85,
+                width: 276,
                 height: 350,
                 label: {
                     text: ({ value }: { value: any }) =>
@@ -191,21 +220,22 @@ const NotificationSuperAdmin = ({ date }: { date: Date }) => {
                     style: {
                         fontWeight: '400',
                         fontSize: 19,
+                        margin: 10,
                     },
                     pointerEvents: 'none',
                 },
                 legend: {
                     color: {
+                        itemMarker: 'circle',
                         title: false,
-                        position: 'right-',
+                        // position: 'right-',
+                        position: 'bottom',
                         rowPadding: 10,
-                        width: 250,
+                        width: 350,
                         cols: 1,
                         maxRows: 1,
                         rowMargin: 10,
-                    },
-                    click: () => {
-                        console.log('Click!!!!!')
+                        itemLabelFontSize: 15,
                     },
                 },
                 annotations: [
@@ -222,12 +252,15 @@ const NotificationSuperAdmin = ({ date }: { date: Date }) => {
                         },
                     },
                 ],
+                interaction: {
+                    legendFilter: false,
+                },
+                autoFit: true, // Để biểu đồ tự động fit kích thước container
             }
         },
         // eslint-disable-next-line
         [dataStatistic],
     )
-
 
     if (loadingFetchData) {
         return (
@@ -238,107 +271,170 @@ const NotificationSuperAdmin = ({ date }: { date: Date }) => {
     }
 
     return (
-        <div className="flex min-h-[350px] flex-col gap-3 p-2">
+        <div className="mb-7 flex min-h-[350px] w-full flex-col gap-3 border p-2 pb-7">
             <span className="text-xl">
-                {t('MEETING_INFORMATION_STATISTICS')} ({date.getMonth() + 1}/
-                {date.getFullYear()})
+                {t('MEETING_INFORMATION_STATISTICS')} ({date.getFullYear()}-
+                {date.getMonth() + 1})
             </span>
-            <div className="flex gap-5">
-                <div className="flex-1 border pb-10 shadow-xl">
-                    <div className="mt-3 pl-5 text-lg">
-                        {t('NUMBER_MEETINGS')}
-                    </div>
-                    <div className="mb-3 h-[24px] pl-5"></div>
-                    <Pie
-                        {...configPie([
-                            {
-                                type:
-                                    t('SHAREHOLDER_MEETING') +
-                                    ': ' +
-                                    dataStatistic?.shareholderMeetingInMonth
-                                        .totalMeeting,
-                                value:
-                                    dataStatistic?.shareholderMeetingInMonth
-                                        .totalMeeting ?? 0,
-                            },
-                            {
-                                type:
-                                    t('BOARD_MEETING') +
-                                    ': ' +
-                                    dataStatistic?.boardMeetingInMonth
-                                        .totalMeeting,
-                                value:
-                                    dataStatistic?.boardMeetingInMonth
-                                        .totalMeeting ?? 0,
-                            },
-                        ])}
-                    />
-                </div>
-                <div className="flex-1  border pb-10 shadow-xl">
-                    <div className="mt-3 pl-5 text-lg">
-                        {t('SHAREHOLDER_MEETING')}
-                    </div>
-                    <div className="mb-3 pl-5 text-base">
-                        {t('TOTAL_PARTICIPANT_JOINED')}/
-                        {t('TOTAL_PARTICIPANTS')}
-                    </div>
-                    <Pie
-                        {...configPie([
-                            {
-                                type:
-                                    t('TOTAL_PARTICIPANT_JOINED') +
-                                    ': ' +
-                                    dataStatistic?.shareholderMeetingInMonth
-                                        .totalParticipantJoined,
-                                value:
-                                    dataStatistic?.shareholderMeetingInMonth
-                                        .totalParticipantJoined ?? 0,
-                            },
-                            {
-                                type:
-                                    t('TOTAL_PARTICIPANTS') +
-                                    ': ' +
-                                    dataStatistic?.shareholderMeetingInMonth
-                                        .totalParticipant,
-                                value:
-                                    dataStatistic?.shareholderMeetingInMonth
-                                        .totalParticipant ?? 0,
-                            },
-                        ])}
-                    />
-                </div>
-                <div className="flex-1 border pb-10 shadow-xl">
-                    <div className="mt-3 pl-5 text-lg">
-                        {t('BOARD_MEETING')}
-                    </div>
-                    <div className="mb-3 pl-5 text-base">
-                        {t('TOTAL_PARTICIPANT_JOINED')}/
-                        {t('TOTAL_PARTICIPANTS')}
-                    </div>
-                    <Pie
-                        {...configPie([
-                            {
-                                type:
-                                    t('TOTAL_PARTICIPANT_JOINED') +
-                                    ': ' +
-                                    dataStatistic?.boardMeetingInMonth
-                                        .totalParticipantJoined,
-                                value:
-                                    dataStatistic?.boardMeetingInMonth
-                                        .totalParticipantJoined ?? 0,
-                            },
-                            {
-                                type:
-                                    t('TOTAL_PARTICIPANTS') +
-                                    ': ' +
-                                    dataStatistic?.boardMeetingInMonth
-                                        .totalParticipant,
-                                value:
-                                    dataStatistic?.boardMeetingInMonth
-                                        .totalParticipant ?? 0,
-                            },
-                        ])}
-                    />
+            <div className="mx-auto w-[90%]">
+                <div className="mx-auto max-w-[1200px] px-0">
+                    <Sliders
+                        {...settings}
+                        className="slider_dash_board mx-auto pb-3"
+                    >
+                        <div className=" mx-auto flex h-[470px] max-w-[320px] flex-col justify-between border">
+                            <div>
+                                <div className="mt-3 pl-5 text-lg">
+                                    {t('NUMBER_MEETINGS')}
+                                </div>
+                                <div className="mb-3 h-[24px] pl-5"></div>
+                            </div>
+                            <div className="flex justify-center pb-5">
+                                <div>
+                                    <Pie
+                                        {...configPie([
+                                            {
+                                                type:
+                                                    t('SHAREHOLDER_MEETING') +
+                                                    ': ' +
+                                                    dataStatistic
+                                                        ?.shareholderMeetingInMonth
+                                                        .totalMeeting,
+                                                value:
+                                                    dataStatistic
+                                                        ?.shareholderMeetingInMonth
+                                                        .totalMeeting ?? 0,
+                                            },
+                                            {
+                                                type:
+                                                    t('BOARD_MEETING') +
+                                                    ': ' +
+                                                    dataStatistic
+                                                        ?.boardMeetingInMonth
+                                                        .totalMeeting,
+                                                value:
+                                                    dataStatistic
+                                                        ?.boardMeetingInMonth
+                                                        .totalMeeting ?? 0,
+                                            },
+                                        ])}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mx-auto flex h-[470px] max-w-[320px] flex-col justify-between border pb-5">
+                            <div>
+                                <div className="mt-3 pl-5 text-lg">
+                                    {t('SHAREHOLDER_MEETING')}
+                                </div>
+                                <div className="mb-3 pl-5 text-base">
+                                    {t('TOTAL_PARTICIPANT_JOINED')}/
+                                    {t('ABSENT_PARTICIPANTS')}
+                                </div>
+                            </div>
+                            <div className="flex justify-center pb-5">
+                                <div>
+                                    <Pie
+                                        {...configPie([
+                                            {
+                                                type:
+                                                    t(
+                                                        'TOTAL_PARTICIPANT_JOINED',
+                                                    ) +
+                                                    ': ' +
+                                                    dataStatistic
+                                                        ?.shareholderMeetingInMonth
+                                                        .totalParticipantJoined,
+                                                value:
+                                                    dataStatistic
+                                                        ?.shareholderMeetingInMonth
+                                                        .totalParticipantJoined ??
+                                                    0,
+                                            },
+                                            {
+                                                type:
+                                                    t('ABSENT_PARTICIPANTS') +
+                                                    ': ' +
+                                                    ((dataStatistic
+                                                        ?.shareholderMeetingInMonth
+                                                        .totalParticipant ??
+                                                        0) -
+                                                        (dataStatistic
+                                                            ?.shareholderMeetingInMonth
+                                                            .totalParticipantJoined ??
+                                                            0)),
+                                                value:
+                                                    (dataStatistic
+                                                        ?.shareholderMeetingInMonth
+                                                        .totalParticipant ??
+                                                        0) -
+                                                    (dataStatistic
+                                                        ?.shareholderMeetingInMonth
+                                                        .totalParticipantJoined ??
+                                                        0),
+                                            },
+                                        ])}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mx-auto flex h-[470px] max-w-[320px] flex-col justify-between border pb-5">
+                            <div>
+                                <div className="mt-3 pl-5 text-lg">
+                                    {t('BOARD_MEETING')}
+                                </div>
+                                <div className="mb-3 pl-5 text-base">
+                                    {t('TOTAL_PARTICIPANT_JOINED')}/
+                                    {t('ABSENT_PARTICIPANTS')}
+                                </div>
+                            </div>
+                            <div className="flex justify-center pb-5">
+                                <div>
+                                    <Pie
+                                        {...configPie([
+                                            {
+                                                type:
+                                                    t(
+                                                        'TOTAL_PARTICIPANT_JOINED',
+                                                    ) +
+                                                    ': ' +
+                                                    dataStatistic
+                                                        ?.boardMeetingInMonth
+                                                        .totalParticipantJoined,
+                                                value:
+                                                    dataStatistic
+                                                        ?.boardMeetingInMonth
+                                                        .totalParticipantJoined ??
+                                                    0,
+                                            },
+                                            {
+                                                type:
+                                                    t('ABSENT_PARTICIPANTS') +
+                                                    ': ' +
+                                                    ((dataStatistic
+                                                        ?.boardMeetingInMonth
+                                                        .totalParticipant ??
+                                                        0) -
+                                                        (dataStatistic
+                                                            ?.boardMeetingInMonth
+                                                            .totalParticipantJoined ??
+                                                            0)),
+                                                value:
+                                                    (dataStatistic
+                                                        ?.boardMeetingInMonth
+                                                        .totalParticipant ??
+                                                        0) -
+                                                    (dataStatistic
+                                                        ?.boardMeetingInMonth
+                                                        .totalParticipantJoined ??
+                                                        0),
+                                            },
+                                        ])}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </Sliders>
                 </div>
             </div>
         </div>
@@ -354,10 +450,6 @@ const NotificationPersonal = ({
     date,
     isSupperAdmin,
 }: INotificationPersonal) => {
-    console.log('date: ', date)
-
-    console.log('isSupperAdmin: ', isSupperAdmin)
-
     const bodyNotificationOfPersonal = useMemo(() => {
         if (isSupperAdmin) {
             return (
@@ -374,7 +466,9 @@ const NotificationPersonal = ({
         }
     }, [isSupperAdmin, date])
 
-    return <div className="w-[100%]">{bodyNotificationOfPersonal}</div>
+    return (
+        <div className="w-[100%] shadow-lg">{bodyNotificationOfPersonal}</div>
+    )
 }
 
 export default NotificationPersonal

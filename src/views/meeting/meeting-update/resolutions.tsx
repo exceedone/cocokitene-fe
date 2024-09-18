@@ -106,6 +106,7 @@ const Resolutions = () => {
                 onClick={onAddNew}
                 icon={<PlusOutlined />}
                 disabled={data.resolutions.length >= 10}
+                className="ml-6"
             >
                 {t('ADD_NEW')}
             </Button>

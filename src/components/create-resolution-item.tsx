@@ -56,9 +56,15 @@ const CreateResolutionItem = ({
 
     const onUpload = async ({ file }: RcCustomRequestOptions) => {
         try {
+            const meetingFileType =
+                type == ResolutionType.MANAGEMENT_FINANCIAL
+                    ? MeetingFileType.REPORTS
+                    : MeetingFileType.PROPOSAL_FILES
+
             const res = await serviceUpload.getPresignedUrl(
                 [file as File],
-                MeetingFileType.PROPOSAL_FILES,
+                // MeetingFileType.PROPOSAL_FILES,
+                meetingFileType,
             )
             await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
 
@@ -153,8 +159,8 @@ const CreateResolutionItem = ({
 
     return (
         <div className="flex flex-row items-start gap-2">
-            <div>
-                <span className="mr-2 align-middle text-lg font-medium text-[#ff4d4f]">
+            <div className="flex flex-none max-[470px]:max-w-[100px]">
+                <span className="mr-2 pt-2 align-middle text-lg font-medium text-[#ff4d4f]">
                     *
                 </span>
                 <Text className="leading-10">
@@ -168,12 +174,14 @@ const CreateResolutionItem = ({
                     size="large"
                     value={title}
                     onChange={onChange(onChangeTitle)}
+                    maxLength={255}
                 />
                 <TextArea
                     className="placeholder:text-sm"
                     placeholder={t('ENTER_RESOLUTION_DETAIL')}
                     value={content}
                     onChange={onChange(onChangeContent)}
+                    maxLength={255}
                 />
                 {type === ResolutionType.AMENDMENT_RESOLUTION &&
                     onChangeOldContent && (
@@ -182,6 +190,7 @@ const CreateResolutionItem = ({
                             placeholder={t('ENTER_OLD_RESOLUTION_DETAIL')}
                             value={oldContent}
                             onChange={onChange(onChangeOldContent)}
+                            maxLength={255}
                         />
                     )}
                 {(title || content) && (
@@ -201,7 +210,7 @@ const CreateResolutionItem = ({
                             </Button>
                         </Upload>
                         <div className="flex flex-col items-start">
-                            <Text className="text-black-45">
+                            <Text className="break-words text-black-45">
                                 {t('INVITATION_FILE_UPLOAD_NOTICE')}
                             </Text>
                             {fileData.errorUniqueFile && (

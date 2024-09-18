@@ -1,5 +1,5 @@
 import { MeetingFileType } from '@/constants/meeting'
-import { ResolutionType, VoteProposalOption } from '@/constants/resolution'
+import { ResolutionType } from '@/constants/resolution'
 import { RootState, useAppDispatch, useAppSelector } from '@/stores'
 import {
     resetCreateMeetingData,
@@ -11,8 +11,7 @@ import {
     IGetAllMeetingQuery,
     IMeetingDetail,
     IMeetingState,
-    IProposalCreator,
-    IProposalFile,
+    IResolution,
     IUpdateMeeting,
     ListParamsFilter,
 } from '@/stores/meeting/types'
@@ -80,7 +79,7 @@ export function useMeetingDetail(): [
             status,
         },
         fetchMeetingDetail,
-        resetStatusGetMeeting
+        resetStatusGetMeeting,
     ]
 }
 
@@ -216,18 +215,7 @@ export function useMeetingFiles(): {
 //     }
 // }
 
-export function useResolutions(type: ResolutionType): {
-    title: string
-    content: string
-    oldContent?: string
-    percentVoted: number
-    percentUnVoted: number
-    percentNotVoteYet: number
-    voteResult: VoteProposalOption
-    creator: IProposalCreator
-    id: number
-    proposalFiles: IProposalFile[]
-}[] {
+export function useResolutions(type: ResolutionType): IResolution[] {
     const meeting = useAppSelector(
         (state: RootState) => state.meetingDetail.meeting,
     )

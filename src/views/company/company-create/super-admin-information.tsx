@@ -66,7 +66,7 @@ const SuperAdminInformation = ({ form }: CompanyInfoProp) => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={50} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -75,7 +75,7 @@ const SuperAdminInformation = ({ form }: CompanyInfoProp) => {
                         label={t('WALLET_ADDRESS')}
                         rules={[{ required: false }]}
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={42} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -121,7 +121,7 @@ const SuperAdminInformation = ({ form }: CompanyInfoProp) => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={255} />
                     </Form.Item>
                 </Col>
             </Row>

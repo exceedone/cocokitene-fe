@@ -1,6 +1,4 @@
-import LayoutTitle, {
-    IBaseTitle,
-} from '@/components/content-page-title/layout-title'
+import { IBaseTitle } from '@/components/content-page-title/layout-title'
 import Loader from '@/components/loader'
 import ViewHtml from '@/components/view-html'
 import { FETCH_STATUS } from '@/constants/common'
@@ -48,7 +46,7 @@ const Header = ({
 }: IHeaderScreenSysNotification) => {
     const t = useTranslations()
     return (
-        <LayoutTitle>
+        <div className="content-title z-1 sticky top-12 flex items-center justify-between gap-4 bg-white px-2 py-4 max-[470px]:px-0">
             <div className="flex items-center gap-2">
                 <ArrowLeftOutlined
                     onClick={() => {
@@ -63,7 +61,7 @@ const Header = ({
                 {saveButton}
                 {extraButton}
             </div>
-        </LayoutTitle>
+        </div>
     )
 }
 
@@ -186,9 +184,9 @@ const EditSystemNotificationScreen = ({
     }
 
     return (
-        <div>
+        <div className="z-0">
             <div>
-                <div className="bg-white px-6 pb-6 shadow-01">
+                <div className="bg-white pb-6 shadow-01 sm:px-6">
                     <Form
                         onFinish={onFinish}
                         form={form}
@@ -209,7 +207,7 @@ const EditSystemNotificationScreen = ({
                                 />
                             }
                         />
-                        <div className="p-6">
+                        <div className="p-6 max-[470px]:px-0">
                             <Row gutter={[16, 24]}>
                                 <Col xs={24} lg={24}>
                                     <Form.Item
@@ -222,7 +220,7 @@ const EditSystemNotificationScreen = ({
                                             },
                                         ]}
                                     >
-                                        <Input size="large" maxLength={250} />
+                                        <Input size="large" maxLength={255} />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} lg={24}>
@@ -245,7 +243,7 @@ const EditSystemNotificationScreen = ({
                                     </Form.Item>
                                 </Col>
                             </Row>
-                            <div className="mt-2 min-h-[100px]">
+                            <div className="mt-2 min-h-[100px] max-[470px]:mt-8">
                                 <div>
                                     {showPreView ? (
                                         <Button
@@ -273,7 +271,11 @@ const EditSystemNotificationScreen = ({
                                         </Button>
                                     )}
                                 </div>
-                                {showPreView && <ViewHtml value={value} />}
+                                {showPreView && (
+                                    <div className="border">
+                                        <ViewHtml value={value} />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </Form>

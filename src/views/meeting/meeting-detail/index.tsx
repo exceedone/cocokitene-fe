@@ -13,7 +13,7 @@ import Participants from '@/views/meeting/meeting-detail/participants'
 import Resolutions from '@/views/meeting/meeting-detail/resolutions'
 import SendEmailButton from '@/views/meeting/meeting-detail/send-email-button'
 import { EditOutlined } from '@ant-design/icons'
-import { Button, notification } from 'antd'
+import { Button, Grid, notification } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -21,9 +21,11 @@ import { truncateString } from '@/utils/format-string'
 import MeetingChat from '@/components/view-chat'
 import { MeetingStatus } from '@/constants/meeting'
 import PersonnelVoting from './personnel-voting'
+const { useBreakpoint } = Grid
 
 const MeetingDetail = () => {
     const t = useTranslations()
+    const screens = useBreakpoint()
 
     const [{ meeting, status }, fetchMeetingDetail, resetStatusGetMeeting] =
         useMeetingDetail()
@@ -82,31 +84,41 @@ const MeetingDetail = () => {
                         : meeting.title
                 }
                 editButton={
-                    permissionEditMeeting &&
-                    meeting.status !== MeetingStatus.CANCELED &&
-                    meeting.status !== MeetingStatus.HAPPENED && (
-                        <Button
-                            icon={<EditOutlined />}
-                            type="default"
-                            size="large"
-                            onClick={() =>
-                                router.push(`/meeting/update/${meetingId}`)
-                            }
-                        >
-                            {t('EDIT')}
-                        </Button>
-                    )
+                    <div className="flex items-end gap-2">
+                        {permissionEditMeeting &&
+                            meeting.status !== MeetingStatus.CANCELED &&
+                            meeting.status !== MeetingStatus.HAPPENED && (
+                                <Button
+                                    icon={<EditOutlined />}
+                                    type="default"
+                                    size={screens.lg ? 'large' : 'middle'}
+                                    className="max-[470px]:px-2"
+                                    onClick={() =>
+                                        router.push(
+                                            `/meeting/update/${meetingId}`,
+                                        )
+                                    }
+                                >
+                                    {t('EDIT')}
+                                </Button>
+                            )}
+                        {permissionSendEmailShareholder &&
+                            meeting.status !== MeetingStatus.CANCELED &&
+                            meeting.status !== MeetingStatus.HAPPENED && (
+                                <SendEmailButton />
+                            )}
+                    </div>
                 }
                 // editUrl={`/meeting/update/${meetingId}`}
-                extraButton={
-                    permissionSendEmailShareholder &&
-                    meeting.status !== MeetingStatus.CANCELED &&
-                    meeting.status !== MeetingStatus.HAPPENED && (
-                        <SendEmailButton />
-                    )
-                }
+                // extraButton={
+                //     permissionSendEmailShareholder &&
+                //     meeting.status !== MeetingStatus.CANCELED &&
+                //     meeting.status !== MeetingStatus.HAPPENED && (
+                //         <SendEmailButton />
+                //     )
+                // }
             />
-            <div className="flex flex-col gap-6 p-6">
+            <div className="flex flex-col gap-6 p-6 max-sm:px-2">
                 <DetailInformation />
                 <Documents />
                 <Resolutions />

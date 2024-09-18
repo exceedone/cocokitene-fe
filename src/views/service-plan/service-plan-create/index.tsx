@@ -88,7 +88,7 @@ const CreatePlan = () => {
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={50} />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>
@@ -98,13 +98,13 @@ const CreatePlan = () => {
                                     rules={[{ required: false }]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={255} />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>
                                 <Form.Item
                                     name="price"
-                                    label={`${t('PRICE')} ($)`}
+                                    label={`${t('PRICE')} (¥)`}
                                     rules={[
                                         {
                                             required: true,
@@ -119,7 +119,7 @@ const CreatePlan = () => {
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={10} />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>
@@ -142,7 +142,7 @@ const CreatePlan = () => {
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={10} />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>
@@ -163,7 +163,7 @@ const CreatePlan = () => {
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={10} />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>
@@ -184,7 +184,7 @@ const CreatePlan = () => {
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={10} />
                                 </Form.Item>
                             </Col>
                         </Row>

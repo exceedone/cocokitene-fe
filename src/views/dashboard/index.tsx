@@ -38,13 +38,6 @@ const DashboardView = () => {
             setLoading(true)
             const detailProfile = await serviceProfile.getDetailProfile(id)
             if (detailProfile) {
-                console.log('Role User: ', detailProfile.roles)
-                console.log(
-                    'isSupperAdmin---------------- ',
-                    detailProfile.roles.some(
-                        (role) => role.roleName == RoleName.SUPER_ADMIN,
-                    ),
-                )
                 setIsSupperAdmin(
                     detailProfile.roles.some(
                         (role) => role.roleName == RoleName.SUPER_ADMIN,
@@ -92,18 +85,18 @@ const DashboardView = () => {
                 </div>
                 <div className="flex items-center gap-2"></div>
             </LayoutTitle>
-            <div className="p-6">
+            <div className="sm:p-6">
                 <div className=" bg-white p-6 px-6 py-4 shadow-01">
                     {screen === ScreenDashBoard.DASH_BOARD && (
                         <div className="flex flex-col gap-10">
-                            <div className="flex gap-5">
+                            <div className="flex flex-wrap gap-5 max-sm:flex-col">
                                 <div className="flex-[7_7_0%] border shadow-lg">
                                     <NotificationSystem
                                         changeScreen={changeScreen}
                                         getSysNotification={getSysNotification}
                                     />
                                 </div>
-                                <div className="min-w-[300px] max-w-[350px] flex-[3_3_0%] border shadow-lg">
+                                <div className="mx-auto min-w-[250px] max-w-[378px] flex-[3_3_0%] border shadow-lg">
                                     <CalendarCustom
                                         isSupperAdmin={isSupperAdmin}
                                         onSelectDate={onSelect}

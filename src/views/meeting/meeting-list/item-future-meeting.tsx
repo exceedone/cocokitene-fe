@@ -13,7 +13,7 @@ import { calculateTimeDifference, formatTimeMeeting } from '@/utils/date'
 import { truncateString } from '@/utils/format-string'
 import { IMeetingItem } from '@/views/meeting/meeting-list/type'
 import { EditTwoTone, EyeTwoTone } from '@ant-design/icons'
-import { Button, Col, Modal, Row, Tooltip, Typography } from 'antd'
+import { Badge, Button, Col, Modal, Row, Tooltip, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -81,10 +81,10 @@ const ItemFutureMeeting = ({
         <>
             {contextHolder}
             <Row
-                className="border-true-gray-300 mb-2 rounded-lg border p-2"
+                className="border-true-gray-300 m-0 mb-2 w-full rounded-lg border p-2"
                 gutter={[16, 16]}
             >
-                <Col span={6} className="flex items-center space-x-2">
+                <Col span={6} className="flex items-center space-x-2 px-0">
                     <Image
                         src="/images/logo-meeting-future.png"
                         alt="service-image-alt"
@@ -98,7 +98,7 @@ const ItemFutureMeeting = ({
                         )}
                     </Text>
                 </Col>
-                <Col span={5} className="flex items-center">
+                <Col span={5} className="flex items-center ">
                     <Tooltip
                         placement="topLeft"
                         title={
@@ -119,37 +119,42 @@ const ItemFutureMeeting = ({
                         overlayClassName=" lg:max-2xl:max-w-[370px] 2xl:max-w-[500px]"
                         color={'rgba(81, 81, 229, 1)'}
                     >
-                        <Text className="overflow-hidden overflow-ellipsis whitespace-nowrap ">
-                            {meetings_title}
-                        </Text>
+                        <Text className="line-clamp-2">{meetings_title}</Text>
                     </Tooltip>
                 </Col>
-                <Col span={5}></Col>
-                <Col span={3} className="flex items-center pl-4">
+                <Col span={4} xl={5} className=""></Col>
+                <Col span={2} className="flex items-center ">
                     <Link
                         href={meetings_meeting_link.toString()}
                         passHref
                         legacyBehavior
                     >
                         <a target="_blank" rel="noopener noreferrer">
-                            <Text className="text-blue-500 hover:underline">
+                            <div className="text-blue-500 hover:underline ">
                                 {t('MEETING_LINKS')}
-                            </Text>
+                            </div>
                         </a>
                     </Link>
                 </Col>
-                <Col span={2} className="flex items-center pl-3">
+                <Col span={3} xl={2} className="flex items-center px-0">
                     {enumToArray(MeetingStatus).map((status, key) => {
                         if (status === meetings_status) {
                             return (
-                                <li
+                                // <li
+                                //     key={key}
+                                //     style={{
+                                //         color: MeetingStatusColor[status],
+                                //         listStylePosition: 'inside',
+                                //     }}
+                                // >
+                                //     {t(MeetingStatusName[status])}
+                                // </li>
+                                <Badge
+                                    color={MeetingStatusColor[status]}
+                                    text={t(MeetingStatusName[status])}
+                                    className="mx-auto"
                                     key={key}
-                                    style={{
-                                        color: MeetingStatusColor[status],
-                                    }}
-                                >
-                                    {t(MeetingStatusName[status])}
-                                </li>
+                                />
                             )
                         }
                     })}
@@ -157,11 +162,11 @@ const ItemFutureMeeting = ({
 
                 <Col
                     span={2}
-                    className={`flex items-center ${
+                    className={`flex items-center  ${
                         meetings_status !== MeetingStatus.CANCELED
-                            ? 'justify-between'
+                            ? 'justify-center'
                             : 'justify-end'
-                    } gap-5 space-x-2 pr-5`}
+                    } space-x-2 px-1`}
                 >
                     {meetings_status !== MeetingStatus.CANCELED &&
                     isParticipant == 1 ? (
@@ -170,7 +175,7 @@ const ItemFutureMeeting = ({
                                 type="primary"
                                 size="middle"
                                 onClick={() => showModal(meetings_start_time)}
-                                className="w-[73px]"
+                                className="w-[62px] px-0 xl:w-[73px]"
                             >
                                 {t('BTN_JOIN')}
                             </Button>
@@ -179,7 +184,7 @@ const ItemFutureMeeting = ({
                                 disabled
                                 type="primary"
                                 size="middle"
-                                className="w-[73px]"
+                                className="w-[62px] px-0 xl:w-[73px]"
                             >
                                 {t('JOINED')}
                             </Button>
@@ -190,10 +195,11 @@ const ItemFutureMeeting = ({
                 </Col>
 
                 <Col
-                    span={1}
-                    className="flex items-center justify-end gap-5 space-x-2 pr-5"
+                    span={2}
+                    // className="flex items-center justify-end gap-5 space-x-2  pr-5"
+                    className="flex items-center justify-end px-0 pr-3 2xl:pr-7"
                 >
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                         {permissionEdit &&
                             meetings_status !== MeetingStatus.CANCELED && (
                                 <EditTwoTone

@@ -46,8 +46,9 @@ const AccountList = () => {
         {
             title: t('NO'),
             dataIndex: 'index',
-            width: '5%',
+            width: 55,
             className: 'text-center',
+            responsive: ['md'],
         },
         {
             title: t('USER_NAME'),
@@ -84,13 +85,14 @@ const AccountList = () => {
                         <Text
                             title={record.username}
                             // className="cursor-pointer"
+                            className="flex-1"
                         >
                             {record.username}
                         </Text>
                     </div>
                 )
             },
-            width: '17%',
+            width: '26%',
         },
         {
             title: t('WALLET_ADDRESS'),
@@ -106,12 +108,15 @@ const AccountList = () => {
                     </>
                 )
             },
-            width: '17%',
+            width: '10%',
         },
         {
             title: t('EMAIL'),
             dataIndex: 'email',
-            width: '21',
+            render: (_, record) => {
+                return <div className="break-all">{record.email}</div>
+            },
+            width: '25%',
         },
         {
             title: t('ROLES'),
@@ -168,7 +173,7 @@ const AccountList = () => {
                     </div>
                 )
             },
-            width: '22%',
+            width: '20%',
         },
 
         {
@@ -185,7 +190,7 @@ const AccountList = () => {
                     </>
                 )
             },
-            width: '11%',
+            width: '12%',
         },
         {
             title: '',
@@ -235,6 +240,7 @@ const AccountList = () => {
                     onChange: handlePageChange,
                 }}
                 locale={locale}
+                scroll={{ x: 845, y: 'calc(100vh - 337px)' }}
             />
         </div>
     )

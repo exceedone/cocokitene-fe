@@ -7,7 +7,7 @@ import serviceSettingRole from '@/services/setting-role'
 import { useSettingRoleSys } from '@/stores/setting-role-sys/hooks'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons'
-import { Button, notification } from 'antd'
+import { Button, Grid, notification } from 'antd'
 import Checkbox, { CheckboxChangeEvent } from 'antd/es/checkbox/Checkbox'
 import Table, { ColumnsType } from 'antd/es/table'
 import { useTranslations } from 'next-intl'
@@ -36,8 +36,12 @@ type RoleChecked = {
     state: number
 }
 
+const { useBreakpoint } = Grid
+
 const SettingRoleView = () => {
     const t = useTranslations()
+    const screens = useBreakpoint()
+
     const {
         settingRoleState,
         getAllCombineRoleWithPermission,
@@ -98,10 +102,14 @@ const SettingRoleView = () => {
             const totalRoleColumn = Object.keys(
                 Object.values(settingRoleState.permissionRoleList)[0],
             ).length
-            const widthRolesColumn = 80 // default 80%
-            setWidthRoleColumn(
-                `${(widthRolesColumn / totalRoleColumn).toFixed(2)}%`,
-            )
+            if (totalRoleColumn < 6) {
+                const widthRolesColumn = 80 // default 80%
+                setWidthRoleColumn(
+                    `${(widthRolesColumn / totalRoleColumn).toFixed(2)}%`,
+                )
+            } else {
+                setWidthRoleColumn('110px')
+            }
             setIsLoading(FETCH_STATUS.SUCCESS)
         } else {
             setCheckboxState({})
@@ -149,7 +157,8 @@ const SettingRoleView = () => {
                         }
                     />
                 ),
-                width: widthRoleColumn,
+                // width: widthRoleColumn,
+                width: '110px',
             }))
 
             const columns: ColumnsType<DataType> = [
@@ -159,6 +168,8 @@ const SettingRoleView = () => {
                     render: (text: string) => (
                         <>{convertSnakeCaseToTitleCase(text)} </>
                     ),
+                    fixed: 'left',
+                    width: 185,
                 },
                 ...columnData,
             ]
@@ -368,7 +379,8 @@ const SettingRoleView = () => {
                     <Button
                         type="primary"
                         icon={<PlusOutlined />}
-                        size="large"
+                        size={screens.lg ? 'large' : 'middle'}
+                        className="max-[470px]:px-2"
                         onClick={() => {
                             if (choiceTab) {
                                 setOpenModal(true)
@@ -387,7 +399,8 @@ const SettingRoleView = () => {
                                   key="edit-button"
                                   type={'primary'}
                                   icon={<EditOutlined />}
-                                  size="large"
+                                  size={screens.lg ? 'large' : 'middle'}
+                                  className="max-[470px]:px-2"
                                   onClick={() =>
                                       setClickButtonEdit(!clickButtonEdit)
                                   }
@@ -420,6 +433,7 @@ const SettingRoleView = () => {
                         loading={isLoading != FETCH_STATUS.SUCCESS}
                         // pagination={false}
                         locale={locale}
+                        scroll={{ x: 845, y: 'calc(100vh - 287px)' }}
                     />
                 ) : (
                     <RoleMtgList />

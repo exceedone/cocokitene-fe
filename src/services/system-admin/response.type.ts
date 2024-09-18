@@ -86,6 +86,8 @@ export interface ICompanyDetailResponse {
     fax?: string
     dateOfCorporation: string
     businessType: string
+    totalCreateMeeting: string
+    totalCreatedAccount: string
     companyStatus: ICompanyStatusResponse
     superAdminInfo: IUserResponse
     servicePlan: IPlanResponse

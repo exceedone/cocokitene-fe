@@ -7,33 +7,115 @@ import { useAuthLogin } from '@/stores/auth/hooks'
 import { IBoardMeetingDetail } from '@/stores/board-meeting/types'
 import { RoleMtgEnum } from '@/constants/role-mtg'
 import { UserMeetingStatusEnum } from '@/stores/attendance/type'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { titleTooltipShow } from '@/constants/board-meeting'
 import { Empty } from 'antd'
 import { ElectionEnum } from '@/constants/election'
-import DetailCandidateItem from '@/components/detail-candidate-item'
 import { MeetingType } from '@/constants/meeting'
 import DetailPersonnelVotingItem from '@/components/detail-personnel-voting'
+import { IPersonnelVoting } from '@/services/response.type'
+import { useParams } from 'next/navigation'
+import { io } from 'socket.io-client'
 
 const PersonnelVoting = () => {
     const t = useTranslations()
+    const params = useParams()
+    const boardMeetingId = Number(params.id)
     const [{ boardMeeting }] = useBoardMeetingDetail()
+    const [boardMeetingData, setBoardMeetingData] =
+        useState<IPersonnelVoting[]>()
 
     const { authState } = useAuthLogin()
+    const [socketVoting, setSocketVoting] = useState<any>(undefined)
+
+    useEffect(() => {
+        setBoardMeetingData(boardMeeting?.candidates)
+    }, [boardMeeting?.candidates])
+
+    useEffect(() => {
+        const socketIO = io(String(process.env.NEXT_PUBLIC_API_SOCKET))
+
+        socketIO.on(
+            `voting-candidate-board-meeting/${boardMeetingId}`,
+            (responseCandidateInfo) => {
+                if (responseCandidateInfo.voterId !== authState.userData?.id) {
+                    setBoardMeetingData((prev) => {
+                        const personnelVotingData = prev?.map((personnel) => {
+                            if (
+                                personnel.id ==
+                                responseCandidateInfo.personnelVoting.id
+                            ) {
+                                return {
+                                    ...personnel,
+                                    candidate: personnel.candidate.map(
+                                        (candidate) => {
+                                            if (
+                                                candidate.id ==
+                                                responseCandidateInfo.id
+                                            ) {
+                                                return {
+                                                    ...candidate,
+                                                    votedQuantity:
+                                                        responseCandidateInfo.votedQuantity,
+                                                    unVotedQuantity:
+                                                        responseCandidateInfo.unVotedQuantity,
+                                                    notVoteYetQuantity:
+                                                        responseCandidateInfo.notVoteYetQuantity,
+                                                }
+                                            }
+                                            return candidate
+                                        },
+                                    ),
+                                }
+                            }
+                            return personnel
+                        })
+                        return personnelVotingData
+                    })
+                }
+            },
+        )
+
+        setSocketVoting(socketIO)
+
+        return () => {
+            if (socketVoting) {
+                socketVoting.disconnect()
+                console.log('Disconnect socketVoting!!!')
+            }
+        }
+    }, [boardMeetingId])
+
     const checkParticipantIsBoardAndStatusParticipant = (
         boardMeeting: IBoardMeetingDetail,
+        checkJoined: boolean = true,
     ): boolean => {
         return boardMeeting.participants.some((item) => {
             if (item.roleMtgName !== RoleMtgEnum.HOST) {
-                return item.userParticipants.some(
-                    (option) =>
-                        option.userId === authState.userData?.id &&
-                        option.status === UserMeetingStatusEnum.PARTICIPATE,
-                )
+                return item.userParticipants.some((option) => {
+                    if (checkJoined) {
+                        return (
+                            option.userId === authState.userData?.id &&
+                            option.status === UserMeetingStatusEnum.PARTICIPATE
+                        )
+                    }
+                    return option.userId === authState.userData?.id
+                })
             }
             return false
         })
     }
+
+    const isBoard = useMemo(() => {
+        if (boardMeeting) {
+            return checkParticipantIsBoardAndStatusParticipant(
+                boardMeeting,
+                false,
+            )
+        }
+        return false
+    }, [[boardMeeting, authState]])
+
     const notifiEnableVote = useMemo(() => {
         let message: string = ''
         if (boardMeeting) {
@@ -54,19 +136,27 @@ const PersonnelVoting = () => {
         return message
         // eslint-disable-next-line
     }, [boardMeeting, authState])
-    const appointMents = boardMeeting?.candidates
-        ?.filter(
-            (item) =>
-                item.typeElection.status === ElectionEnum.VOTE_OF_CONFIDENCE,
-        )
-        .sort((a, b) => a.id - b.id)
-    const dismissals = boardMeeting?.candidates
-        ?.filter(
-            (item) =>
-                item.typeElection.status ===
-                ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
-        )
-        .sort((a, b) => a.id - b.id)
+
+    const appointMents = useMemo(() => {
+        return boardMeetingData
+            ?.filter(
+                (item) =>
+                    item.typeElection.status ===
+                    ElectionEnum.VOTE_OF_CONFIDENCE,
+            )
+            .sort((a, b) => a.id - b.id)
+    }, [boardMeetingData])
+
+    const dismissals = useMemo(() => {
+        return boardMeetingData
+            ?.filter(
+                (item) =>
+                    item.typeElection.status ===
+                    ElectionEnum.VOTE_OF_NOT_CONFIDENCE,
+            )
+            .sort((a, b) => a.id - b.id)
+    }, [boardMeetingData])
+
     const bodyDismissals = useMemo(() => {
         if (dismissals?.length === 0) {
             return (
@@ -80,43 +170,19 @@ const PersonnelVoting = () => {
         }
         // return dismissals?.map((candidate, index) => {
         return dismissals?.map((personnelVoting, index) => {
-            return personnelVoting.candidate.map((candidate, index) => {
-                const notVoteYetQuantity = Number(candidate.notVoteYetQuantity)
-                const votedQuantity = Number(candidate.votedQuantity)
-                const unVotedQuantity = Number(candidate.unVotedQuantity)
-                const totalParticipantSeparate =
-                    notVoteYetQuantity + votedQuantity + unVotedQuantity
-                const percentVoted =
-                    totalParticipantSeparate === 0
-                        ? 0
-                        : (votedQuantity * 100) / totalParticipantSeparate
-                const percentUnVoted =
-                    totalParticipantSeparate === 0
-                        ? 0
-                        : (unVotedQuantity * 100) / totalParticipantSeparate
-                const percentNotVoteYet =
-                    totalParticipantSeparate === 0
-                        ? 0
-                        : (notVoteYetQuantity * 100) / totalParticipantSeparate
-
-                return (
-                    <DetailCandidateItem
-                        index={index + 1}
-                        key={candidate.id}
-                        content={candidate.candidateName}
-                        percentVoted={percentVoted}
-                        percentUnVoted={percentUnVoted}
-                        percentNotVoteYet={percentNotVoteYet}
-                        voteResult={candidate.voteResult}
-                        id={candidate.id}
-                        title={personnelVoting.title}
-                        voteErrorMessage={notifiEnableVote}
-                        meetingType={
-                            boardMeeting?.type ?? MeetingType.BOARD_MEETING
-                        }
-                    />
-                )
-            })
+            return (
+                <DetailPersonnelVotingItem
+                    key={personnelVoting.id}
+                    index={index}
+                    title={personnelVoting.title}
+                    candidate={personnelVoting.candidate}
+                    voteErrorMessage={notifiEnableVote}
+                    meetingType={
+                        boardMeeting?.type ?? MeetingType.BOARD_MEETING
+                    }
+                    isVoter={isBoard}
+                />
+            )
         })
     }, [notifiEnableVote, appointMents])
 
@@ -142,6 +208,7 @@ const PersonnelVoting = () => {
                     meetingType={
                         boardMeeting?.type ?? MeetingType.BOARD_MEETING
                     }
+                    isVoter={isBoard}
                 />
             )
         })
@@ -150,13 +217,15 @@ const PersonnelVoting = () => {
     return (
         <BoxArea title={t('EXECUTIVE_OFFICER_ELECTION')}>
             <BoxArea title={t('APPOINTMENT')}>
-                <div className="mb-6 flex flex-col gap-6">
+                <div className="mb-6 flex flex-col gap-6 max-md:mr-[-24px]">
                     {bodyAppontMents}
                 </div>
             </BoxArea>
 
             <BoxArea title={t('DISMISSAL')}>
-                <div className="mb-6 flex flex-col gap-6">{bodyDismissals}</div>
+                <div className="mb-6 flex flex-col gap-6 max-md:mr-[-24px]">
+                    {bodyDismissals}
+                </div>
             </BoxArea>
         </BoxArea>
     )

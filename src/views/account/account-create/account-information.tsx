@@ -312,7 +312,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={50} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -328,7 +328,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={11} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -341,7 +341,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={255} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>
@@ -409,7 +409,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                         rules={[{ required: false }]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={42} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>

@@ -32,6 +32,7 @@ const SelectedParticipantList = ({
                                     participant.users_defaultAvatarHashColor
                                 }
                                 users_avartar={participant.users_avartar}
+                                disable_delete={participant.disable_delete}
                                 onDeleteParticipant={() =>
                                     onDeleteParticipant(participant)
                                 }

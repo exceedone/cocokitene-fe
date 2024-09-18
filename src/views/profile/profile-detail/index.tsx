@@ -75,8 +75,8 @@ const MyProfileDetail = () => {
                     )
                 }
             />
-            <div className="p-6">
-                <div className="bg-white p-6 px-6 py-4 shadow-01">
+            <div className="p-6 max-sm:px-0">
+                <div className="bg-white p-6 px-6 py-4 shadow-01 max-[470px]:px-2">
                     <MyProfileInfo data={profile} />
                 </div>
             </div>

@@ -76,6 +76,7 @@ const ManagementAndFinancialReports = () => {
                 creator={resolution.creator}
                 proposalFiles={resolution.proposalFiles}
                 voteErrorMessage={notifiEnableVote}
+                isBoard={false}
             />
         ))
     }, [managementFinancials, notifiEnableVote])

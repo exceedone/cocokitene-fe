@@ -1,14 +1,15 @@
-import { Avatar, Col, Row } from 'antd'
+import { Avatar, Col, Row, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
 import Color from 'color'
 
 import BoxArea from '@/components/box-area'
 import { useCompanyDetail } from '@/stores/company/hooks'
-import { truncateString } from '@/utils/format-string'
 import { IRowInfo, RowInfo } from './row-info'
 import { AvatarBgHexColors } from '@/constants/common'
 import { getFirstCharacterUpperCase } from '@/utils/get-first-character'
 import { UserStatus } from '@/constants/user-status'
+
+const { Text } = Typography
 
 const backgroundAvatarColor = Color(AvatarBgHexColors.GOLDEN_PURPLE)
     .lighten(0.6)
@@ -23,7 +24,7 @@ const SuperAdminInfo = () => {
             label: 'USERNAME',
             content: company?.superAdminInfo?.username && (
                 <div
-                    className={`mt-[-3px] flex flex-wrap content-start items-center gap-[4px]`}
+                    className={`flex flex-nowrap content-start items-center gap-[4px]`}
                 >
                     <Avatar
                         style={{
@@ -32,25 +33,24 @@ const SuperAdminInfo = () => {
                             color: AvatarBgHexColors.GOLDEN_PURPLE,
                         }}
                         size="small"
+                        className="mb-auto"
                     >
                         {getFirstCharacterUpperCase(
                             company?.superAdminInfo?.username,
                         )}
                     </Avatar>
-                    <span>{company?.superAdminInfo?.username}</span>
+                    <Text className="flex-1">
+                        {company?.superAdminInfo?.username}
+                    </Text>
                 </div>
             ),
         },
         {
             label: 'WALLET_ADDRESS',
             content: company?.superAdminInfo?.walletAddress && (
-                <p className="max-w-[415px] truncate hover:text-clip">
-                    {truncateString({
-                        text: String(company?.superAdminInfo?.walletAddress),
-                        start: 5,
-                        end: 3,
-                    })}
-                </p>
+                <Text className="">
+                    {company?.superAdminInfo?.walletAddress}
+                </Text>
             ),
         },
         {
@@ -63,29 +63,29 @@ const SuperAdminInfo = () => {
                             UserStatus.ACTIVE
                                 ? 'bg-green-300'
                                 : company?.superAdminInfo?.userStatus?.status ==
-                                    UserStatus.INACTIVE
-                                  ? 'bg-red-500'
-                                  : null
+                                  UserStatus.INACTIVE
+                                ? 'bg-red-500'
+                                : null
                         } `}
                     ></div>
-                    <p>
+                    <Text>
                         {company?.superAdminInfo?.userStatus?.status ==
                         UserStatus.ACTIVE
                             ? t('ACTIVE')
                             : company?.superAdminInfo?.userStatus?.status ==
-                                UserStatus.INACTIVE
-                              ? t('INACTIVE')
-                              : null}
-                    </p>
+                              UserStatus.INACTIVE
+                            ? t('INACTIVE')
+                            : null}
+                    </Text>
                 </div>
             ),
         },
         {
             label: 'EMAIL',
             content: (
-                <p className="max-w-[415px] truncate hover:text-clip">
+                <Text className="flex-1 break-all">
                     {company?.superAdminInfo?.email}
-                </p>
+                </Text>
             ),
         },
     ]
@@ -93,7 +93,7 @@ const SuperAdminInfo = () => {
     return (
         <div>
             <BoxArea title={t('SUPER_ADMIN_INFORMATION')}>
-                <Row gutter={[16, 0]} className="min-w-[1184px]">
+                <Row gutter={[16, 0]} className="">
                     {dataSuperAdminInfo.map((item) => {
                         return (
                             <Col xs={24} lg={12} key={item.label}>

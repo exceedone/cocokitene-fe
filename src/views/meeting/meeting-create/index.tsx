@@ -26,7 +26,7 @@ const MeetingCreate = () => {
                 pageName={t('CREATE_NEW_MEETING')}
                 saveButton={<SaveCreateMeetingButton />}
             />
-            <div className="flex flex-col gap-6 p-6">
+            <div className="flex flex-col gap-6 p-6 max-[470px]:px-2">
                 <MeetingInformation />
                 <Resolutions />
                 <AmendmentResolutions />

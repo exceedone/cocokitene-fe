@@ -29,23 +29,19 @@ const MyProfileInfo = ({ data }: IProfileDetail) => {
         {
             label: 'COMPANY',
             content: (
-                <p className="truncate hover:text-clip">
-                    {data?.companyName || ''}
-                </p>
+                <p className="flex-1 break-words">{data?.companyName || ''}</p>
             ),
             lg: 6,
         },
         {
             label: 'PHONE',
-            content: (
-                <p className="truncate hover:text-clip">{data?.phone || ''}</p>
-            ),
+            content: <p className="flex-1 break-all">{data?.phone || ''}</p>,
             lg: 6,
         },
         {
             label: 'ROLE',
             content: (
-                <div className="mt-[-2px] flex gap-1 truncate hover:text-clip">
+                <div className="mt-[-2px] flex flex-wrap gap-1 truncate hover:text-clip">
                     {data?.roles.map((item) => (
                         <RoleInfo key={item.id} roleName={item.roleName} />
                     ))}
@@ -56,9 +52,7 @@ const MyProfileInfo = ({ data }: IProfileDetail) => {
         {
             label: 'WALLET_ADDRESS',
             content: (
-                <p className="max-w-[415px] truncate hover:text-clip">
-                    {data?.walletAddress || ''}
-                </p>
+                <p className="flex-1 break-all">{data?.walletAddress || ''}</p>
             ),
             lg: 6,
         },
@@ -94,7 +88,7 @@ const MyProfileInfo = ({ data }: IProfileDetail) => {
                             {getFirstCharacterUpperCase(data.userName)}
                         </Avatar>
                     )}
-                    <span>{data.userName}</span>
+                    <span className="flex-1">{data.userName}</span>
                 </div>
             ),
             lg: 3,
@@ -102,11 +96,7 @@ const MyProfileInfo = ({ data }: IProfileDetail) => {
 
         {
             label: 'EMAIL',
-            content: (
-                <p className="max-w-[415px] truncate hover:text-clip">
-                    {data?.email || ''}
-                </p>
-            ),
+            content: <p className="flex-1 break-all">{data?.email || ''}</p>,
             lg: 3,
         },
         {
@@ -142,30 +132,26 @@ const MyProfileInfo = ({ data }: IProfileDetail) => {
 
     return (
         <div className="bg-white p-6 px-6 py-4 shadow-01">
-            <Row gutter={[0, 0]} className="min-w-[1184px]">
-                <Col xs={24} lg={12}>
+            <Row gutter={[16, 0]}>
+                <Col xs={24} lg={12} span={24}>
                     {dataAccountDetailLeft.map((item, index) => {
                         return (
-                            <Col xs={24} key={index}>
+                            <Col key={index} className="max-sm:px-0">
                                 <RowMyInforInfo
                                     label={t(item.label)}
                                     content={item.content}
-                                    xs={item?.xs}
-                                    lg={item?.lg}
                                 />
                             </Col>
                         )
                     })}
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} lg={12} span={24}>
                     {dataAccountDetailRight.map((item, index) => {
                         return (
-                            <Col xs={24} key={index}>
+                            <Col key={index} className="max-sm:px-0">
                                 <RowMyInforInfo
                                     label={t(item.label)}
                                     content={item.content}
-                                    xs={item?.xs}
-                                    lg={item?.lg}
                                 />
                             </Col>
                         )

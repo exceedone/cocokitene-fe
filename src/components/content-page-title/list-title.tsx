@@ -3,11 +3,12 @@ import LayoutTitle, {
 } from '@/components/content-page-title/layout-title'
 import { SORT } from '@/constants/meeting'
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, Select, Typography } from 'antd'
+import { Grid, Input, Select, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
 import { ChangeEvent, ReactNode } from 'react'
 
 const { Title } = Typography
+const { useBreakpoint } = Grid
 
 interface IListTitle extends IBaseTitle {
     addButton?: ReactNode
@@ -28,6 +29,7 @@ const ListTitle = ({
     defaultSort,
 }: IListTitle) => {
     const t = useTranslations()
+    const screens = useBreakpoint()
 
     const handleChangeSelect = (value: string) => {
         if (onChangeSelect) {
@@ -42,26 +44,29 @@ const ListTitle = ({
     }
     return (
         <LayoutTitle>
-            <Title level={4} className="mb-0 font-medium">
+            <Title
+                level={4}
+                className="mb-0 pr-1 font-medium max-[470px]:text-base"
+            >
                 {pageName}
             </Title>
             <div className="items flex items-center gap-2">
                 <Input
-                    className="w-[200px]"
-                    size="large"
+                    className="w-[178px] max-[470px]:w-[150px]"
+                    size={screens.lg ? 'large' : 'middle'}
                     addonAfter={<SearchOutlined />}
                     placeholder={t('SEARCH')}
                     onChange={handleInputChange}
                 />
                 {onChangeSelect && (
                     <Select
-                        className="w-[200px]"
+                        className="w-[155px] max-md:hidden"
                         defaultValue={
                             defaultSort == SORT.ASC
                                 ? t('SORT_OLDEST_MEETING')
                                 : t('SORT_NEWEST_MEETING')
                         }
-                        size="large"
+                        size={screens.lg ? 'large' : 'middle'}
                         style={{ width: 120 }}
                         onChange={handleChangeSelect}
                         options={[

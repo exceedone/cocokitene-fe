@@ -1,14 +1,16 @@
 import { MailOutlined } from '@ant-design/icons'
-import { Button, notification } from 'antd'
+import { Button, Grid, notification } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { FETCH_STATUS } from '@/constants/common'
 import { useParams } from 'next/navigation'
 import { AxiosError } from 'axios'
 import serviceBoardMeeting from '@/services/board-meeting'
+const { useBreakpoint } = Grid
 
 const SendEmailButton = () => {
     const t = useTranslations()
+    const screens = useBreakpoint()
     const params = useParams()
     const meetingId: number = Number(params.id)
 
@@ -45,13 +47,15 @@ const SendEmailButton = () => {
         <Button
             icon={<MailOutlined />}
             type="primary"
-            size="large"
+            size={screens.lg ? 'large' : 'middle'}
+            className="max-[470px]:px-2"
             loading={status === FETCH_STATUS.LOADING}
             onClick={() => {
                 handleClick()
             }}
         >
-            {t('SEND_EMAIL_TO_BOARD')}
+            <span className="max-sm:hidden">{t('SEND_EMAIL_TO_BOARD')}</span>
+            <span className="sm:hidden">{t('SEND_MAIL')}</span>
         </Button>
     )
 }

@@ -33,13 +33,13 @@ const LandingHeader = () => {
     return (
         <div
             id="landing-header"
-            className={`fixed top-0 z-10 w-full opacity-0 transition-all ${metaClass}`}
+            className={`fixed top-0 z-10 w-full px-3 opacity-0 transition-all ${metaClass}`}
         >
-            <div className="mx-auto flex max-w-[1200px] justify-between py-3">
+            <div className="mx-auto flex max-w-[1200px] items-center justify-between p-3">
                 <Link className="flex-shrink-0 cursor-pointer" href={'/'}>
                     <LogoAppIcon />
                 </Link>
-                <div className="flex items-center gap-10">
+                <div className="flex items-center gap-2 sm:gap-5 lg:gap-10">
                     <Menu />
                     <LocaleSwitcher />
                     <ConnectWallet />

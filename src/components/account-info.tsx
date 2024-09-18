@@ -92,7 +92,7 @@ const AccountInfo = ({ avatar }: { name: string; avatar: string }) => {
                         height={24}
                         className="h-8 w-8 rounded-full"
                     />
-                    <Text className="text-sm leading-[22px] text-white">
+                    <Text className="line-clamp-1 max-w-[87px] text-sm leading-[22px] text-white">
                         {authState.userData?.username ?? 'Unknow'}
                     </Text>
                 </div>

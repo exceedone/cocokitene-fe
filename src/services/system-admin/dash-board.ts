@@ -5,8 +5,12 @@ import { IGetAllDataReponse, IStatisticCompanyResponse } from "./response.type"
 
 
 const serviceDashBoard = {
-    getStatistical: async (): Promise<IStatisticCompanyResponse> => {
-        const response:{data: IStatisticCompanyResponse} = await get<IStatisticCompanyResponse>('/system-admin/statistical')
+    getStatistical: async (
+        month: number,
+        year: number,
+    ): Promise<IStatisticCompanyResponse> => {
+        const payload = { month, year }
+        const response:{data: IStatisticCompanyResponse} = await get<IStatisticCompanyResponse>('/system-admin/statistical',payload)
 
         return response.data
     },

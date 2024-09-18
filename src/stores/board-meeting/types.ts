@@ -176,3 +176,16 @@ export interface IBoardMeetingUpdateCandidate {
     candidateId?: number
     candidateName: string
 }
+
+export interface IReports {
+    title: string
+    description: string
+    oldDescription?: string
+    percentVoted: number
+    percentUnVoted: number
+    percentNotVoteYet: number
+    voteResult: VoteProposalOption
+    creator: IBoardProposalCreator
+    id: number
+    proposalFiles: IBoardProposalFile[]
+}

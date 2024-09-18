@@ -16,6 +16,7 @@ const SelectedParticipantItem = ({
     users_email,
     users_avartar,
     onDeleteParticipant,
+    disable_delete,
 }: ISelectedParticipantItem) => {
     const backgroundAvatarColor = Color(users_defaultAvatarHashColor)
         .lighten(0.6)
@@ -55,7 +56,9 @@ const SelectedParticipantItem = ({
                 </Text>
             </div>
             <CloseCircleFilled
-                className="cursor-pointer text-black-25"
+                className={`text-black-25 ${
+                    disable_delete ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
                 width={14}
                 height={14}
                 onClick={onDeleteParticipant}

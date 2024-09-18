@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactNode, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import LayoutTitle from '@/components/content-page-title/layout-title'
-import { Input, Tabs, TabsProps } from 'antd'
+import { Grid, Input, Tabs, TabsProps } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 
 interface ISettingTile {
@@ -13,6 +13,8 @@ interface ISettingTile {
     onChangeTab?: ((key: string) => void) | undefined
 }
 
+const { useBreakpoint } = Grid
+
 const SettingTitle = ({
     addButton,
     editButton,
@@ -20,6 +22,8 @@ const SettingTitle = ({
     onChangeTab,
 }: ISettingTile) => {
     const t = useTranslations()
+    const screens = useBreakpoint()
+
     const items: TabsProps['items'] = [
         {
             key: 'roleSys',
@@ -46,25 +50,33 @@ const SettingTitle = ({
 
     return (
         <LayoutTitle>
-            <Tabs
-                items={items}
-                onChange={onChange}
-                defaultActiveKey="roleSys"
-            />
-
-            <div className="items flex items-center gap-2" key={choiceTab}>
-                {choiceTab === 'roleSys' ? (
-                    <Input
-                        className="w-[200px]"
-                        size="large"
-                        addonAfter={<SearchOutlined />}
-                        placeholder={t('SEARCH')}
-                        onChange={handleInputChange}
+            <div className="flex w-full justify-between gap-2 max-md:flex-col-reverse">
+                <div className="">
+                    <Tabs
+                        items={items}
+                        onChange={onChange}
+                        defaultActiveKey="roleSys"
+                        size="small"
                     />
-                ) : null}
+                </div>
 
-                {addButton}
-                {choiceTab === 'roleSys' ? editButton : null}
+                <div
+                    className="items flex items-center gap-2 max-md:justify-end "
+                    key={choiceTab}
+                >
+                    {choiceTab === 'roleSys' ? (
+                        <Input
+                            className="w-[178px] max-[470px]:w-[150px] lg:w-[200px]"
+                            size={screens.lg ? 'large' : 'middle'}
+                            addonAfter={<SearchOutlined />}
+                            placeholder={t('SEARCH')}
+                            onChange={handleInputChange}
+                        />
+                    ) : null}
+
+                    {addButton}
+                    {choiceTab === 'roleSys' ? editButton : null}
+                </div>
             </div>
         </LayoutTitle>
     )

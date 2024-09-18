@@ -48,7 +48,7 @@ const ShareholderView = () => {
                 onChangeSelect={handleSelectChange}
                 pageName={t('LIST_SHAREHOLDERS')}
             />
-            <div className="p-6">
+            <div className="p-6 max-sm:px-0">
                 <ShareholderList />
             </div>
         </div>

@@ -12,14 +12,16 @@ import { checkPermission } from '@/utils/auth'
 import ListMeetingFuture from '@/views/meeting/meeting-list/list-future-meeting'
 import ListMeetingPast from '@/views/meeting/meeting-list/list-past-meeting'
 import { PlusOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button, Grid } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+const { useBreakpoint } = Grid
 
 const MeetingList = () => {
     const router = useRouter()
     const t = useTranslations()
+    const screens = useBreakpoint()
     const { attendanceState, resetStateAttendance } = useAttendance()
     const { openNotification, contextHolder } = useNotification()
     const { authState } = useAuthLogin()
@@ -116,7 +118,8 @@ const MeetingList = () => {
                         <Button
                             type="primary"
                             icon={<PlusOutlined />}
-                            size="large"
+                            size={screens.lg ? 'large' : 'middle'}
+                            className="max-[470px]:px-2"
                             onClick={() => {
                                 router.push('/meeting/create')
                             }}
@@ -129,7 +132,7 @@ const MeetingList = () => {
                 onChangeInput={handleInputChange}
                 onChangeSelect={handleSelectChange}
             />
-            <div className="p-6">
+            <div className="p-6 max-sm:px-0">
                 <ListMeetingFuture data={meetingState.meetingFutureList} />
                 <ListMeetingPast data={meetingState.meetingPassList} />
             </div>

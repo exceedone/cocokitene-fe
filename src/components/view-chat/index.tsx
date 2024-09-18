@@ -111,9 +111,9 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
     //Socket
     const [socket, setSocket] = useState<any>(undefined)
     useEffect(() => {
-        const socket = io(String(process.env.NEXT_PUBLIC_API_SOCKET))
+        const socketIO = io(String(process.env.NEXT_PUBLIC_API_SOCKET))
 
-        socket.on(`receive_chat_public/${dataChat.roomChat}`, (message) => {
+        socketIO.on(`receive_chat_public/${dataChat.roomChat}`, (message) => {
             setDataChat((prev) => {
                 const newMessage = { ...message, isReaded: false }
                 return {
@@ -130,7 +130,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
             }
         })
 
-        socket.on(
+        socketIO.on(
             `receive_chat_private/${dataChat.roomChat}/${authState.userData?.id}`,
             (message) => {
                 setDataChat((prev) => {
@@ -160,7 +160,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
         )
 
         //Reaction Message
-        socket.on(
+        socketIO.on(
             `receive_reaction_message_public/${dataChat.roomChat}`,
             (item) => {
                 // console.log('receive_reaction_message-public', item)
@@ -206,7 +206,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
             },
         )
 
-        socket.on(
+        socketIO.on(
             `receive_reaction_message_private/${dataChat.roomChat}/${authState.userData?.id}`,
             (item) => {
                 // console.log('receive_reaction_message-private', item)
@@ -252,14 +252,21 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
         )
 
         //Socket update permission of chat
-        socket.on(
+        socketIO.on(
             `permission_chat_meeting/${dataChat.roomChat}`,
             (permission) => {
                 setPermissionChat(permission)
             },
         )
 
-        setSocket(socket)
+        setSocket(socketIO)
+
+        return () => {
+            if (socket) {
+                socket.disconnect()
+                console.log('Disconnect socket!!!', socket)
+            }
+        }
     }, [dataChat.roomChat])
 
     useEffect(() => {
@@ -810,7 +817,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
 
     return (
         <>
-            <div className="fixed bottom-7 right-5 h-auto">
+            <div className="fixed bottom-7 right-5 z-20 h-auto max-[470px]:bottom-3">
                 <div
                     className={`mb-14 mr-3 border bg-white ${
                         chatModalOpen
@@ -819,9 +826,8 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                     }`}
                 >
                     <div
-                        className={`flex w-[400px] flex-col ${
-                            initMessage ? 'h-[680px]' : 'h-[600px]'
-                        }`}
+                        // className={`flex h-[600px] w-[400px] flex-col max-[470px]:w-[330px]`}
+                        className={`flex h-[70vh] w-[400px] flex-col max-[470px]:w-[330px]`}
                     >
                         {initStatus === FETCH_STATUS.LOADING ? (
                             <Row
@@ -832,8 +838,8 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                 <Spin tip="Loading..." />
                             </Row>
                         ) : (
-                            <>
-                                <div className="relative flex h-[7%] w-full items-center bg-[#5151e5] px-2">
+                            <div className="flex h-full w-full flex-col">
+                                <div className="relative flex h-10 w-full flex-none items-center bg-[#5151e5] px-2">
                                     <span className="max-w-[90%] truncate text-xl font-medium text-[#ffffff]	">
                                         Chat {meetingInfo.title}
                                     </span>
@@ -847,26 +853,27 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                     />
                                 </div>
                                 <div
-                                    className={`${
-                                        initMessage ? 'h-[70%]' : 'h-[76%]'
-                                    } mt-2`}
+                                    className={`mt-2 flex h-1 flex-auto flex-col`}
                                 >
                                     {/* <div className="border-black-500 relative mx-auto h-full w-[95%] overflow-hidden border px-2 hover:overflow-y-auto"> */}
+                                    <div
+                                        // className="fixed right-[50%] top-[7%] z-10 flex w-[95%] translate-x-2/4 border border-gray-400 bg-[#A8C3EB] px-[12px]"
+                                        className="z-10 mx-auto flex w-[95%] border border-gray-400 bg-[#A8C3EB] px-[12px]"
+                                    >
+                                        <p className="mx-auto">
+                                            {t(
+                                                listPermissionChat.find(
+                                                    (permission) =>
+                                                        permission.id ===
+                                                        permissionChat,
+                                                )?.name,
+                                            )}
+                                        </p>
+                                    </div>
                                     <div
                                         className="border-black-500 custom-class relative mx-auto h-full w-[95%] overflow-y-auto overscroll-contain border px-2"
                                         ref={chatRef}
                                     >
-                                        <div className="fixed right-[50%] top-[7%] z-10 flex w-[95%] translate-x-2/4 border border-gray-400 bg-[#A8C3EB] px-[12px]">
-                                            <p className="mx-auto">
-                                                {t(
-                                                    listPermissionChat.find(
-                                                        (permission) =>
-                                                            permission.id ===
-                                                            permissionChat,
-                                                    )?.name,
-                                                )}
-                                            </p>
-                                        </div>
                                         {showBtnSeenUnreadMess &&
                                             !newMessageIncoming &&
                                             unReadRef.current && (
@@ -874,7 +881,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                                     onClick={
                                                         scrollToUnReadMessage
                                                     }
-                                                    className="fixed right-[50%] top-[13%] z-10 translate-x-2/4 rounded-lg bg-[#0059ff] px-2 py-1 text-xs text-[#ffff]"
+                                                    className="fixed right-[50%] top-[72px] z-10 translate-x-2/4 rounded-lg bg-[#0059ff] px-2 py-1 text-xs text-[#ffff]"
                                                 >
                                                     {t('UNREAD_MESSAGE')}
                                                 </Button>
@@ -1190,8 +1197,8 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                                     }}
                                                     className={`fixed right-[50%] ${
                                                         initMessage
-                                                            ? 'bottom-[23%]'
-                                                            : 'bottom-[17%]'
+                                                            ? 'bottom-[155px]'
+                                                            : 'bottom-[107px]'
                                                     } z-10 translate-x-2/4 rounded-lg bg-[#0059ff] px-2 py-1 text-xs text-[#ffff]`}
                                                 >
                                                     {t('NEW_MESSAGE')}
@@ -1201,9 +1208,9 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                     </div>
                                 </div>
                                 <div
-                                    className={`mx-1 my-1 flex gap-5 px-2 ${
-                                        initMessage ? 'h-[23%]' : 'h-[16%]'
-                                    }`}
+                                    className={`mx-1 my-1 flex ${
+                                        initMessage ? 'h-36' : 'h-24'
+                                    } gap-5 px-2`}
                                 >
                                     <div className="flex w-[95%] flex-col gap-2">
                                         <div className="flex w-full items-center">
@@ -1285,10 +1292,6 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                                                                             permission.name,
                                                                                         )}
                                                                                     </span>
-                                                                                    {/* {permissionChat ==
-                                                                                        permission.id && (
-                                                                                        <CheckOutlined className="mr-1" />
-                                                                                    )} */}
                                                                                     <CheckOutlined
                                                                                         className={`ml-3 mr-1 ${
                                                                                             permissionChat !==
@@ -1413,7 +1416,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                         </div>
                                     </div>
                                 </div>
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>

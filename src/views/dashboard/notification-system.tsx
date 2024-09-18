@@ -7,10 +7,12 @@ import {
     ISysNotificationListResponse,
     ISystemNotificationResponse,
 } from '@/services/response.type'
-import { Button } from 'antd'
 import { formatDate } from '@/utils/date'
 import { ScreenDashBoard } from '@/constants/dash-board'
-import { truncateString } from '@/utils/format-string'
+import { EyeOutlined } from '@ant-design/icons'
+import { Grid } from 'antd'
+
+const { useBreakpoint } = Grid
 
 interface DataNotificationSys {
     key: React.Key
@@ -34,6 +36,7 @@ const NotificationSystem = ({
         useState<ISysNotificationListResponse>()
     const [loadingFetchData, setLoadingFetchData] = useState<boolean>(false)
     const t = useTranslations()
+    const screens = useBreakpoint()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -71,11 +74,12 @@ const NotificationSystem = ({
         {
             title: t('NO'),
             dataIndex: 'key',
-            width: '5%',
             className: 'text-center',
+            responsive: ['xl'],
+            width: 40,
         },
         {
-            title: t('DURATION'),
+            title: t('CREATE_AT'),
             dataIndex: 'date',
             render: (_, record) => {
                 return (
@@ -84,30 +88,34 @@ const NotificationSystem = ({
                     </div>
                 )
             },
-            width: '20%',
+            // width: '20%',
+            responsive: ['lg'],
+            width: 130,
         },
         {
             title: t('TITLE_SYSTEM_NOTI'),
             dataIndex: 'title',
             render: (_, record) => {
                 return (
-                    <div className="w-[95%] truncate">
-                        {truncateString({
+                    <div className="truncate">
+                        {/* {truncateString({
                             text: record.title,
                             start: 78,
                             end: 0,
-                        })}
+                        })} */}
+                        {record.title}
                     </div>
                 )
             },
-            width: '60%',
+            // width: '66%',
+            ellipsis: true,
         },
         {
             render: (_, record) => {
                 return (
-                    <div className="">
-                        <Button
-                            size="small"
+                    <div className="p-0 text-center">
+                        <EyeOutlined
+                            style={{ fontSize: '20px' }}
                             onClick={() => {
                                 const sysNotification =
                                     dataSysNotification?.items.find(
@@ -122,13 +130,12 @@ const NotificationSystem = ({
                                     getSysNotification(sysNotification)
                                 }
                             }}
-                        >
-                            {t('BTN_VIEW_DETAIL')}
-                        </Button>
+                        />
                     </div>
                 )
             },
-            width: '15%',
+            width: 40,
+            // ellipsis: true,
         },
     ]
 
@@ -166,6 +173,7 @@ const NotificationSystem = ({
                     locale={locale}
                     loading={loadingFetchData}
                     onChange={handlePageChange}
+                    showHeader={screens.sm}
                 />
             </div>
         </div>

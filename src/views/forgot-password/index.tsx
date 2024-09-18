@@ -15,6 +15,7 @@ const ForgotPassword = () => {
     const { forgotPasswordState } = useForgotPassword()
 
     return (
+        // <div className="w-full">
         <AuthLayout>
             {contextHolder}
             <div className="mb-10 flex items-center justify-center gap-5">
@@ -31,6 +32,7 @@ const ForgotPassword = () => {
             {forgotPasswordState.currentScreen ===
                 ScreenForgotPassword.CONFIRM && <ConfirmCodeForgot />}
         </AuthLayout>
+        // </div>
     )
 }
 

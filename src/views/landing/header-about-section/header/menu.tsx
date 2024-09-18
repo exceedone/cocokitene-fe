@@ -67,7 +67,7 @@ const Menu = () => {
     ]
 
     return (
-        <div className={`flex h-full gap-10`}>
+        <div className={`hidden h-full gap-6 md:flex`}>
             {data.map((item) => (
                 <MenuItem
                     text={item.text}

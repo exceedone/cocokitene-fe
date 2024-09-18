@@ -30,14 +30,17 @@ const ServicesSection = () => {
     const t = useTranslations()
 
     return (
-        <div id="services" className="mx-auto max-w-[1200px] py-[100px]">
+        <div id="services" className="mx-auto max-w-[1200px] px-4 py-[50px]">
             <div id="services-title" className="mb-10 text-center">
                 <Title level={2} className="font-bold">
                     {t('OUR_SERVICE')}
                 </Title>
                 <Text className="font-normal">{t('SERVICE_SUB_TITLE')}</Text>
             </div>
-            <div id="services-list" className="flex justify-center gap-6">
+            <div
+                id="services-list"
+                className="flex justify-center gap-6 max-sm:flex-col"
+            >
                 {servicesList.map((service, index) => (
                     <ServiceItem
                         key={index}

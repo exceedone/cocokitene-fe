@@ -111,6 +111,7 @@ const ManagementAndFinancialReports = () => {
                 onClick={onAddNew}
                 icon={<PlusOutlined />}
                 disabled={data.managementAndFinancials.length >= 10}
+                className="ml-6"
             >
                 {t('ADD_NEW')}
             </Button>

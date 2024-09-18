@@ -21,8 +21,8 @@ const ParticipantItem = ({
         .hex()
 
     return (
-        <div className="flex items-center justify-between">
-            <div className="flex w-[90%] items-center gap-2">
+        <div className="flex w-full items-center justify-between">
+            <div className="flex w-full items-center gap-2">
                 {avatar ? (
                     <Avatar
                         src={avatar}
@@ -47,18 +47,19 @@ const ParticipantItem = ({
                         {getFirstCharacterUpperCase(email)}
                     </Avatar>
                 )}
-                <div className="w-[90%] cursor-pointer">
+                <div className="flex flex-1 cursor-pointer gap-2">
                     <Text
                         title={email}
-                        className={`${
-                            !joined && 'text-black-45'
-                        } w-[80%] truncate`}
+                        className={`${!joined && 'text-black-45'} line-clamp-2`}
                     >
                         {/* {truncateString({ text: email, start: 10, end: 0 })}{' '} */}
                         {email}{' '}
                     </Text>
                     {joined && (
-                        <Text className="text-polar-green">
+                        <Text
+                            className="text-polar-green"
+                            style={{ whiteSpace: 'nowrap' }}
+                        >
                             ({t('JOINED')})
                         </Text>
                     )}

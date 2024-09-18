@@ -107,7 +107,7 @@ const AccountInfoSystem = ({ avatar }: { name: string; avatar: string }) => {
             <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
                     <Image src={avatar} alt={'avatar'} width={24} height={24} />
-                    <Text className="text-sm leading-[22px] text-white">
+                    <Text className="line-clamp-1 text-sm leading-[22px] text-white">
                         {authAdminState.userAdminInfo?.username ?? 'Unknow'}
                     </Text>
                 </div>

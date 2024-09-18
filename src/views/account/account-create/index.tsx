@@ -126,7 +126,7 @@ const CreateAccount = () => {
                     />
                 }
             />
-            <div className="gap-6 p-6">
+            <div className="gap-6 p-6 max-[470px]:px-2">
                 <AccountInformation form={form} getFileAvatar={getFileAvatar} />
             </div>
         </Form>

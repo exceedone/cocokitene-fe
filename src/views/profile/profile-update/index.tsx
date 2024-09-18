@@ -255,6 +255,9 @@ const UpdateMyProfile = () => {
                         username: values.username,
                         walletAddress: values.walletAddress || '',
                         avatar: urlAvatar || '',
+                        defaultAvatarHashColor:
+                            serviceUser.getInfoStorage()
+                                ?.defaultAvatarHashColor || '',
                     }
                     store?.dispatch(update(newAuth))
                     router.push(`/profile`)
@@ -331,7 +334,7 @@ const UpdateMyProfile = () => {
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={50} />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>
@@ -349,7 +352,7 @@ const UpdateMyProfile = () => {
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={11} />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>
@@ -378,7 +381,7 @@ const UpdateMyProfile = () => {
                                     rules={[{ required: false }]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" />
+                                    <Input size="large" maxLength={50} />
                                 </Form.Item>
                             </Col>
                         </Row>

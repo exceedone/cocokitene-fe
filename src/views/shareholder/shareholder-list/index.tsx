@@ -41,8 +41,9 @@ const ShareholderList = () => {
         {
             title: t('NO'),
             dataIndex: 'index',
-            width: '5%',
+            width: 55,
             className: 'text-center',
+            responsive: ['md'],
         },
         {
             title: t('SHAREHOLDER_NAME'),
@@ -78,14 +79,14 @@ const ShareholderList = () => {
                         )}
                         <Text
                             title={record.username}
-                            className="cursor-pointer"
+                            className="flex-1 cursor-pointer"
                         >
                             {record.username}
                         </Text>
                     </div>
                 )
             },
-            width: '17%',
+            width: '25%',
         },
         {
             title: t('WALLET_ADDRESS'),
@@ -101,12 +102,15 @@ const ShareholderList = () => {
                     </>
                 )
             },
-            width: '18%',
+            width: '15%',
         },
         {
             title: t('EMAIL'),
             dataIndex: 'email',
-            width: '25',
+            render: (_, record) => {
+                return <div className="flex-1 break-all">{record.email}</div>
+            },
+            width: '25%',
         },
         {
             title: t('SHARES_QUANTITY'),
@@ -127,7 +131,7 @@ const ShareholderList = () => {
                     </>
                 )
             },
-            width: '11%',
+            width: '12%',
         },
         {
             title: '',
@@ -181,6 +185,7 @@ const ShareholderList = () => {
                     onChange: handlePageChane,
                 }}
                 locale={locale}
+                scroll={{ x: 845, y: 'calc(100vh - 337px)' }}
             />
         </div>
     )

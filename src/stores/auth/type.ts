@@ -29,6 +29,7 @@ export interface IAccount {
     companyName: string
     avatar: string
     permissionKeys: string[]
+    defaultAvatarHashColor: string
 }
 
 export interface ILoginEmailRequest {

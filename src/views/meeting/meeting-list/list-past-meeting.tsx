@@ -37,9 +37,13 @@ const ListPastMeeting = ({ data }: ListPastMeetingProps) => {
             <BoxArea title={t('MEETING_PAST_LIST')}>
                 {data && data.length > 0 ? (
                     <>
-                        {data.map((item, index) => (
-                            <ItemPastMeeting key={index} {...item} />
-                        ))}
+                        <div className="overflow-x-auto">
+                            <div className="min-w-[845px]">
+                                {data.map((item, index) => (
+                                    <ItemPastMeeting key={index} {...item} />
+                                ))}
+                            </div>
+                        </div>
                         <div className="mt-6 flex justify-end">
                             <Pagination
                                 pageSize={limit}

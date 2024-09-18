@@ -27,7 +27,7 @@ const BoardMeetingCreate = () => {
                 pageName={t('CREATE_NEW_BOARD_MEETING')}
                 saveButton={<SaveCreateBoardMeetingButton />}
             />
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-6 p-6 max-[470px]:px-2">
                 <BoardMeetingInformation />
                 <ManagementAndFinancialReports />
                 <Elections />

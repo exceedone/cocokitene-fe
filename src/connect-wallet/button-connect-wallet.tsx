@@ -110,6 +110,7 @@ const ButtonConnectWallet = ({
                             <Modal
                                 open={isModalOpen}
                                 onCancel={handleCancel}
+                                centered
                                 footer={null}
                             >
                                 {(() => {
@@ -293,7 +294,8 @@ const ButtonConnectWallet = ({
                                             onClick={showModal}
                                             type="default"
                                             size="large"
-                                            className="text-base font-normal text-primary "
+                                            className="text-base font-normal text-primary"
+                                            style={{ width: '96px' }}
                                         >
                                             {t('LOGIN')}
                                         </Button>
@@ -318,7 +320,7 @@ const ButtonConnectWallet = ({
                                 }
 
                                 return (
-                                    <div>
+                                    <div className="custom-connect-wallet">
                                         <button
                                             onClick={openChainModal}
                                             className="flex items-center gap-2 py-1 text-sm text-white"
@@ -335,8 +337,12 @@ const ButtonConnectWallet = ({
                                                     height={24}
                                                 />
                                             )}
-                                            {chain && chain.name}
-                                            <DownOutlined className="h-[10px] w-[10px] text-white" />
+                                            <span className="custom-connect-wallet__chain-name">
+                                                {chain && chain.name}
+                                            </span>
+                                            {chain && chain.iconUrl && (
+                                                <DownOutlined className="h-[10px] w-[10px] text-white" />
+                                            )}
                                         </button>
                                     </div>
                                 )

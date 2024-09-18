@@ -74,7 +74,7 @@ const SendMailForgotUser = () => {
                             {
                                 required: true,
                                 type: 'email',
-                                message: 'Please input your Email!',
+                                message: t('PLEASE_INPUT_YOUR_EMAIL'),
                             },
                         ]}
                     >

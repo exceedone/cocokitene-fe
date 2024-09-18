@@ -24,17 +24,17 @@ export const BoxGeneralInformation = ({
     totalNumber,
 }: IBoxGeneralInformation) => {
     return (
-        <div className="h-full bg-white p-6">
-            <div className="flex items-center justify-between">
-                <div className="flex items-end justify-center gap-2">
-                    {icon}
+        <div className="h-full bg-white p-6 max-[470px]:px-3">
+            <div className="flex items-center justify-between gap-2">
+                <div className="flex justify-center gap-2">
+                    <div className="h-4 w-4">{icon}</div>
                     <Text className="leading-none">{title}</Text>
                 </div>
                 <div>
-                    <div className="flex items-baseline gap-2">
+                    <div className="flex flex-nowrap items-baseline gap-2">
                         <Title
                             level={2}
-                            className="mb-0 font-medium leading-none"
+                            className="mb-0 break-keep font-medium leading-none"
                         >
                             {realNumber}
                         </Title>
@@ -46,7 +46,7 @@ export const BoxGeneralInformation = ({
                         </Title>
                         <Title
                             level={4}
-                            className="mb-0 mt-0 font-medium leading-none"
+                            className="mb-0 mt-0 break-keep font-medium leading-none"
                         >
                             {totalNumber}
                         </Title>
@@ -83,7 +83,7 @@ const BoardMeetingInformation = () => {
                 </Col>
                 <Col xs={24} lg={12}>
                     <BoxArea title={t('BOARD_MEETING_INFORMATION')}>
-                        <div className="flex gap-3">
+                        <div className="flex flex-wrap gap-x-8 max-[470px]:gap-y-2">
                             <div className="flex gap-1">
                                 <Text className="text-black-45">
                                     {t('START_TIME')}

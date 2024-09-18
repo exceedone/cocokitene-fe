@@ -1,5 +1,5 @@
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Button, Form, Input, Typography, notification } from 'antd'
+import { Button, Form, Input, Spin, Typography, notification } from 'antd'
 import { useEffect, useState } from 'react'
 import AuthLayout from '@/components/auth-layout'
 import { useNotification } from '@/hooks/use-notification'
@@ -26,7 +26,6 @@ const ResetPassword = () => {
     //Get Token on Param Url
     const searchParams = useSearchParams()
     const tokenFromUrl = searchParams.get('token')
-
     useEffect(() => {
         if (tokenFromUrl) {
             const token = tokenFromUrl.split('-')
@@ -82,13 +81,11 @@ const ResetPassword = () => {
             /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 
         if (!value) {
-            return Promise.reject('Please input your new password!')
+            return Promise.reject(t('REQUIRE_PASSWORD'))
         }
 
         if (!regex.test(value)) {
-            return Promise.reject(
-                'Password must be at least 8 characters long, contain at least one uppercase letter, one special character, and one digit.',
-            )
+            return Promise.reject(t('VALID_PASSWORD'))
         }
 
         // Reset confirm password error when password changes
@@ -96,6 +93,16 @@ const ResetPassword = () => {
         setConfirmPasswordError(null)
 
         return Promise.resolve()
+    }
+
+    if (countdown == undefined) {
+        return (
+            <AuthLayout>
+                <div className="flex items-center justify-center">
+                    <Spin tip="Loading..." />
+                </div>
+            </AuthLayout>
+        )
     }
 
     return (
@@ -125,7 +132,7 @@ const ResetPassword = () => {
                         </Text>
                     </div>
                     <div className="mb-4 flex items-center justify-center">
-                        {countdown !== 0 ? (
+                        {countdown && countdown > 0 ? (
                             <Text className="text-sm">
                                 {t('THE_LINK_EXPIRES_AFTER_{second}_SECONDS', {
                                     second: countdown,
@@ -138,7 +145,7 @@ const ResetPassword = () => {
                         )}
                     </div>
 
-                    {countdown ? (
+                    {countdown && countdown > 0 ? (
                         <div className="mb-6">
                             <Form
                                 name="resetPassword"
@@ -161,6 +168,7 @@ const ResetPassword = () => {
                                     <Input.Password
                                         size="large"
                                         className="font-normal"
+                                        maxLength={255}
                                     />
                                 </Form.Item>
 
@@ -172,8 +180,9 @@ const ResetPassword = () => {
                                     rules={[
                                         {
                                             required: true,
-                                            message:
-                                                'Please confirm your password!',
+                                            message: t(
+                                                'REQUIRE_CONFIRM_PASSWORD',
+                                            ),
                                         },
                                         ({ getFieldValue }) => ({
                                             validator(_, value) {
@@ -187,7 +196,9 @@ const ResetPassword = () => {
                                                 }
                                                 return Promise.reject(
                                                     new Error(
-                                                        'The new password that you entered do not match!',
+                                                        t(
+                                                            'VALID_CONFIRM_PASSWORD',
+                                                        ),
                                                     ),
                                                 )
                                             },
@@ -201,6 +212,7 @@ const ResetPassword = () => {
                                     <Input.Password
                                         size="large"
                                         className="font-normal"
+                                        maxLength={255}
                                     />
                                 </Form.Item>
 

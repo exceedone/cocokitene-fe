@@ -13,6 +13,7 @@ export interface IParticipants {
     users_id: number
     userStatus_status?: string
     listRoleResponse?: string
+    disable_delete?: boolean
 }
 
 export interface IParticipantsWithRole {

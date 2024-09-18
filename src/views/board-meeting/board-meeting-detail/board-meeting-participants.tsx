@@ -60,11 +60,11 @@ const BoardMeetingParticipants = () => {
     return (
         <BoxArea title={t('PARTICIPANTS')}>
             {participants.data.userWithRoleMtg.length > 0 ? (
-                <>
+                <div className="max-[470px]:px-3">
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         <Input
                             placeholder={t('SEARCH')}
-                            className="mb-6"
+                            className="mb-6 max-w-[320px]"
                             addonAfter={<SettingOutlined />}
                             onChange={onChange}
                             value={query}
@@ -89,7 +89,7 @@ const BoardMeetingParticipants = () => {
                                 ),
                             )}
                     </div>
-                </>
+                </div>
             ) : (
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}

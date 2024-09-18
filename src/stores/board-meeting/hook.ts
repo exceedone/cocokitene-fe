@@ -1,8 +1,6 @@
-import { IUpdateBoardMeeting } from './types'
+import { IReports, IUpdateBoardMeeting } from './types'
 import {
     IBoardMeetingDetail,
-    IBoardProposalCreator,
-    IBoardProposalFile,
     ICreateBoardMeeting,
 } from '@/stores/board-meeting/types'
 import { RootState, useAppDispatch, useAppSelector } from '@/stores'
@@ -16,7 +14,7 @@ import { getBoardMeetingDetail } from '@/stores/board-meeting/detailSlice'
 import { BoardMeetingResource } from '@/views/board-meeting/board-meeting-detail/board-meeting-documents'
 import { MeetingFileType } from '@/constants/meeting'
 import { getFileTypeByUrl } from '@/utils/file'
-import { ResolutionType, VoteProposalOption } from '@/constants/resolution'
+import { ResolutionType } from '@/constants/resolution'
 import {
     initUpdateBoardMeeting,
     updateBoardMeetingInformation,
@@ -26,9 +24,12 @@ import {
     IMeetingState,
     ListParamsFilter,
 } from '../meeting/types'
-import { getAllBoardMeetings, getAllPassBoardMeetings, setFilter } from './listSlice'
+import {
+    getAllBoardMeetings,
+    getAllPassBoardMeetings,
+    setFilter,
+} from './listSlice'
 import { resetStatus } from './detailSlice'
-
 
 export function useCreateBoardMeetingInformation(): [
     ICreateBoardMeeting,
@@ -81,9 +82,12 @@ export const useListBoardMeeting = (): ListBoardMeetingType => {
         [dispatch],
     )
 
-    const setFilterAction = useCallback((data:ListParamsFilter )=>{
-        dispatch(setFilter(data))
-    },[dispatch])
+    const setFilterAction = useCallback(
+        (data: ListParamsFilter) => {
+            dispatch(setFilter(data))
+        },
+        [dispatch],
+    )
 
     return {
         boardMeetingState,
@@ -114,11 +118,9 @@ export function useBoardMeetingDetail(): [
         [dispatch],
     )
 
-    const resetStateBoardMtg = useCallback(
-        () =>{
-            dispatch(resetStatus())
-        },[dispatch]
-    )
+    const resetStateBoardMtg = useCallback(() => {
+        dispatch(resetStatus())
+    }, [dispatch])
 
     return [
         {
@@ -163,18 +165,7 @@ export function useBoardMeetingFiles(): {
     }
 }
 
-export function useReports(type: ResolutionType): {
-    title: string
-    description: string
-    oldDescription?: string
-    percentVoted: number
-    percentUnVoted: number
-    percentNotVoteYet: number
-    voteResult: VoteProposalOption
-    creator: IBoardProposalCreator
-    id: number
-    proposalFiles: IBoardProposalFile[]
-}[] {
+export function useReports(type: ResolutionType): IReports[] {
     const boardMetingDetail = useAppSelector(
         (state: RootState) => state.boardMeetingDetail.boardMeeting,
     )

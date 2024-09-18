@@ -8,7 +8,7 @@ const CompanyInfo = () => {
     const { authState } = useAuthLogin()
 
     return (
-        <div className="flex items-center">
+        <div className="hidden items-center lg:flex">
             <Text className="max-w-[278px] truncate text-sm leading-[22px] text-white">
                 {authState.userData?.companyName || 'Unknow'}
             </Text>

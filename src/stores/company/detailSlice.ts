@@ -30,6 +30,8 @@ export const getCompanyDetail = createAsyncThunk<
             taxCompany: companyDetail?.taxNumber,
             fax: companyDetail.fax,
             businessType: companyDetail?.businessType,
+            totalCreateMeeting: companyDetail.totalCreateMeeting,
+            totalCreatedAccount: companyDetail.totalCreatedAccount,
             status: {
                 id: companyDetail?.companyStatus?.id,
                 status: companyDetail?.companyStatus?.status,

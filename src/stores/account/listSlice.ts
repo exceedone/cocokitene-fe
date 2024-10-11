@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IGetAllDataReponse } from '@/services/response.type'
+import { IGetAllDataAllowControlResponse } from '@/services/response.type'
 import {
     IAccountList,
     IAccountState,
@@ -15,6 +15,7 @@ import serviceAccount from '@/services/account'
 const initialState: IAccountState = {
     status: EActionStatus.Idle,
     accountList: [],
+    allowCreate: true,
     totalAccountItem: 0,
     page: 1,
     limit: 10,
@@ -26,9 +27,8 @@ const initialState: IAccountState = {
     errorMessage: '',
 }
 
-
 export const getAllAccount = createAsyncThunk<
-    IGetAllDataReponse<IAccountList>,
+    IGetAllDataAllowControlResponse<IAccountList>,
     IGetAllAccountQuery,
     {
         rejectValue: FetchError
@@ -36,7 +36,9 @@ export const getAllAccount = createAsyncThunk<
 >('users/getUserAll', async (param, { rejectWithValue }) => {
     try {
         const data = await serviceAccount.getAllUsers(param)
-        const mappedData = data.items.map((item, index) => {
+        console.log('data: ', data)
+
+        const mappedData = data.users.items.map((item, index) => {
             return {
                 id: item.users_id,
                 index: index + 1,
@@ -53,7 +55,9 @@ export const getAllAccount = createAsyncThunk<
         return {
             ...data,
             items: mappedData,
-        } as unknown as IGetAllDataReponse<IAccountList>
+            allowCreate: data.allowCreate,
+            meta: data.users.meta
+        } as unknown as IGetAllDataAllowControlResponse<IAccountList>
     } catch (error) {
         const err = error as AxiosError
         const responseData: any = err.response?.data
@@ -78,9 +82,11 @@ const accountListSlice = createSlice({
                 state.status = EActionStatus.Pending
             })
             .addCase(getAllAccount.fulfilled, (state, action) => {
-                state.status = EActionStatus.Succeeded
-                state.accountList = action.payload?.items ?? []
-                state.totalAccountItem = action.payload?.meta?.totalItems ?? 0
+                state.status = EActionStatus.Succeeded,
+                state.accountList = action.payload?.items ?? [],
+                state.allowCreate = action.payload.allowCreate,
+                state.totalAccountItem =action.payload?.meta?.totalItems ?? 0
+                state.page = action.payload.meta.currentPage
             })
             .addCase(getAllAccount.rejected, (state, action) => {
                 state.status = EActionStatus.Failed

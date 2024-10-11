@@ -7,6 +7,7 @@ import {
     Form,
     Input,
     Row,
+    Tooltip,
     Typography,
     Upload,
 } from 'antd'
@@ -29,7 +30,11 @@ const { Text } = Typography
 const { TextArea } = Input
 const { RangePicker } = DatePicker
 
-const BoardMeetingInformation = () => {
+const BoardMeetingInformation = ({
+    allowUploadFile,
+}: {
+    allowUploadFile: boolean
+}) => {
     const t = useTranslations()
     const params = useParams()
     const locale = params.locale
@@ -64,19 +69,31 @@ const BoardMeetingInformation = () => {
         ) =>
         async ({ file }: RcCustomRequestOptions) => {
             try {
-                console.log('upload file board mtg-----')
-                const res = await serviceUpload.getPresignedUrl(
-                    [file as File],
-                    fileType,
-                )
-                await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
+                // console.log('upload file board mtg-----')
+                // const res = await serviceUpload.getPresignedUrl(
+                //     [file as File],
+                //     fileType,
+                // )
+                // await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
+                // const values = data[name]
+                // setData({
+                //     ...data,
+                //     [name]: [
+                //         ...values,
+                //         {
+                //             url: res.uploadUrls[0].split('?')[0],
+                //             fileType,
+                //             uid: (file as RcFile).uid,
+                //         },
+                //     ],
+                // })
                 const values = data[name]
                 setData({
                     ...data,
                     [name]: [
                         ...values,
                         {
-                            url: res.uploadUrls[0].split('?')[0],
+                            file: file,
                             fileType,
                             uid: (file as RcFile).uid,
                         },
@@ -168,7 +185,7 @@ const BoardMeetingInformation = () => {
                     errorUniqueFile: false,
                 },
             })
-            if (file.size > 10 * (1024 * 1024)) {
+            if (file.size > 20 * (1024 * 1024 * 1024)) {
                 setFileData({
                     ...fileData,
                     [name]: {
@@ -315,10 +332,23 @@ const BoardMeetingInformation = () => {
                                     'meetingInvitations',
                                     MeetingFileType.MEETING_INVITATION,
                                 )}
+                                disabled={!allowUploadFile}
                             >
-                                <Button icon={<UploadOutlined />}>
-                                    {t('CLICK_TO_UPLOAD')}
-                                </Button>
+                                <Tooltip
+                                    placement="bottomRight"
+                                    title={
+                                        allowUploadFile
+                                            ? ''
+                                            : t('UNABLE_TO_CREATE_MORE')
+                                    }
+                                >
+                                    <Button
+                                        icon={<UploadOutlined />}
+                                        disabled={!allowUploadFile}
+                                    >
+                                        {t('CLICK_TO_UPLOAD')}
+                                    </Button>
+                                </Tooltip>
                             </Upload>
                             <div className="flex flex-col items-start">
                                 <Text className="text-black-45">
@@ -376,10 +406,23 @@ const BoardMeetingInformation = () => {
                                     'meetingMinutes',
                                     MeetingFileType.MEETING_MINUTES,
                                 )}
+                                disabled={!allowUploadFile}
                             >
-                                <Button icon={<UploadOutlined />}>
-                                    {t('CLICK_TO_UPLOAD')}
-                                </Button>
+                                <Tooltip
+                                    placement="bottomRight"
+                                    title={
+                                        allowUploadFile
+                                            ? ''
+                                            : t('UNABLE_TO_CREATE_MORE')
+                                    }
+                                >
+                                    <Button
+                                        icon={<UploadOutlined />}
+                                        disabled={!allowUploadFile}
+                                    >
+                                        {t('CLICK_TO_UPLOAD')}
+                                    </Button>
+                                </Tooltip>
                             </Upload>
                             <div className="flex flex-col items-start">
                                 <Text className="text-black-45">

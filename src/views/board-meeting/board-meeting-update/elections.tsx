@@ -1,5 +1,5 @@
 import BoxArea from '@/components/box-area'
-import CreateReportItem from '@/components/create-report-item'
+import UpdateReportItem from '@/components/update-report-item'
 import { ResolutionType } from '@/constants/resolution'
 import { useUpdateBoardMeetingInformation } from '@/stores/board-meeting/hook'
 import { IProposalFile } from '@/stores/meeting/types'
@@ -8,7 +8,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useTranslations } from 'next-intl'
 
-const Elections = () => {
+const Elections = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
     const t = useTranslations()
     const [data, setData] = useUpdateBoardMeetingInformation()
 
@@ -82,7 +82,7 @@ const Elections = () => {
         <BoxArea title={t('ELECTIONS')}>
             <div className="mb-6 flex flex-col gap-6">
                 {data.elections.map((election, index) => (
-                    <CreateReportItem
+                    <UpdateReportItem
                         key={index}
                         type={ResolutionType.ELECTION}
                         index={index + 1}
@@ -103,6 +103,7 @@ const Elections = () => {
                         onAddFile={onAddFile(index)}
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
+                        allowUploadFile={allowUploadFile}
                     />
                 ))}
             </div>

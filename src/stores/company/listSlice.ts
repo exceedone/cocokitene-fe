@@ -79,6 +79,7 @@ const companyListSlice = createSlice({
                 state.status = EActionStatus.Succeeded
                 state.companyList = action.payload?.items ?? []
                 state.totalCompanyItem = action.payload?.meta?.totalItems ?? 0
+                state.page = action.payload.meta.currentPage
             })
             .addCase(getAllCompany.rejected, (state, action) => {
                 state.status = EActionStatus.Failed

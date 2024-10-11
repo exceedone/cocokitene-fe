@@ -10,7 +10,6 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/navigation'
 import withAuth from '@/components/component-auth'
 import { Permissions } from '@/constants/permission'
-import serviceUser from '@/services/user'
 import servicePassword from '@/services/system-admin/forgot-password'
 
 const { Title } = Typography

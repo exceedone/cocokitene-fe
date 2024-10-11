@@ -26,7 +26,7 @@ export interface IAccountList {
     index: number
     username: string
     avatar: string
-    email:string
+    email: string
     companyId: number
     walletAddress: string
     defaultAvatarHashColor: string | null
@@ -49,6 +49,7 @@ export interface IGetAllAccountQuery {
 export interface IAccountState extends IGetAllAccountQuery, FetchError {
     status: EActionStatus
     accountList: IAccountList[]
+    allowCreate: boolean
     totalAccountItem: number
 }
 

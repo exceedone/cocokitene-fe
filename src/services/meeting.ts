@@ -16,12 +16,17 @@ const serviceMeeting = {
         type,
         filter,
         meetingType,
-    }: IGetAllMeetingQuery): Promise<IGetAllDataReponse<IMeeting>> => {
+    }: IGetAllMeetingQuery): Promise<{
+        meetings: IGetAllDataReponse<IMeeting>
+        allowCreate: boolean
+    }> => {
         const payload = { page, limit, type, meetingType, ...filter }
-        const response: { data: IGetAllDataReponse<IMeeting> } = await get(
-            '/meetings',
-            payload,
-        )
+        const response: {
+            data: {
+                meetings: IGetAllDataReponse<IMeeting>
+                allowCreate: boolean
+            }
+        } = await get('/meetings', payload)
 
         return response.data
     },
@@ -68,10 +73,10 @@ const serviceMeeting = {
     },
     getDataHashMeeting: async (meetingId: number) => {
         const response = await get<IDataHashMeeting>(
-            `/meetings/${meetingId}/dataHash`
+            `/meetings/${meetingId}/dataHash`,
         )
         return response.data
-    }
+    },
 }
 
 export default serviceMeeting

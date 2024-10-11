@@ -81,6 +81,7 @@ const shareholderListSlice = createSlice({
                 state.shareholderList = action.payload?.items ?? []
                 state.totalShareholderItem =
                     action.payload?.meta?.totalItems ?? 0
+                state.page = action.payload.meta.currentPage
             })
             .addCase(getAllShareholder.rejected, (state, action) => {
                 state.status = EActionStatus.Failed

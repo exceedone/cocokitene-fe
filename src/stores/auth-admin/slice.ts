@@ -6,9 +6,8 @@ import { IAuthAdminState, ILoginAdminResponse } from './type'
 
 const initialState: IAuthAdminState = {
     status: EActionStatus.Idle,
-    isAuthenticated: !!serviceUserSystem.getInfoStorageSys() ?? false,
+    isAuthenticated: !!serviceUserSystem.getInfoStorageSys(),
     userAdminInfo: serviceUserSystem.getInfoStorageSys(),
-
     errCode: '',
     errMessage: '',
 }

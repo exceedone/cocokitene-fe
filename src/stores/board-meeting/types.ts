@@ -10,6 +10,7 @@ import { ElectionEnum } from '@/constants/election'
 import { UserMeetingStatusEnum } from '@/stores/attendance/type'
 import { IPersonnelVoting } from '@/services/response.type'
 import { IMeetingExecutive } from '../meeting/types'
+import { RcFile } from 'antd/es/upload'
 
 export interface ICreateBoardMeeting {
     title: string
@@ -18,10 +19,10 @@ export interface ICreateBoardMeeting {
     endTime: string
     endVotingTime: string
     note: string
-    meetingMinutes: IBoardMeetingDocument[]
-    meetingInvitations: IBoardMeetingDocument[]
-    managementAndFinancials: IBoardMeetingReport[]
-    elections: IBoardMeetingReport[]
+    meetingMinutes: IBoardMeetingFileDocument[]
+    meetingInvitations: IBoardMeetingFileDocument[]
+    managementAndFinancials: IBoardMeetingReportRedux[]
+    elections: IBoardMeetingReportRedux[]
     personnelVoting: IMeetingExecutive
     participants: IParticipantsWithRole[]
 }
@@ -32,10 +33,33 @@ export interface IBoardMeetingDocument {
     url: string
     fileType: string
 }
+
+export interface IBoardMeetingFileDocument {
+    id?: number
+    uid?: string
+    file: string | Blob | RcFile
+    fileType: MeetingFileType
+}
+
 export interface IBoardProposalFile {
     id?: number
     uid?: string
     url: string
+}
+
+export interface IBoardProposalRedux {
+    id?: number
+    uid?: string
+    file: string | Blob | RcFile
+}
+
+export interface IBoardMeetingReportRedux {
+    id?: number
+    title: string
+    description: string
+    oldDescription?: string
+    files?: IBoardProposalRedux[]
+    type: ResolutionType
 }
 
 export interface IBoardMeetingReport {

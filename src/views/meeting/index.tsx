@@ -12,7 +12,7 @@ import { checkPermission } from '@/utils/auth'
 import ListMeetingFuture from '@/views/meeting/meeting-list/list-future-meeting'
 import ListMeetingPast from '@/views/meeting/meeting-list/list-past-meeting'
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Grid } from 'antd'
+import { Button, Grid, Tooltip } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -108,6 +108,8 @@ const MeetingList = () => {
         // eslint-disable-next-line
     }, [meetingState.status])
 
+    console.log('meetingState:', meetingState)
+
     return (
         <div>
             {contextHolder}
@@ -115,17 +117,27 @@ const MeetingList = () => {
                 pageName={t('LIST_SHAREHOLDER_MEETINGS')}
                 addButton={
                     permissionCreateMeeting && (
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            size={screens.lg ? 'large' : 'middle'}
-                            className="max-[470px]:px-2"
-                            onClick={() => {
-                                router.push('/meeting/create')
-                            }}
+                        <Tooltip
+                            placement="bottomRight"
+                            title={
+                                meetingState.allowCreate
+                                    ? ''
+                                    : t('UNABLE_TO_CREATE_MORE')
+                            }
                         >
-                            {t('ADD_NEW')}
-                        </Button>
+                            <Button
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                size={screens.lg ? 'large' : 'middle'}
+                                className="max-[470px]:px-2"
+                                onClick={() => {
+                                    router.push('/meeting/create')
+                                }}
+                                disabled={!meetingState.allowCreate}
+                            >
+                                {t('ADD_NEW')}
+                            </Button>
+                        </Tooltip>
                     )
                 }
                 defaultSort={meetingState.filter?.sortOrder}

@@ -11,6 +11,11 @@ import { UserMeetingStatusEnum } from '@/stores/attendance/type'
 import { ICompanyStatusResponse } from './system-admin/response.type'
 import { ElectionEnum } from '@/constants/election'
 import { TypeRoleMeeting } from '@/constants/role-mtg'
+import {
+    PaymentMethod,
+    StatusSubscriptionEnum,
+    SubscriptionEnum,
+} from '@/constants/service-subscript'
 
 export interface IMeta {
     totalItems: number
@@ -22,6 +27,12 @@ export interface IMeta {
 
 export interface IGetAllDataReponse<T> {
     items: T[]
+    meta: IMeta
+}
+
+export interface IGetAllDataAllowControlResponse<T> {
+    items: T[]
+    allowCreate: boolean
     meta: IMeta
 }
 
@@ -489,15 +500,15 @@ export interface IDataHashMeeting {
     detailMeetingHash: string
 }
 
-export interface IStatisticMeetingInMonth{
-    totalMeeting: number,
-    totalParticipant: number,
-    totalParticipantJoined: number,
+export interface IStatisticMeetingInMonth {
+    totalMeeting: number
+    totalParticipant: number
+    totalParticipantJoined: number
 }
 
 export interface IStatisticMeetingInMonthResponse {
-    shareholderMeetingInMonth: IStatisticMeetingInMonth,
-    boardMeetingInMonth: IStatisticMeetingInMonth,
+    shareholderMeetingInMonth: IStatisticMeetingInMonth
+    boardMeetingInMonth: IStatisticMeetingInMonth
 }
 
 export interface ISystemNotificationResponse {
@@ -507,11 +518,11 @@ export interface ISystemNotificationResponse {
     system_notification_created_at: string
     system_notification_updated_at: string
     creator_id: number
-    creator_username: string,
-    creator_email: string,
-    updater_id: number|null,
-    updater_username: string|null,
-    updater_email: string|null,
+    creator_username: string
+    creator_email: string
+    updater_id: number | null
+    updater_username: string | null
+    updater_email: string | null
 }
 
 export interface ISysNotificationListResponse {
@@ -520,9 +531,52 @@ export interface ISysNotificationListResponse {
 }
 
 export interface IMeetingInMonthResponse {
-    meetings_id: number,
-    meetings_start_time: string, 
-    meetings_end_time: string,
-    meetings_company_id: number,
+    meetings_id: number
+    meetings_start_time: string
+    meetings_end_time: string
+    meetings_company_id: number
     meetings_type: MeetingType
+}
+
+export interface IServicePlanOfCompany {
+    id: number
+    companyId: number
+    planId: number
+    meetingLimit: number
+    meetingCreated: number
+    accountLimit: number
+    accountCreated: number
+    storageLimit: number
+    storageUsed: number
+    expirationDate: string
+    createdAt: string
+    createdSystemId?: number
+    updatedAt: string
+    updatedSystemId?: number
+    plan: {
+        id: number
+        planName: string
+        description: string
+        price: number
+    }
+    company: {
+        id: number
+        companyName: string
+        companyShortName: string
+        planId: number
+        statusId: number
+    }
+}
+
+export interface IServiceSubscription {
+    service_subscription_id: number
+    service_subscription_type: SubscriptionEnum
+    service_subscription_total_free: number
+    service_subscription_status: StatusSubscriptionEnum
+    planName: string
+    company_id: number
+    payment_method: PaymentMethod
+    approval_time: string
+    activation_date: string
+    expiration_date: string
 }

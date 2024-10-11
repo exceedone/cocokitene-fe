@@ -1,5 +1,5 @@
 import {
-    IBoardMeetingReport,
+    IBoardMeetingReportRedux,
     ICreateBoardMeeting,
 } from '@/stores/board-meeting/types'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
@@ -66,7 +66,10 @@ export const boardMeetingCreateSlice = createSlice({
         },
         updateCreateBoardMeetingReport: (
             state: ICreateBoardMeeting,
-            action: PayloadAction<{ data: IBoardMeetingReport; index: number }>,
+            action: PayloadAction<{
+                data: IBoardMeetingReportRedux
+                index: number
+            }>,
         ) => {
             state.managementAndFinancials[action.payload.index] =
                 action.payload.data

@@ -8,9 +8,12 @@ import {
     ICompanyDetailResponse,
     IGetAllDataReponse,
     IListCompanyResponse,
+    IServicePlanOfCompanyResponse,
 } from '@/services/system-admin/response.type'
 import { get, post, patch } from '@/services/system-admin/fetcher-system'
 import { IContactForm } from '@/views/landing/contact-section'
+import { IGetAllServiceSubscriptionQuery } from '@/stores/service-subscription/type'
+import { IServiceSubscription } from '../response.type'
 
 const serviceCompany = {
     getAllCompanys: async ({
@@ -22,13 +25,13 @@ const serviceCompany = {
     > => {
         const payload = { page, limit, ...filter }
         const response: { data: IGetAllDataReponse<IListCompanyResponse> } =
-            await get('/system-admin/get-all-companys', payload)
+            await get('/system-admin/get-all-company', payload)
 
         return response.data
     },
 
     createCompany: async (payload: ICreateCompanyPayload) => {
-        const response = await post<any>('/system-admin/companys', payload)
+        const response = await post<any>('/system-admin/company', payload)
         return response.data
     },
 
@@ -68,6 +71,17 @@ const serviceCompany = {
         )
         return response.data
     },
+    getServicePlanOfCompany: async (companyId: number) => {
+        const response = await get<IServicePlanOfCompanyResponse>(`/system-admin/company/${companyId}/service-plan`)
+    
+        return response.data
+    },
+    getAllSubscriptionServiceOfCompany: async (companyId: number,{page,limit}:IGetAllServiceSubscriptionQuery) => {
+        const payload = {page, limit}
+        const response: {data: IGetAllDataReponse<IServiceSubscription>} = await get(`/system-admin/company/${companyId}/service-plan/subscription`, payload)
+
+        return response.data
+    }
 }
 
 export default serviceCompany

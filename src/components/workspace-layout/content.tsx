@@ -15,7 +15,7 @@ const Content = ({ children, isCollapsed }: IContent) => {
                 marginLeft: `${sidebarWidth}px`,
                 transition: `margin-left .15s`,
             }}
-            className={`max-[767px]:ml-0 md:max-[1199px]:ml-20`}
+            className={`max-[767px]:ml-0 md:max-xl:ml-20`}
         >
             {children}
         </Layout.Content>

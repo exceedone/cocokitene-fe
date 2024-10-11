@@ -197,7 +197,7 @@ const AccountList = () => {
             key: 'action',
             render: (_, record) => (
                 <div className="flex gap-3">
-                    {permissionEdit && (
+                    {permissionEdit && !authState.serviceIsExpired && (
                         <EditTwoTone
                             style={{ fontSize: '18px' }}
                             twoToneColor="#5151e5"
@@ -227,11 +227,22 @@ const AccountList = () => {
             filter: { ...accountState.filter },
         })
     }
+
+    console.log('accountState: ', accountState)
+
     return (
         <div className="bg-white p-6">
             <Table
                 columns={columns}
-                dataSource={accountState.accountList}
+                dataSource={accountState.accountList.map((account, index) => {
+                    return {
+                        ...account,
+                        index:
+                            accountState.limit * (accountState.page - 1) +
+                            index +
+                            1,
+                    }
+                })}
                 rowKey="id"
                 pagination={{
                     pageSize: accountState.limit,

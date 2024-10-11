@@ -98,15 +98,15 @@ const MeetingDetail = () => {
                                             `/meeting/update/${meetingId}`,
                                         )
                                     }
+                                    disabled={authState.serviceIsExpired}
                                 >
                                     {t('EDIT')}
                                 </Button>
                             )}
                         {permissionSendEmailShareholder &&
                             meeting.status !== MeetingStatus.CANCELED &&
-                            meeting.status !== MeetingStatus.HAPPENED && (
-                                <SendEmailButton />
-                            )}
+                            meeting.status !== MeetingStatus.HAPPENED &&
+                            !authState.serviceIsExpired && <SendEmailButton />}
                     </div>
                 }
                 // editUrl={`/meeting/update/${meetingId}`}

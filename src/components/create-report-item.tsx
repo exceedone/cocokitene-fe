@@ -1,11 +1,14 @@
 /* eslint-disable */
-import { Button, Input, Select, Typography, Upload } from 'antd'
+import { Button, Input, Select, Tooltip, Typography, Upload } from 'antd'
 import {
     Resolution,
     ResolutionTitle,
     ResolutionType,
 } from '@/constants/resolution'
-import { IBoardProposalFile } from '@/stores/board-meeting/types'
+import {
+    IBoardProposalFile,
+    IBoardProposalRedux,
+} from '@/stores/board-meeting/types'
 import { useTranslations } from 'next-intl'
 import { ACCEPT_FILE_TYPES, MeetingFileType } from '@/constants/meeting'
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
@@ -31,12 +34,13 @@ interface ICreateReportItem extends Resolution {
     // eslint-disable-next-line
     onChangeOldContent?: (value: string) => void
     // eslint-disable-next-line
-    onAddFile?: (file: IBoardProposalFile) => void
+    onAddFile?: (file: IBoardProposalRedux) => void
     // eslint-disable-next-line
     onRemoveFile?: (uuid: string) => void
     onDelete: () => void
     electionList?: IElectionResponse[] | []
     defaultElection?: number
+    allowUploadFile?: boolean
 }
 
 const CreateReportItem = ({
@@ -54,6 +58,7 @@ const CreateReportItem = ({
     onDelete,
     electionList,
     defaultElection,
+    allowUploadFile,
 }: ICreateReportItem) => {
     const t = useTranslations()
     const [data, setData] = useCreateBoardMeetingInformation()
@@ -80,7 +85,7 @@ const CreateReportItem = ({
             if (url) {
                 onAddFile &&
                     onAddFile({
-                        url: url.split('?')[0],
+                        file: info.file as RcFile,
                         uid: info.file.uid,
                     })
             }
@@ -115,7 +120,7 @@ const CreateReportItem = ({
             fileList: [...fileData.fileList, ...newUploadFiles],
             errorUniqueFile: false,
         })
-        if (file.size > 10 * (1024 * 1024)) {
+        if (file.size > 20 * (1024 * 1024 * 1024)) {
             setFileData({
                 ...fileData,
                 errorFileSize: true,
@@ -138,21 +143,21 @@ const CreateReportItem = ({
 
     const onUpload = async ({ file }: RcCustomRequestOptions) => {
         try {
-            const meetingFileType =
-                type == ResolutionType.MANAGEMENT_FINANCIAL
-                    ? MeetingFileType.REPORTS
-                    : MeetingFileType.PROPOSAL_FILES
+            // const meetingFileType =
+            //     type == ResolutionType.MANAGEMENT_FINANCIAL
+            //         ? MeetingFileType.REPORTS
+            //         : MeetingFileType.PROPOSAL_FILES
 
-            const res = await serviceUpload.getPresignedUrl(
-                [file as File],
-                // MeetingFileType.PROPOSAL_FILES,
-                meetingFileType,
-            )
-            await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
+            // const res = await serviceUpload.getPresignedUrl(
+            //     [file as File],
+            //     // MeetingFileType.PROPOSAL_FILES,
+            //     meetingFileType,
+            // )
+            // await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
 
             onAddFile &&
                 onAddFile({
-                    url: res.uploadUrls[0].split('?')[0],
+                    file: file,
                     uid: (file as RcFile).uid,
                 })
         } catch (error) {
@@ -217,10 +222,23 @@ const CreateReportItem = ({
                                 accept={ACCEPT_FILE_TYPES}
                                 name="proposal-files"
                                 // showUploadList={false}
+                                disabled={!allowUploadFile}
                             >
-                                <Button icon={<UploadOutlined />}>
-                                    {t('CLICK_TO_UPLOAD')}
-                                </Button>
+                                <Tooltip
+                                    placement="bottomRight"
+                                    title={
+                                        allowUploadFile
+                                            ? ''
+                                            : t('UNABLE_TO_CREATE_MORE')
+                                    }
+                                >
+                                    <Button
+                                        icon={<UploadOutlined />}
+                                        disabled={!allowUploadFile}
+                                    >
+                                        {t('CLICK_TO_UPLOAD')}
+                                    </Button>
+                                </Tooltip>
                             </Upload>
                             <div className="flex flex-col items-start">
                                 <Text className="break-words text-black-45">

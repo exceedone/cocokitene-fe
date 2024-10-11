@@ -1,7 +1,6 @@
 /* eslint-disable */
 import BoxArea from '@/components/box-area'
 import { ACCEPT_FILE_TYPES, MeetingFileType } from '@/constants/meeting'
-import serviceUpload from '@/services/upload'
 import { useCreateMeetingInformation } from '@/stores/meeting/hooks'
 import { UploadOutlined } from '@ant-design/icons'
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface'
@@ -15,6 +14,7 @@ import {
     Typography,
     UploadFile,
     DatePicker,
+    Tooltip,
 } from 'antd'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { useTranslations } from 'next-intl'
@@ -29,7 +29,11 @@ const { TextArea } = Input
 
 const { Text } = Typography
 
-const MeetingInformation = () => {
+const MeetingInformation = ({
+    allowUploadFile,
+}: {
+    allowUploadFile: boolean
+}) => {
     const t = useTranslations()
     const params = useParams()
     const locale = params.locale
@@ -75,19 +79,34 @@ const MeetingInformation = () => {
         ) =>
         async ({ file }: RcCustomRequestOptions) => {
             try {
-                const res = await serviceUpload.getPresignedUrl(
-                    [file as File],
-                    fileType,
-                )
+                // const res = await serviceUpload.getPresignedUrl(
+                //     [file as File],
+                //     fileType,
+                // )
 
-                await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
+                // await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
+                // const values = data[name]
+                // setData({
+                //     ...data,
+                //     [name]: [
+                //         ...values,
+                //         {
+                //             url: res.uploadUrls[0].split('?')[0],
+                //             fileType,
+                //             uid: (file as RcFile).uid,
+                //         },
+                //     ],
+                // })
+
+                console.log('file---onUpload--101:', file)
+
                 const values = data[name]
                 setData({
                     ...data,
                     [name]: [
                         ...values,
                         {
-                            url: res.uploadUrls[0].split('?')[0],
+                            file: file,
                             fileType,
                             uid: (file as RcFile).uid,
                         },
@@ -185,7 +204,7 @@ const MeetingInformation = () => {
                 },
             })
 
-            if (file.size > 10 * (1024 * 1024)) {
+            if (file.size > 20 * (1024 * 1024 * 1024)) {
                 setFileData({
                     ...fileData,
                     [name]: {
@@ -332,10 +351,23 @@ const MeetingInformation = () => {
                                 )}
                                 accept={ACCEPT_FILE_TYPES}
                                 name="meeting-invitations"
+                                disabled={!allowUploadFile}
                             >
-                                <Button icon={<UploadOutlined />}>
-                                    {t('CLICK_TO_UPLOAD')}
-                                </Button>
+                                <Tooltip
+                                    placement="bottomRight"
+                                    title={
+                                        allowUploadFile
+                                            ? ''
+                                            : t('UNABLE_TO_CREATE_MORE')
+                                    }
+                                >
+                                    <Button
+                                        icon={<UploadOutlined />}
+                                        disabled={!allowUploadFile}
+                                    >
+                                        {t('CLICK_TO_UPLOAD')}
+                                    </Button>
+                                </Tooltip>
                             </Upload>
                             <div className="flex flex-col items-start">
                                 <Text className="text-black-45">
@@ -394,35 +426,46 @@ const MeetingInformation = () => {
                                     'meetingMinutes',
                                     MeetingFileType.MEETING_MINUTES,
                                 )}
+                                disabled={!allowUploadFile}
                             >
-                                <Button icon={<UploadOutlined />}>
-                                    {t('CLICK_TO_UPLOAD')}
-                                </Button>
-                                <div className="flex flex-col items-start">
-                                    <Text className="text-black-45">
-                                        {t('INVITATION_FILE_UPLOAD_NOTICE')}
-                                    </Text>
-                                    {fileData.meetingMinutes
-                                        .errorUniqueFile && (
-                                        <Text className="text-dust-red">
-                                            {t('UNIQUE_FILE_ERROR_MESSAGE')}
-                                        </Text>
-                                    )}
-                                    {fileData.meetingMinutes
-                                        .errorWrongFileType && (
-                                        <Text className="text-dust-red">
-                                            {t('WRONG_FILE_TYPE_ERROR_MESSAGE')}
-                                        </Text>
-                                    )}
-                                    {fileData.meetingMinutes.errorFileSize && (
-                                        <Text className="text-dust-red">
-                                            {t(
-                                                'FILE_THROUGH_THE_CAPACITY_FOR_UPLOAD',
-                                            )}
-                                        </Text>
-                                    )}
-                                </div>
+                                <Tooltip
+                                    placement="bottomRight"
+                                    title={
+                                        allowUploadFile
+                                            ? ''
+                                            : t('UNABLE_TO_CREATE_MORE')
+                                    }
+                                >
+                                    <Button
+                                        icon={<UploadOutlined />}
+                                        disabled={!allowUploadFile}
+                                    >
+                                        {t('CLICK_TO_UPLOAD')}
+                                    </Button>
+                                </Tooltip>
                             </Upload>
+                            <div className="flex flex-col items-start">
+                                <Text className="text-black-45">
+                                    {t('INVITATION_FILE_UPLOAD_NOTICE')}
+                                </Text>
+                                {fileData.meetingMinutes.errorUniqueFile && (
+                                    <Text className="text-dust-red">
+                                        {t('UNIQUE_FILE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingMinutes.errorWrongFileType && (
+                                    <Text className="text-dust-red">
+                                        {t('WRONG_FILE_TYPE_ERROR_MESSAGE')}
+                                    </Text>
+                                )}
+                                {fileData.meetingMinutes.errorFileSize && (
+                                    <Text className="text-dust-red">
+                                        {t(
+                                            'FILE_THROUGH_THE_CAPACITY_FOR_UPLOAD',
+                                        )}
+                                    </Text>
+                                )}
+                            </div>
                         </Form.Item>
                     </Form>
                 </Col>

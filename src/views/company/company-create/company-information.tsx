@@ -28,6 +28,7 @@ export interface ICompanyStatus {
 export interface IPlan {
     id: number
     planName: string
+    price: number
 }
 
 interface IDefaultValues {
@@ -76,9 +77,7 @@ const CompanyInformation = ({ form }: CompanyInfoProp) => {
 
             if (planList) {
                 setPlanList(planList)
-                const planId = planList.find(
-                    (item) => item.planName === ServicePlan.TRIAL,
-                )?.id
+                const planId = planList.find((item) => item.price == 0)?.id
                 setInitialDefaultValue((prevInitialDefaultValue) => ({
                     ...prevInitialDefaultValue,
                     planId: planId,
@@ -286,24 +285,14 @@ const CompanyInformation = ({ form }: CompanyInfoProp) => {
                             options={planList.map((plan) => ({
                                 value: plan.id,
                                 label: (
-                                    <span
-                                    // style={{
-                                    //     color: ServicePlanColor[
-                                    //         plan.planName as ServicePlan
-                                    //     ],
-                                    // }}
-                                    >
-                                        {/* {t(
-                                            ServicePlanName[
-                                                plan.planName as ServicePlan
-                                            ],
-                                        )} */}
+                                    <span>
                                         {convertSnakeCaseToTitleCase(
                                             plan.planName,
                                         )}
                                     </span>
                                 ),
                             }))}
+                            disabled={true}
                         />
                     </Form.Item>
                 </Col>

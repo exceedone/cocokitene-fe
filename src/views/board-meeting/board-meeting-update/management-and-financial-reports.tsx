@@ -1,5 +1,5 @@
 import BoxArea from '@/components/box-area'
-import CreateResolutionItem from '@/components/create-resolution-item'
+import UpdateResolutionItem from '@/components/update_resolution-item'
 import { ResolutionType } from '@/constants/resolution'
 import { useUpdateBoardMeetingInformation } from '@/stores/board-meeting/hook'
 import { IBoardProposalFile } from '@/stores/board-meeting/types'
@@ -9,7 +9,11 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useTranslations } from 'next-intl'
 
-const ManagementAndFinancialReports = () => {
+const ManagementAndFinancialReports = ({
+    allowUploadFile,
+}: {
+    allowUploadFile: boolean
+}) => {
     const t = useTranslations()
     const [data, setData] = useUpdateBoardMeetingInformation()
 
@@ -83,7 +87,7 @@ const ManagementAndFinancialReports = () => {
         <BoxArea title={t('MANAGEMENT_AND_FINANCIAL_REPORTS')}>
             <div className="mb-6 flex flex-col gap-6">
                 {data.managementAndFinancials.map((report, index) => (
-                    <CreateResolutionItem
+                    <UpdateResolutionItem
                         key={index}
                         type={ResolutionType.MANAGEMENT_FINANCIAL}
                         index={index + 1}
@@ -104,6 +108,7 @@ const ManagementAndFinancialReports = () => {
                         onAddFile={onAddFile(index)}
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
+                        allowUploadFile={allowUploadFile}
                     />
                 ))}
             </div>

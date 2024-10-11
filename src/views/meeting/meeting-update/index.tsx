@@ -12,16 +12,27 @@ import Candidate from '@/views/meeting/meeting-update/candidate'
 import SaveUpdateMeetingButton from '@/views/meeting/meeting-update/save-button'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import companyServicePlan from '@/services/company-service-plan'
 
 const MeetingUpdate = () => {
     const t = useTranslations()
+    const [allowUploadFile, setAllowUploadFile] = useState<boolean>(true)
 
     const [data, , status, initUpdateMeeting] = useUpdateMeetingInformation()
 
     const params = useParams()
 
     const meetingId = Number(params.id)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response =
+                await companyServicePlan.getAllowUploadFileForCompany()
+            setAllowUploadFile(response)
+        }
+        fetchData()
+    }, [])
 
     useEffect(() => {
         if (meetingId) {
@@ -40,9 +51,9 @@ const MeetingUpdate = () => {
                 saveButton={<SaveUpdateMeetingButton />}
             />
             <div className="flex flex-col gap-6 p-6">
-                <MeetingInformation />
-                <Resolutions />
-                <AmendmentResolutions />
+                <MeetingInformation allowUploadFile={allowUploadFile} />
+                <Resolutions allowUploadFile={allowUploadFile} />
+                <AmendmentResolutions allowUploadFile={allowUploadFile} />
                 <Candidate />
                 <Participants />
             </div>

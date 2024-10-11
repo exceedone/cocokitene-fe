@@ -1,5 +1,5 @@
 // import { ResolutionType } from '@/constants/resolution'
-import { ICreateMeeting, IMeetingResolution } from '@/stores/meeting/types'
+import { ICreateMeeting, IMeetingResolutionRedux } from '@/stores/meeting/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState: ICreateMeeting = {
@@ -28,7 +28,7 @@ const initialState: ICreateMeeting = {
         //     type: ResolutionType.AMENDMENT_RESOLUTION,
         // },
     ],
-    personnelVoting:{
+    personnelVoting: {
         confidence: [],
         notConfidence: [],
     },
@@ -76,7 +76,10 @@ export const meetingCreateSlice = createSlice({
 
         updateCreateMeetingResolution: (
             state: ICreateMeeting,
-            action: PayloadAction<{ data: IMeetingResolution; index: number }>,
+            action: PayloadAction<{
+                data: IMeetingResolutionRedux
+                index: number
+            }>,
         ) => {
             // state.title = action.payload.title
             // state.link = action.payload.link]

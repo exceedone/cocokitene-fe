@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import { MeetingTime, MeetingType, SORT, SortField } from '@/constants/meeting'
 import { EActionStatus } from '@/stores/type'
 import ListTitle from '@/components/content-page-title/list-title'
-import { Button, Grid } from 'antd'
+import { Button, Grid, Tooltip } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import ListBoardMeetingFuture from '@/views/board-meeting/board-meeting-list/list-board-meeting-future'
 import ListBoardMeetingPast from './board-meeting-list/list-board-meeting-pass'
@@ -121,6 +121,8 @@ const BoardMeetingList = () => {
         // eslint-disable-next-line
     }, [boardMeetingState.status])
 
+    console.log('boardMeetingState: ', boardMeetingState)
+
     return (
         <div>
             {contextHolder}
@@ -128,17 +130,27 @@ const BoardMeetingList = () => {
                 pageName={t('LIST_BOARD_MEETINGS')}
                 addButton={
                     permissionCreateBoardMeeting && (
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            size={screens.lg ? 'large' : 'middle'}
-                            className="max-[470px]:px-2"
-                            onClick={() => {
-                                router.push('/board-meeting/create')
-                            }}
+                        <Tooltip
+                            placement="bottomRight"
+                            title={
+                                boardMeetingState.allowCreate
+                                    ? ''
+                                    : t('UNABLE_TO_CREATE_MORE')
+                            }
                         >
-                            {t('ADD_NEW')}
-                        </Button>
+                            <Button
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                size={screens.lg ? 'large' : 'middle'}
+                                className="max-[470px]:px-2"
+                                onClick={() => {
+                                    router.push('/board-meeting/create')
+                                }}
+                                disabled={!boardMeetingState.allowCreate}
+                            >
+                                {t('ADD_NEW')}
+                            </Button>
+                        </Tooltip>
                     )
                 }
                 defaultSort={boardMeetingState.filter?.sortOrder}

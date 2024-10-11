@@ -5,9 +5,10 @@ import CreateReportItem from '@/components/create-report-item'
 import { ResolutionType } from '@/constants/resolution'
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { IBoardProposalFile } from '@/stores/board-meeting/types'
+import { IBoardProposalRedux } from '@/stores/board-meeting/types'
+import { IProposalFileMeeting } from '@/stores/meeting/types'
 
-const Elections = () => {
+const Elections = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
     const t = useTranslations()
 
     const [data, setData] = useCreateBoardMeetingInformation()
@@ -26,9 +27,9 @@ const Elections = () => {
             })
         }
 
-    const onAddFile = (index: number) => (file: IBoardProposalFile) => {
+    const onAddFile = (index: number) => (file: IProposalFileMeeting) => {
         const elections = [...data.elections]
-        const oldFiles = elections[index].files as IBoardProposalFile[]
+        const oldFiles = elections[index].files as IBoardProposalRedux[]
         elections[index] = {
             ...elections[index],
             files: [...oldFiles, file],
@@ -41,7 +42,7 @@ const Elections = () => {
 
     const onRemoveFile = (index: number) => (uid: string) => {
         const elections = [...data.elections]
-        const oldFiles = elections[index].files as IBoardProposalFile[]
+        const oldFiles = elections[index].files as IBoardProposalRedux[]
         const newFiles = oldFiles.filter((file) => file.uid !== uid)
         elections[index] = {
             ...elections[index],
@@ -93,6 +94,7 @@ const Elections = () => {
                         onAddFile={onAddFile(index)}
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
+                        allowUploadFile={allowUploadFile}
                     />
                 ))}
             </div>

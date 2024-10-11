@@ -1,4 +1,4 @@
-import { Avatar, Col, Row, Typography } from 'antd'
+import { Avatar, Button, Col, Row, Typography } from 'antd'
 import { useTranslations } from 'next-intl'
 import Color from 'color'
 
@@ -9,6 +9,7 @@ import { AvatarBgHexColors } from '@/constants/common'
 import { getFirstCharacterUpperCase } from '@/utils/get-first-character'
 import { CompanyStatus } from '@/constants/company-status'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
+import { useRouter } from 'next/navigation'
 
 const { Text } = Typography
 
@@ -18,6 +19,7 @@ const backgroundAvatarColor = Color(AvatarBgHexColors.GOLDEN_PURPLE)
 
 const CompanyInfo = () => {
     const t = useTranslations()
+    const router = useRouter()
     const [{ company }] = useCompanyDetail()
 
     const dataCompanyInfoLeft: IRowInfo[] = [
@@ -141,21 +143,36 @@ const CompanyInfo = () => {
             ),
         },
         {
-            label: 'SERVICE_PLAN',
-            content: (
-                <Text className="">
-                    {convertSnakeCaseToTitleCase(
-                        company?.servicePlan.planName || '',
-                    )}
-                </Text>
-            ),
-        },
-        {
             label: 'BUSINESS_TYPE',
             content: (
                 <Text className="flex-1 break-words">
                     {company?.businessType}
                 </Text>
+            ),
+        },
+        {
+            label: 'SERVICE_PLAN',
+            content: (
+                <div className="flex flex-col gap-1">
+                    <Text className="">
+                        {convertSnakeCaseToTitleCase(
+                            company?.servicePlan.planName || '',
+                        )}
+                    </Text>
+                    <div>
+                        <Button
+                            size="small"
+                            className="px-[4px]"
+                            onClick={() => {
+                                router.push(
+                                    `/company/${company?.id}/service-plan`,
+                                )
+                            }}
+                        >
+                            {t('BTN_VIEW_DETAIL')}
+                        </Button>
+                    </div>
+                </div>
             ),
         },
     ]

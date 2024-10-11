@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import ListTitle from '@/components/content-page-title/list-title'
-import { Button, Grid } from 'antd'
+import { Button, Grid, Tooltip } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useListAccount } from '@/stores/account/hook'
 import { useAuthLogin } from '@/stores/auth/hooks'
@@ -57,17 +57,27 @@ const AccountView = () => {
                 pageName={t('LIST_ACCOUNTS')}
                 addButton={
                     permissionCreateAccount && (
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            size={screens.lg ? 'large' : 'middle'}
-                            className="max-[470px]:px-2"
-                            onClick={() => {
-                                router.push('/account/create')
-                            }}
+                        <Tooltip
+                            placement="bottomRight"
+                            title={
+                                accountState.allowCreate
+                                    ? ''
+                                    : t('UNABLE_TO_CREATE_MORE')
+                            }
                         >
-                            {t('ADD_NEW')}
-                        </Button>
+                            <Button
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                size={screens.lg ? 'large' : 'middle'}
+                                className="max-[470px]:px-2"
+                                onClick={() => {
+                                    router.push('/account/create')
+                                }}
+                                disabled={!accountState.allowCreate}
+                            >
+                                {t('ADD_NEW')}
+                            </Button>
+                        </Tooltip>
                     )
                 }
                 defaultSort={accountState.filter?.sortOrder}

@@ -19,4 +19,5 @@ export enum Permissions {
     EDIT_BOARD_MEETING = 'edit_board_meeting',
     SEND_MAIL_TO_BOARD = 'send_mail_to_board',
     BASIC_PERMISSION = 'basic_permission',
+    SUPER_ADMIN_PERMISSION = 'super_admin_permission',
 }

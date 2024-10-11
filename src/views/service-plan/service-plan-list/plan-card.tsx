@@ -99,7 +99,7 @@ const PlanCard = ({
                             isBold ? 'text-white' : ''
                         }`}
                     >
-                        / {t('MONTH')}
+                        / {t('YEAR')}
                     </Text>
                 </div>
                 <div
@@ -112,7 +112,8 @@ const PlanCard = ({
                     </Text>
                     <Text className={quantityTextClass}>
                         {getNumberLimitedPlan(maxShareholderAccount, t)}{' '}
-                        {t('SHAREHOLDERS')}
+                        {/* {t('SHAREHOLDERS')} */}
+                        {t('ACCOUNT')}
                     </Text>
                     <Text className={quantityTextClass}>
                         {getNumberLimitedPlan(maxStorage, t)} {t('GB_STORAGE')}

@@ -223,7 +223,7 @@ const ResetPassword = () => {
                                         htmlType="submit"
                                         className="bg-#5151E5 w-full rounded text-center text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-blue-600 "
                                     >
-                                        {t('BTN_CONFIRM')}
+                                        {t('CONFIRM')}
                                     </Button>
                                 </Form.Item>
                             </Form>

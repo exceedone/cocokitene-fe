@@ -861,13 +861,18 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
                                         className="z-10 mx-auto flex w-[95%] border border-gray-400 bg-[#A8C3EB] px-[12px]"
                                     >
                                         <p className="mx-auto">
-                                            {t(
-                                                listPermissionChat.find(
-                                                    (permission) =>
-                                                        permission.id ===
-                                                        permissionChat,
-                                                )?.name,
-                                            )}
+                                            {listPermissionChat.find(
+                                                (permission) =>
+                                                    permission.id ===
+                                                    permissionChat,
+                                            )?.name &&
+                                                t(
+                                                    listPermissionChat.find(
+                                                        (permission) =>
+                                                            permission.id ===
+                                                            permissionChat,
+                                                    )?.name,
+                                                )}
                                         </p>
                                     </div>
                                     <div

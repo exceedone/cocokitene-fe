@@ -21,10 +21,11 @@ export const login = createAsyncThunk<
 >('auth/login', async (loginData, { rejectWithValue }) => {
     try {
         const loginResponse: ILoginResponse = await serviceUser.login(loginData)
-        const { userData, accessToken, refreshToken } = loginResponse
+        const { userData, accessToken, refreshToken, serviceIsExpired } = loginResponse
         serviceUser.storeInfo(userData)
         serviceUser.storeAccessToken(accessToken)
         serviceUser.storeRefreshToken(refreshToken)
+        serviceUser.storeServiceIsExpired(serviceIsExpired)
         return loginResponse
     } catch (error) {
         const err = error as AxiosError

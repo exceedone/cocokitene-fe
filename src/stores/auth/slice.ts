@@ -8,6 +8,7 @@ const initialState: IAuthState = {
     status: EActionStatus.Idle,
     nonce: '',
     userData: serviceUser.getInfoStorage(),
+    serviceIsExpired: serviceUser.getServiceIsExpired(),
     isAuthenticated: !!serviceUser.getInfoStorage(),
     errorMessage: '',
     errorCode: '',
@@ -21,6 +22,7 @@ const authSlice = createSlice({
             state.status = EActionStatus.Idle
             state.isAuthenticated = null
             state.userData = null
+            state.serviceIsExpired = true
             state.nonce = ''
             state.errorMessage = ''
             state.errorCode = ''
@@ -44,6 +46,7 @@ const authSlice = createSlice({
                     state.status = EActionStatus.Succeeded
                     state.userData = action.payload.userData
                     state.isAuthenticated = true
+                    state.serviceIsExpired = action.payload.serviceIsExpired
                 },
             )
             .addCase(login.rejected, (state: IAuthState, action) => {
@@ -69,6 +72,7 @@ const authSlice = createSlice({
                     state.status = EActionStatus.Succeeded
                     state.userData = action.payload.userData
                     state.isAuthenticated = true
+                    state.serviceIsExpired = action.payload.serviceIsExpired
                 },
             )
             .addCase(loginByEmail.rejected, (state: IAuthState, action) => {

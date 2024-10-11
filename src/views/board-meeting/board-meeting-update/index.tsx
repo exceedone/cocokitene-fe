@@ -6,21 +6,32 @@ import { useParams } from 'next/navigation'
 import SaveUpdateBoardMeetingButton from './save-button'
 import BoardMeetingInformation from './board-meeting-information'
 import ManagementAndFinancialReports from './management-and-financial-reports'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUpdateBoardMeetingInformation } from '@/stores/board-meeting/hook'
 import { EActionStatus } from '@/stores/type'
 import Loader from '@/components/loader'
 import Elections from './elections'
 import Participants from './participant'
 import Candidate from './candidate'
+import companyServicePlan from '@/services/company-service-plan'
 
 const BoardMeetingUpdate = () => {
     const t = useTranslations()
     const params = useParams()
+    const [allowUploadFile, setAllowUploadFile] = useState<boolean>(true)
 
     const [data, , status, initUpdateMeeting] =
         useUpdateBoardMeetingInformation()
     const meetingId = Number(params.id)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response =
+                await companyServicePlan.getAllowUploadFileForCompany()
+            setAllowUploadFile(response)
+        }
+        fetchData()
+    }, [])
 
     useEffect(() => {
         if (meetingId) {
@@ -39,9 +50,11 @@ const BoardMeetingUpdate = () => {
                 saveButton={<SaveUpdateBoardMeetingButton />}
             />
             <div className="flex flex-col gap-6 p-6">
-                <BoardMeetingInformation />
-                <ManagementAndFinancialReports />
-                <Elections />
+                <BoardMeetingInformation allowUploadFile={allowUploadFile} />
+                <ManagementAndFinancialReports
+                    allowUploadFile={allowUploadFile}
+                />
+                <Elections allowUploadFile={allowUploadFile} />
                 <Candidate />
                 <Participants />
             </div>

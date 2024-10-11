@@ -9,13 +9,14 @@ import {
     ListParamsFilter,
 } from './types'
 import { AxiosError } from 'axios'
-import { IGetAllDataReponse } from '@/services/response.type'
+import { IGetAllDataAllowControlResponse } from '@/services/response.type'
 import { CONSTANT_EMPTY_STRING } from '@/constants/common'
 
 const initialState: IMeetingState = {
     status: EActionStatus.Idle,
     meetingFutureList: [],
     meetingPassList: [],
+    allowCreate: true,
     page: 1,
     limit: 4,
     totalFutureMeetingItem: 0,
@@ -32,7 +33,7 @@ const initialState: IMeetingState = {
 }
 
 export const getAllMeetings = createAsyncThunk<
-    IGetAllDataReponse<IMeeting>,
+    IGetAllDataAllowControlResponse<IMeeting>,
     IGetAllMeetingQuery,
     {
         rejectValue: FetchError
@@ -40,7 +41,12 @@ export const getAllMeetings = createAsyncThunk<
 >('meeting/getFutureMeetingAll', async (param, { rejectWithValue }) => {
     try {
         const data = await serviceMeeting.getAllMeetings(param)
-        return data
+        return {
+            ...data,
+            items: data.meetings.items,
+            meta: data.meetings.meta,
+            allowCreate: data.allowCreate,
+        } as unknown as IGetAllDataAllowControlResponse<IMeeting>
     } catch (error) {
         const err = error as AxiosError
         const responseData: any = err.response?.data
@@ -52,7 +58,7 @@ export const getAllMeetings = createAsyncThunk<
 })
 
 export const getAllPassMeetings = createAsyncThunk<
-    IGetAllDataReponse<IMeeting>,
+    IGetAllDataAllowControlResponse<IMeeting>,
     IGetAllMeetingQuery,
     {
         rejectValue: FetchError
@@ -60,7 +66,12 @@ export const getAllPassMeetings = createAsyncThunk<
 >('meeting/getPassMeetingAll', async (param, { rejectWithValue }) => {
     try {
         const data = await serviceMeeting.getAllMeetings(param)
-        return data
+        return {
+            ...data,
+            items: data.meetings.items,
+            meta: data.meetings.meta,
+            allowCreate: data.allowCreate,
+        } as unknown as IGetAllDataAllowControlResponse<IMeeting>
     } catch (error) {
         const err = error as AxiosError
         const responseData: any = err.response?.data
@@ -85,10 +96,12 @@ const meetingListSlice = createSlice({
                 state.status = EActionStatus.Pending
             })
             .addCase(getAllMeetings.fulfilled, (state, action) => {
+                console.log('action:', action)
                 state.status = EActionStatus.Succeeded
                 state.meetingFutureList = action.payload?.items ?? []
+                state.allowCreate = action.payload.allowCreate
                 state.totalFutureMeetingItem =
-                    action.payload?.meta?.totalItems ?? 0
+                    action.payload?.meta.totalItems ?? 0
             })
             .addCase(getAllMeetings.rejected, (state, action) => {
                 state.status = EActionStatus.Failed
@@ -101,6 +114,7 @@ const meetingListSlice = createSlice({
             .addCase(getAllPassMeetings.fulfilled, (state, action) => {
                 state.status = EActionStatus.Succeeded
                 state.meetingPassList = action.payload?.items ?? []
+                state.allowCreate = action.payload.allowCreate
                 state.totalPassMeetingItem =
                     action.payload?.meta?.totalItems ?? 0
             })

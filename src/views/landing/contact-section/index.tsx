@@ -43,7 +43,7 @@ const ContactSection = () => {
             if (response) {
                 notification.success({
                     message: t('CREATED'),
-                    description: t('SEND_EMAIL_TO_SYSTEM_ADMIN_SUCCESSFULLY'),
+                    description: t('YOUR_REGISTRATION_SENT'),
                     duration: 2,
                 })
                 form.resetFields()

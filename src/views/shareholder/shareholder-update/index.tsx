@@ -14,6 +14,7 @@ import {
     UserStatusColor,
     UserStatusName,
 } from '@/constants/user-status'
+import companyServicePlan from '@/services/company-service-plan'
 import serviceShareholder from '@/services/shareholder'
 import serviceUpload from '@/services/upload'
 import serviceUserRole from '@/services/user-role'
@@ -113,6 +114,9 @@ const UpdateShareholder = () => {
         file: string | Blob | RcFile
         flag: boolean
     }>()
+
+    const [allowUploadFile, setAllowUploadFile] = useState<boolean>(true)
+
     // select
     const [selectedItems, setSelectedItems] = useState<string[]>([])
     const [requiredQuantity, setRequiredQuantity] = useState<boolean>(false)
@@ -185,6 +189,10 @@ const UpdateShareholder = () => {
                 if (userRoleList) {
                     setRoleList(userRoleList)
                 }
+                const response =
+                    await companyServicePlan.getAllowUploadFileForCompany()
+                setAllowUploadFile(response)
+
                 setInitStatus(FETCH_STATUS.SUCCESS)
             } catch (error) {
                 if (error instanceof AxiosError) {
@@ -203,7 +211,8 @@ const UpdateShareholder = () => {
     }, [shareholderId, authState.userData])
     // upload image
     const beforeUpload = (file: RcFile) => {
-        const isLt20M = file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024)
+        const isLt20M =
+            file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024 * 1024)
         const langCurrent = cookies.get('NEXT_LOCALE')
         if (!isLt20M) {
             if (langCurrent === 'en') {
@@ -614,6 +623,7 @@ const UpdateShareholder = () => {
                                         listType="picture-card"
                                         accept={ACCEPT_AVATAR_TYPES}
                                         onPreview={handlePreview}
+                                        disabled={!allowUploadFile}
                                     >
                                         {fileList.length >= 1
                                             ? null

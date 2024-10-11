@@ -28,6 +28,17 @@ const CreatePlan = () => {
     const [form] = useForm<IPlanCreateForm>()
     const router = useRouter()
 
+    const validatePrice = (_: any, value: string) => {
+        const regex = /^(0*[1-9]\d*|0+)$/
+        if (!value) {
+            return Promise.resolve()
+        }
+        if (!regex.test(value) || +value <= 0) {
+            return Promise.reject(t('PRICE_GREATER_THAN_0'))
+        }
+        return Promise.resolve()
+    }
+
     const onFinish = async (value: IPlanCreateForm) => {
         try {
             const response = await servicePlan.createPlan({
@@ -111,11 +122,13 @@ const CreatePlan = () => {
                                             message: t('REQUIRE_PLAN_PRICE'),
                                         },
                                         {
-                                            pattern: new RegExp(/^[0-9]+$/),
-                                            message: t(
-                                                'PLEASE_ENTER_ONLY_NUMBER',
-                                            ),
+                                            // pattern: new RegExp(/^[0-9]+$/),
+                                            // message: t(
+                                            //     'PLEASE_ENTER_ONLY_NUMBER',
+                                            // ),
+                                            validator: validatePrice,
                                         },
+                                        // { validator: validatePrice },
                                     ]}
                                     className="mb-0"
                                 >

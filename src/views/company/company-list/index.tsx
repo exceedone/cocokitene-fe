@@ -82,19 +82,19 @@ const CompanyList = ({ data }: CompanyListProps) => {
                     </div>
                 )
             },
-            width: '15%',
+            width: '18%',
             className: 'min-w-[126px]',
         },
         {
             title: t('TOTAL_CREATED_ACCOUNT'),
             dataIndex: 'totalCreatedAccount',
-            width: '10%',
+            width: '12%',
             className: 'px-2 min-w-[78px]',
         },
         {
             title: t('TOTAL_CREATED_MTGS'),
             dataIndex: 'totalCreatedMTGs',
-            width: '10%',
+            width: '12%',
             className: 'min-w-[85px]',
         },
         {
@@ -109,7 +109,7 @@ const CompanyList = ({ data }: CompanyListProps) => {
                     )}{' '}
                 </>
             ),
-            width: '15%',
+            width: '12%',
             className: 'px-[6px] max-[470px]:px-0 min-w-[79px]',
         },
         {
@@ -133,7 +133,7 @@ const CompanyList = ({ data }: CompanyListProps) => {
                     />
                 </div>
             ),
-            width: '15%',
+            width: '10%',
             className: 'px-3 min-w-[68px]',
         },
     ]
@@ -146,9 +146,10 @@ const CompanyList = ({ data }: CompanyListProps) => {
         })
     }
 
-    const dataFinal = data.map((item) => ({
+    const dataFinal = data.map((item, index) => ({
         ...item,
         servicePlan: convertSnakeCaseToTitleCase(item.servicePlan),
+        index: companyState.limit * (companyState.page - 1) + index + 1,
     }))
 
     return (

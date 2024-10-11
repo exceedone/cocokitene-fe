@@ -9,6 +9,7 @@ import {
     Row,
     Select,
     Tag,
+    Tooltip,
     Upload,
     message,
 } from 'antd'
@@ -31,10 +32,10 @@ import {
 import { PlusOutlined } from '@ant-design/icons'
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface'
 import { useAuthLogin } from '@/stores/auth/hooks'
-import serviceAccount from '@/services/account'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { useWatch } from 'antd/es/form/Form'
 import { Cookies } from 'react-cookie'
+import companyServicePlan from '@/services/company-service-plan'
 const cookies = new Cookies()
 const tagRenderStatus = (props: any) => {
     const { label, value, closable, onClose } = props
@@ -87,6 +88,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
     const [selectedItems, setSelectedItems] = useState<string[]>([])
     const [companyName, setCompanyName] = useState<string>('')
     const [requiredQuantity, setRequiredQuantity] = useState<boolean>(false)
+    const [allowUploadFile, setAllowUploadFile] = useState<boolean>(true)
 
     const quantity = useWatch('shareQuantity', form)
 
@@ -110,6 +112,10 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                 page: 1,
                 limit: 10,
             })
+            const response =
+                await companyServicePlan.getAllowUploadFileForCompany()
+            setAllowUploadFile(response)
+
             if (userRoleList) {
                 setUserRoleList(userRoleList)
             }
@@ -185,7 +191,10 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
     const [fileList, setFileList] = useState<UploadFile[]>([])
     const t = useTranslations()
     const beforeUpload = (file: RcFile) => {
-        const isLt20M = file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024)
+        console.log('file size: ', file.size)
+
+        const isLt20M =
+            file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024 * 1024)
         const langCurrent = cookies.get('NEXT_LOCALE')
         if (!isLt20M) {
             if (langCurrent === 'en') {
@@ -254,7 +263,7 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
         const filteredList = newFileList.filter((file) => {
             const isLt20M =
                 file.size &&
-                file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024)
+                file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024 * 1024)
             const extension = file.name.split('.').slice(-1)[0]
             const isAcceptedType = ACCEPT_AVATAR_TYPES.split(',').includes(
                 `.${extension}`,
@@ -441,22 +450,32 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
                         rules={[{ required: false }]}
                         className="mb-0"
                     >
-                        <Upload
-                            onChange={handleChange}
-                            fileList={fileList}
-                            beforeUpload={beforeUpload}
-                            multiple={true}
-                            // method="PUT"
-                            customRequest={onUpload(
-                                'avatarAccount',
-                                AccountFileType.AVATAR,
-                            )}
-                            listType="picture-card"
-                            accept={ACCEPT_AVATAR_TYPES}
-                            onPreview={handlePreview}
+                        <Tooltip
+                            placement="bottomRight"
+                            title={
+                                allowUploadFile
+                                    ? ''
+                                    : t('UNABLE_TO_CREATE_MORE')
+                            }
                         >
-                            {fileList.length >= 1 ? null : uploadButton}
-                        </Upload>
+                            <Upload
+                                onChange={handleChange}
+                                fileList={fileList}
+                                beforeUpload={beforeUpload}
+                                multiple={true}
+                                // method="PUT"
+                                customRequest={onUpload(
+                                    'avatarAccount',
+                                    AccountFileType.AVATAR,
+                                )}
+                                listType="picture-card"
+                                accept={ACCEPT_AVATAR_TYPES}
+                                onPreview={handlePreview}
+                                disabled={!allowUploadFile}
+                            >
+                                {fileList.length >= 1 ? null : uploadButton}
+                            </Upload>
+                        </Tooltip>
                         <Modal
                             open={previewOpen}
                             title={previewTitle}

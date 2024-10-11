@@ -1,3 +1,5 @@
+import { PaymentMethod, StatusSubscriptionEnum, SubscriptionEnum } from "@/constants/service-subscript"
+
 export interface IGetAllDataRequest {
     page: number
     limit: number
@@ -47,3 +49,18 @@ export interface IUpdateSuperAdminPayload {
     email: string
     statusId: number
 }
+
+export interface ICreateServiceSubscriptionPayload {
+    companyId: number
+    planId: number
+    amount: number
+    type: SubscriptionEnum
+    paymentMethod: PaymentMethod
+    status: StatusSubscriptionEnum
+    activationDate: string
+    expirationDate: string
+    note?: string
+}
+
+export interface IUpdateServiceSubscriptionPayload extends ICreateServiceSubscriptionPayload{}
+ 

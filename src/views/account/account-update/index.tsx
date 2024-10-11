@@ -43,6 +43,7 @@ import {
 import serviceUpload from '@/services/upload'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { Cookies } from 'react-cookie'
+import companyServicePlan from '@/services/company-service-plan'
 const cookies = new Cookies()
 const tagRenderStatus = (props: any) => {
     const { label, value, closable, onClose } = props
@@ -117,6 +118,7 @@ const UpdateAccount = () => {
         flag: boolean
     }>()
     const [roleSuper, setRoleSuper] = useState<boolean>(false)
+    const [allowUploadFile, setAllowUploadFile] = useState<boolean>(true)
 
     //Select
     const [selectedItems, setSelectedItems] = useState<string[]>([])
@@ -199,6 +201,10 @@ const UpdateAccount = () => {
                     setRoleList(userRoleList)
                 }
 
+                const response =
+                    await companyServicePlan.getAllowUploadFileForCompany()
+                setAllowUploadFile(response)
+
                 setInitStatus(FETCH_STATUS.SUCCESS)
             } catch (error) {
                 if (error instanceof AxiosError) {
@@ -219,7 +225,8 @@ const UpdateAccount = () => {
 
     // Upload Image
     const beforeUpload = (file: RcFile) => {
-        const isLt20M = file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024)
+        const isLt20M =
+            file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024 * 1024)
         const langCurrent = cookies.get('NEXT_LOCALE')
         if (!isLt20M) {
             if (langCurrent === 'en') {
@@ -650,6 +657,7 @@ const UpdateAccount = () => {
                                         listType="picture-card"
                                         accept={ACCEPT_AVATAR_TYPES}
                                         onPreview={handlePreview}
+                                        disabled={!allowUploadFile}
                                     >
                                         {fileList.length >= 1
                                             ? null

@@ -1,11 +1,6 @@
 /* eslint-disable */
 import BoxArea from '@/components/box-area'
 import {
-    ServicePlan,
-    ServicePlanColor,
-    ServicePlanName,
-} from '@/constants/company'
-import {
     CompanyStatus,
     CompanyStatusColor,
     CompanyStatusName,
@@ -249,6 +244,7 @@ const CompanyInformation = () => {
                             placeholder={t('SELECT_COMPANY_PLAN')}
                             size="large"
                             style={{ width: '100%' }}
+                            disabled={true}
                             options={planList.map((plan) => ({
                                 value: plan.id,
                                 label: (

@@ -4,11 +4,15 @@ import BoxArea from '@/components/box-area'
 import { ResolutionType } from '@/constants/resolution'
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { IProposalFile } from '@/stores/meeting/types'
-import { IBoardProposalFile } from '@/stores/board-meeting/types'
+import { IProposalFileMeeting } from '@/stores/meeting/types'
+import { IBoardProposalRedux } from '@/stores/board-meeting/types'
 import CreateReportItem from '@/components/create-report-item'
 
-const ManagementAndFinancialReports = () => {
+const ManagementAndFinancialReports = ({
+    allowUploadFile,
+}: {
+    allowUploadFile: boolean
+}) => {
     const t = useTranslations()
     const [data, setData] = useCreateBoardMeetingInformation()
 
@@ -25,10 +29,10 @@ const ManagementAndFinancialReports = () => {
             })
         }
 
-    const onAddFile = (index: number) => (file: IProposalFile) => {
+    const onAddFile = (index: number) => (file: IProposalFileMeeting) => {
         const managementAndFinancials = [...data.managementAndFinancials]
         const oldFiles = managementAndFinancials[index]
-            .files as IBoardProposalFile[]
+            .files as IBoardProposalRedux[]
         managementAndFinancials[index] = {
             ...managementAndFinancials[index],
             files: [...oldFiles, file],
@@ -42,7 +46,7 @@ const ManagementAndFinancialReports = () => {
     const onRemoveFile = (index: number) => (uid: string) => {
         const managementAndFinancials = [...data.managementAndFinancials]
         const oldFiles = managementAndFinancials[index]
-            .files as IBoardProposalFile[]
+            .files as IBoardProposalRedux[]
         const newFiles = oldFiles.filter((file) => file.uid !== uid)
         managementAndFinancials[index] = {
             ...managementAndFinancials[index],
@@ -95,6 +99,7 @@ const ManagementAndFinancialReports = () => {
                         onAddFile={onAddFile(index)}
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
+                        allowUploadFile={allowUploadFile}
                     />
                 ))}
             </div>

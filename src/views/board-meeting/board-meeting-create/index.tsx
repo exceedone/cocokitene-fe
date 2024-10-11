@@ -11,14 +11,22 @@ import Candidates from '@/views/board-meeting/board-meeting-create/candidates'
 import withAuth from '@/components/component-auth'
 import { Permissions } from '@/constants/permission'
 import { useCreateBoardMeetingInformation } from '@/stores/board-meeting/hook'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import companyServicePlan from '@/services/company-service-plan'
 
 const BoardMeetingCreate = () => {
     const t = useTranslations()
+    const [allowUploadFile, setAllowUploadFile] = useState<boolean>(true)
     const [, , resetData] = useCreateBoardMeetingInformation()
 
     useEffect(() => {
         resetData()
+        const fetchData = async () => {
+            const response =
+                await companyServicePlan.getAllowUploadFileForCompany()
+            setAllowUploadFile(response)
+        }
+        fetchData()
     }, [])
 
     return (
@@ -28,9 +36,11 @@ const BoardMeetingCreate = () => {
                 saveButton={<SaveCreateBoardMeetingButton />}
             />
             <div className="flex flex-col gap-6 p-6 max-[470px]:px-2">
-                <BoardMeetingInformation />
-                <ManagementAndFinancialReports />
-                <Elections />
+                <BoardMeetingInformation allowUploadFile={allowUploadFile} />
+                <ManagementAndFinancialReports
+                    allowUploadFile={allowUploadFile}
+                />
+                <Elections allowUploadFile={allowUploadFile} />
                 <Candidates />
                 <BoardMeetingParticipants />
             </div>

@@ -10,6 +10,8 @@ import { ResolutionType, VoteProposalOption } from '@/constants/resolution'
 import { UserMeetingStatusEnum } from '@/stores/attendance/type'
 import { IPersonnelVoting } from '@/services/response.type'
 
+import { RcFile } from 'antd/es/upload'
+
 export interface ICreateMeeting {
     title: string
     meetingLink: string
@@ -17,10 +19,11 @@ export interface ICreateMeeting {
     endTime: string
     endVotingTime: string
     note: string
-    meetingMinutes: IMeetingDocument[]
-    meetingInvitations: IMeetingDocument[]
-    resolutions: IMeetingResolution[]
-    amendmentResolutions: IMeetingResolution[]
+    meetingMinutes: IMeetingFileDocument[]
+    // meetingInvitations: IMeetingDocument[]
+    meetingInvitations: IMeetingFileDocument[]
+    resolutions: IMeetingResolutionRedux[]
+    amendmentResolutions: IMeetingResolutionRedux[]
     personnelVoting: IMeetingExecutive
     participants: IParticipantsWithRole[]
 }
@@ -32,10 +35,32 @@ export interface IMeetingDocument {
     fileType: string
 }
 
+export interface IMeetingFileDocument {
+    id?: number
+    uid?: string
+    file: string | Blob | RcFile
+    fileType: MeetingFileType
+}
+
 export interface IProposalFile {
     id?: number
     uid?: string
     url: string
+}
+
+export interface IProposalFileMeeting {
+    id?: number
+    uid?: string
+    file: string | Blob | RcFile
+}
+
+export interface IMeetingResolutionRedux {
+    id?: number
+    title: string
+    description: string
+    oldDescription?: string
+    files?: IProposalFileMeeting[]
+    type: ResolutionType
 }
 
 export interface IMeetingResolution {
@@ -79,6 +104,7 @@ export interface IMeetingState extends IGetAllMeetingQuery, FetchError {
     status: EActionStatus
     meetingFutureList: IMeeting[]
     meetingPassList: IMeeting[]
+    allowCreate: boolean
     totalFutureMeetingItem: number
     totalPassMeetingItem: number
 }

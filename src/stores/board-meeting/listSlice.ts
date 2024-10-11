@@ -8,7 +8,7 @@ import { EActionStatus, FetchError } from '@/stores/type'
 import { CONSTANT_EMPTY_STRING } from '@/constants/common'
 import { MeetingTime, MeetingType, SORT, SortField } from '@/constants/meeting'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IGetAllDataReponse } from '@/services/response.type'
+import { IGetAllDataAllowControlResponse } from '@/services/response.type'
 import { AxiosError } from 'axios/index'
 import serviceBoardMeeting from '@/services/board-meeting'
 
@@ -16,6 +16,7 @@ const initialState: IMeetingState = {
     status: EActionStatus.Idle,
     meetingFutureList: [],
     meetingPassList: [],
+    allowCreate: true,
     page: 1,
     limit: 4,
     totalFutureMeetingItem: 0,
@@ -32,7 +33,7 @@ const initialState: IMeetingState = {
 }
 
 export const getAllBoardMeetings = createAsyncThunk<
-    IGetAllDataReponse<IMeeting>,
+    IGetAllDataAllowControlResponse<IMeeting>,
     IGetAllMeetingQuery,
     {
         rejectValue: FetchError
@@ -42,7 +43,12 @@ export const getAllBoardMeetings = createAsyncThunk<
     async (param, { rejectWithValue }) => {
         try {
             const data = await serviceBoardMeeting.getAllMeetings(param)
-            return data
+            return {
+                ...data,
+                items: data.meetings.items,
+                meta: data.meetings.meta,
+                allowCreate: data.allowCreate,
+            } as unknown as IGetAllDataAllowControlResponse<IMeeting>
         } catch (error) {
             const err = error as AxiosError
             const responseData: any = err.response?.data
@@ -55,7 +61,7 @@ export const getAllBoardMeetings = createAsyncThunk<
 )
 
 export const getAllPassBoardMeetings = createAsyncThunk<
-    IGetAllDataReponse<IMeeting>,
+    IGetAllDataAllowControlResponse<IMeeting>,
     IGetAllMeetingQuery,
     {
         rejectValue: FetchError
@@ -63,7 +69,12 @@ export const getAllPassBoardMeetings = createAsyncThunk<
 >('boardMeeting/getPassBoardMeetingAll', async (param, { rejectWithValue }) => {
     try {
         const data = await serviceBoardMeeting.getAllMeetings(param)
-        return data
+        return {
+            ...data,
+            items: data.meetings.items,
+            meta: data.meetings.meta,
+            allowCreate: data.allowCreate,
+        } as unknown as IGetAllDataAllowControlResponse<IMeeting>
     } catch (error) {
         const err = error as AxiosError
         const responseData: any = err.response?.data
@@ -90,8 +101,9 @@ const boardMeetingListSlice = createSlice({
             .addCase(getAllBoardMeetings.fulfilled, (state, action) => {
                 state.status = EActionStatus.Succeeded
                 state.meetingFutureList = action.payload?.items ?? []
-                state.totalFutureMeetingItem = action.payload?.meta?.totalItems ?? 0
-                
+                state.allowCreate = action.payload.allowCreate
+                state.totalFutureMeetingItem =
+                    action.payload?.meta?.totalItems ?? 0
             })
             .addCase(getAllBoardMeetings.rejected, (state, action) => {
                 state.status = EActionStatus.Failed
@@ -104,6 +116,7 @@ const boardMeetingListSlice = createSlice({
             .addCase(getAllPassBoardMeetings.fulfilled, (state, action) => {
                 state.status = EActionStatus.Succeeded
                 state.meetingPassList = action.payload?.items ?? []
+                state.allowCreate = action.payload.allowCreate
                 state.totalPassMeetingItem =
                     action.payload?.meta?.totalItems ?? 0
             })

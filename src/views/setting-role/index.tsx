@@ -20,6 +20,7 @@ import RoleMtgList from '@/views/setting-role/role-mtg-list'
 import { useSettingRoleMtg } from '@/stores/setting-role-mtg/hook'
 import ModalRegisterRoleMtg from '@/views/setting-role/modal-register-role-mtg'
 import EmptyData from '../service-plan/service-plan-list/empty-plan'
+import { useAuthLogin } from '@/stores/auth/hooks'
 interface DataType {
     namePermission: string
     [key: string]: any
@@ -65,6 +66,7 @@ const SettingRoleView = () => {
         null,
     )
     const [dataChecked, setDataCheked] = useState<IUpdatePermissionRole[]>([])
+    const { authState } = useAuthLogin()
 
     let locale = {
         emptyText: <EmptyData />,
@@ -388,6 +390,7 @@ const SettingRoleView = () => {
                                 setOpenModalRoleMtg(true)
                             }
                         }}
+                        disabled={authState.serviceIsExpired}
                     >
                         {t('ADD_NEW')}
                     </Button>
@@ -404,6 +407,7 @@ const SettingRoleView = () => {
                                   onClick={() =>
                                       setClickButtonEdit(!clickButtonEdit)
                                   }
+                                  disabled={authState.serviceIsExpired}
                               >
                                   {t('EDIT')}
                               </Button>,

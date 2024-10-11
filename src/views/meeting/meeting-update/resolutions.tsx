@@ -1,5 +1,5 @@
 import BoxArea from '@/components/box-area'
-import CreateResolutionItem from '@/components/create-resolution-item'
+import UpdateResolutionItem from '@/components/update_resolution-item'
 import { ResolutionType } from '@/constants/resolution'
 import { useUpdateMeetingInformation } from '@/stores/meeting/hooks'
 import { IProposalFile } from '@/stores/meeting/types'
@@ -8,7 +8,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useTranslations } from 'next-intl'
 
-const Resolutions = () => {
+const Resolutions = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
     const t = useTranslations()
     const [data, setData] = useUpdateMeetingInformation()
 
@@ -80,7 +80,7 @@ const Resolutions = () => {
         <BoxArea title={t('RESOLUTIONS')}>
             <div className="mb-6 flex flex-col gap-6">
                 {data.resolutions.map((x, index) => (
-                    <CreateResolutionItem
+                    <UpdateResolutionItem
                         key={index}
                         type={ResolutionType.RESOLUTION}
                         index={index + 1}
@@ -99,6 +99,7 @@ const Resolutions = () => {
                         onAddFile={onAddFile(index)}
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
+                        allowUploadFile={allowUploadFile}
                     />
                 ))}
             </div>

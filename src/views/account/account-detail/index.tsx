@@ -51,6 +51,7 @@ const AccountDetail = () => {
                             onClick={() =>
                                 router.push(`/account/update/${accountId}`)
                             }
+                            disabled={authState.serviceIsExpired}
                         >
                             {t('EDIT')}
                         </Button>

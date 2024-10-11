@@ -12,12 +12,17 @@ const serviceAccount = {
         page,
         limit,
         filter,
-    }: IGetAllAccountQuery): Promise<
-        IGetAllDataReponse<IListAccountResponse>
-    > => {
+    }: IGetAllAccountQuery): Promise<{
+        users: IGetAllDataReponse<IListAccountResponse>
+        allowCreate: boolean
+    }> => {
         const payload = { page, limit, ...filter }
-        const response: { data: IGetAllDataReponse<IListAccountResponse> } =
-            await get('/users', payload)
+        const response: {
+            data: {
+                users: IGetAllDataReponse<IListAccountResponse>
+                allowCreate: boolean
+            }
+        } = await get('/users', payload)
         return response.data
     },
     getDetailAccount: async (accountId: number) => {

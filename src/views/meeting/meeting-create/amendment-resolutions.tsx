@@ -2,12 +2,16 @@ import BoxArea from '@/components/box-area'
 import CreateResolutionItem from '@/components/create-resolution-item'
 import { ResolutionType } from '@/constants/resolution'
 import { useCreateMeetingInformation } from '@/stores/meeting/hooks'
-import { IProposalFile } from '@/stores/meeting/types'
+import { IProposalFileMeeting } from '@/stores/meeting/types'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useTranslations } from 'next-intl'
 
-const AmendmentResolutions = () => {
+const AmendmentResolutions = ({
+    allowUploadFile,
+}: {
+    allowUploadFile: boolean
+}) => {
     const t = useTranslations()
 
     const [data, setData] = useCreateMeetingInformation()
@@ -26,9 +30,10 @@ const AmendmentResolutions = () => {
             })
         }
 
-    const onAddFile = (index: number) => (file: IProposalFile) => {
+    const onAddFile = (index: number) => (file: IProposalFileMeeting) => {
         const amendmentResolutions = [...data.amendmentResolutions]
-        const oldFiles = amendmentResolutions[index].files as IProposalFile[]
+        const oldFiles = amendmentResolutions[index]
+            .files as IProposalFileMeeting[]
         amendmentResolutions[index] = {
             ...amendmentResolutions[index],
             files: [...oldFiles, file],
@@ -42,7 +47,8 @@ const AmendmentResolutions = () => {
     const onRemoveFile = (index: number) => (uid: string) => {
         const amendmentResolutions = [...data.amendmentResolutions]
 
-        const oldFiles = amendmentResolutions[index].files as IProposalFile[]
+        const oldFiles = amendmentResolutions[index]
+            .files as IProposalFileMeeting[]
         const newFiles = oldFiles.filter((file) => file.uid !== uid)
 
         amendmentResolutions[index] = {
@@ -99,6 +105,7 @@ const AmendmentResolutions = () => {
                         onAddFile={onAddFile(index)}
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
+                        allowUploadFile={allowUploadFile}
                     />
                 ))}
             </div>

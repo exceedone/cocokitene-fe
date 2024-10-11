@@ -5,6 +5,7 @@ import { IUpdateMeetingPayload } from '@/services/request.type'
 import { useUpdateMeetingInformation } from '@/stores/meeting/hooks'
 import { IUpdateMeeting } from '@/stores/meeting/types'
 import { Button, Spin, notification } from 'antd'
+import { AxiosError } from 'axios'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -108,29 +109,31 @@ const SaveUpdateMeetingButton = () => {
     }
     const validate = onValidate(data)
 
-    const onSave = () => {
+    const onSave = async () => {
         if (!validate.isValid) {
             return
         }
         try {
-            ;(async () => {
-                setStatus(FETCH_STATUS.LOADING)
-                console.log('validate.payload: ', validate.payload)
-                await serviceMeeting.updateMeeting(data.id, validate.payload)
-                notification.success({
-                    message: t('UPDATED'),
-                    description: t('UPDATED_MEETING_SUCCESSFULLY'),
-                    duration: 2,
-                })
-                setStatus(FETCH_STATUS.SUCCESS)
-                router.push(`/meeting/detail/${data.id}`)
-            })()
-        } catch (error) {
-            notification.error({
-                message: 'Error',
-                description: 'Something went wrong!',
+            // ;(async () => {
+            setStatus(FETCH_STATUS.LOADING)
+            console.log('validate.payload: ', validate.payload)
+            await serviceMeeting.updateMeeting(data.id, validate.payload)
+            notification.success({
+                message: t('UPDATED'),
+                description: t('UPDATED_MEETING_SUCCESSFULLY'),
                 duration: 2,
             })
+            setStatus(FETCH_STATUS.SUCCESS)
+            router.push(`/meeting/detail/${data.id}`)
+            // })()
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                notification.error({
+                    message: t('ERROR'),
+                    description: t(error.response?.data.info.message),
+                    duration: 3,
+                })
+            }
             setStatus(FETCH_STATUS.ERROR)
         }
     }

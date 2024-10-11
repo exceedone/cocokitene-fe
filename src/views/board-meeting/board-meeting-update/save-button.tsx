@@ -6,6 +6,7 @@ import { IUpdateBoardMeetingPayload } from '@/services/request.type'
 import { useUpdateBoardMeetingInformation } from '@/stores/board-meeting/hook'
 import { IUpdateBoardMeeting } from '@/stores/board-meeting/types'
 import { Button, Spin, notification } from 'antd'
+import { AxiosError } from 'axios'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -118,31 +119,33 @@ const SaveUpdateBoardMeetingButton = () => {
 
     const validate = onValidate(data)
 
-    const onSave = () => {
+    const onSave = async () => {
         if (!validate.isValid) {
             return
         }
         try {
-            ;(async () => {
-                setStatus(FETCH_STATUS.LOADING)
-                await serviceBoardMeeting.updateBoardMeeting(
-                    data.id,
-                    validate.payload,
-                )
-                notification.success({
-                    message: t('UPDATED'),
-                    description: t('UPDATE_BOARD_MEETING_SUCCESSFULLY'),
-                    duration: 2,
-                })
-                setStatus(FETCH_STATUS.SUCCESS)
-                router.push(`/board-meeting/detail/${data.id}`)
-            })()
-        } catch (error) {
-            notification.error({
-                message: 'Error',
-                description: 'Something went wrong to update Board Meeting!!!',
-                duration: 3,
+            // ;(async () => {
+            setStatus(FETCH_STATUS.LOADING)
+            await serviceBoardMeeting.updateBoardMeeting(
+                data.id,
+                validate.payload,
+            )
+            notification.success({
+                message: t('UPDATED'),
+                description: t('UPDATE_BOARD_MEETING_SUCCESSFULLY'),
+                duration: 2,
             })
+            setStatus(FETCH_STATUS.SUCCESS)
+            router.push(`/board-meeting/detail/${data.id}`)
+            // })()
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                notification.error({
+                    message: t('ERROR'),
+                    description: t(error.response?.data.info.message),
+                    duration: 3,
+                })
+            }
             setStatus(FETCH_STATUS.ERROR)
         }
     }

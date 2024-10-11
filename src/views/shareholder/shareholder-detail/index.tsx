@@ -58,6 +58,7 @@ const ShareholderDetail = () => {
                                     `/shareholder/update/${shareholderId}`,
                                 )
                             }
+                            disabled={authState.serviceIsExpired}
                         >
                             {t('EDIT')}
                         </Button>

@@ -16,10 +16,12 @@ import withAuth from '@/components/component-auth'
 import { Permissions } from '@/constants/permission'
 import { TypeRoleMeeting } from '@/constants/role-mtg'
 import { MeetingRole } from '@/stores/attendance/type'
+import { useAuthLogin } from '@/stores/auth/hooks'
 
 const { Text } = Typography
 const RoleMtgList = () => {
     const t = useTranslations()
+    const { authState } = useAuthLogin()
     // const router = useRouter()
     // eslint-disable-next-line
     const {
@@ -125,15 +127,17 @@ const RoleMtgList = () => {
                             checkBaseRoleMtg(record) ? 'hidden' : ''
                         }`}
                     >
-                        <EditTwoTone
-                            style={{ fontSize: '18px' }}
-                            twoToneColor="#5151e5"
-                            onClick={() => {
-                                // setSelectedRoleMtgId(record.id)
-                                setIdMOpenModalUpdateRoleMtg(record.id)
-                                setOpenModalUpdatedRoleMtg(true)
-                            }}
-                        />
+                        {!authState.serviceIsExpired && (
+                            <EditTwoTone
+                                style={{ fontSize: '18px' }}
+                                twoToneColor="#5151e5"
+                                onClick={() => {
+                                    // setSelectedRoleMtgId(record.id)
+                                    setIdMOpenModalUpdateRoleMtg(record.id)
+                                    setOpenModalUpdatedRoleMtg(true)
+                                }}
+                            />
+                        )}
                     </div>
                 )
             },

@@ -6,13 +6,15 @@ import {
     ILoginRequest,
     ILoginResponse,
 } from '@/stores/auth/type'
-import { IAccountListResponse } from './response.type'
+import { IAccountListResponse, IMeta } from './response.type'
 import { UserStatus } from '@/constants/user-status'
+import { IParticipants } from '@/components/participant-selector'
 const cookies = new Cookies()
 
 const USER_INFO_STORAGE_KEY = 'usr_if'
 const USER_TOKEN_STORAGE_KEY = 'usr_tk'
 const USER_REFRESH_TOKEN_STORAGE_KEY = 'usr_refresh_token'
+const USER_SERVICE_EXPIRED = 'usr_ser'
 
 const serviceUser = {
     storeInfo: (user: IAccount | null) => {
@@ -42,6 +44,12 @@ const serviceUser = {
         }
         cookies.remove(USER_REFRESH_TOKEN_STORAGE_KEY, { path: '/' })
     },
+    storeServiceIsExpired: (isExpired: boolean) => {
+        cookies.set(USER_SERVICE_EXPIRED, JSON.stringify(isExpired), {
+            path: '/',
+        })
+        return
+    },
     getInfoStorage: (): IAccount | null => {
         const userInfo = cookies.get(USER_INFO_STORAGE_KEY)
         return userInfo ? userInfo : null
@@ -62,6 +70,10 @@ const serviceUser = {
             })
         }
         return accessToken
+    },
+    getServiceIsExpired: (): boolean=> {
+        const serviceIsExpired = cookies.get(USER_SERVICE_EXPIRED)
+        return serviceIsExpired ? true : false
     },
     getNonce: async (walletAddress: string) => {
         const response = await get('/users/get-nonce', {
@@ -97,11 +109,18 @@ const serviceUser = {
             limit,
             page,
         }
-        const response = await get<any, { data: IAccountListResponse }>(
+        const response = await get<any, { data: {
+                users:{items: IParticipants[]}
+                meta: IMeta
+        }}>(
             '/users',
             params,
         )
-        const filteredItems = response.data.items.filter(
+        // const filteredItems = response.data.items.filter(
+        //     // eslint-disable-next-line no-undef
+        //     (user) => user.userStatus_status === UserStatus.ACTIVE,
+        // )
+        const filteredItems = response.data.users.items.filter(
             // eslint-disable-next-line no-undef
             (user) => user.userStatus_status === UserStatus.ACTIVE,
         )

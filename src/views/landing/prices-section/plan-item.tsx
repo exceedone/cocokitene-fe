@@ -67,7 +67,7 @@ const PlanItem = ({
                             isBold ? 'text-white' : ''
                         }`}
                     >
-                        / {t('MONTH')}
+                        / {t('YEAR')}
                     </Text>
                 </div>
                 <div

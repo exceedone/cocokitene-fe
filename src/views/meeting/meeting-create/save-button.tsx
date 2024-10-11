@@ -1,10 +1,18 @@
 /*eslint-disable*/
 import { FETCH_STATUS, urlRegex } from '@/constants/common'
+import { MeetingFileType } from '@/constants/meeting'
+import companyServicePlan from '@/services/company-service-plan'
 import serviceMeeting from '@/services/meeting'
-import { ICreateMeetingPayload } from '@/services/request.type'
+import {
+    ICreateMeetingPayload,
+    ISaveCreateMeetingPayload,
+} from '@/services/request.type'
+import serviceUpload from '@/services/upload'
 import { useCreateMeetingInformation } from '@/stores/meeting/hooks'
-import { ICreateMeeting } from '@/stores/meeting/types'
+import { ICreateMeeting, IMeetingResolution } from '@/stores/meeting/types'
 import { Button, Spin, notification } from 'antd'
+import { RcFile } from 'antd/es/upload'
+import { AxiosError } from 'axios'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -61,7 +69,7 @@ const SaveCreateMeetingButton = () => {
         const rs: {
             isValid: boolean
             errors: { [key: string]: string }
-            payload: ICreateMeetingPayload
+            payload: ISaveCreateMeetingPayload
         } = {
             isValid: true,
             errors: {},
@@ -110,32 +118,167 @@ const SaveCreateMeetingButton = () => {
 
     const validate = onValidate(data)
 
-    const onSave = () => {
+    const onSave = async () => {
         if (!validate.isValid) {
             return
         }
         try {
-            ;(async () => {
-                setStatus(FETCH_STATUS.LOADING)
-                console.log('payload: ', validate.payload)
-                const res = await serviceMeeting.createMeeting(validate.payload)
-                notification.success({
-                    message: t('CREATED'),
-                    description: t('CREATED_MEETING_SUCCESSFULLY'),
-                    duration: 2,
-                })
+            // ;(async () => {
+            setStatus(FETCH_STATUS.LOADING)
+            console.log('payload: ', validate.payload)
 
-                resetData()
+            let storageUsed: number = 0
 
-                setStatus(FETCH_STATUS.SUCCESS)
-                router.push('/meeting')
-            })()
-        } catch (error) {
-            notification.error({
-                message: 'Error',
-                description: 'Something went wrong!',
+            const resolutions: IMeetingResolution[] = []
+            const amendmentResolutions: IMeetingResolution[] = []
+
+            validate.payload.resolutions.forEach(async (resolution) => {
+                const resolutionItem: IMeetingResolution = {
+                    ...resolution,
+                    files:
+                        resolution.files &&
+                        (await Promise.all(
+                            resolution.files.map(async (file) => {
+                                // @ts-ignore
+                                storageUsed += +file.file.size
+
+                                const res = await serviceUpload.getPresignedUrl(
+                                    [file.file as File],
+                                    MeetingFileType.PROPOSAL_FILES,
+                                )
+
+                                await serviceUpload.uploadFile(
+                                    file.file as File,
+                                    res.uploadUrls[0],
+                                )
+
+                                return {
+                                    id: file.id,
+                                    url: res.uploadUrls[0].split('?')[0],
+                                    uid: file.uid,
+                                }
+                            }),
+                        )),
+                }
+                resolutions.push(resolutionItem)
+            })
+
+            validate.payload.amendmentResolutions.forEach(
+                async (amendmentResolution) => {
+                    const amendmentResolutionItem: IMeetingResolution = {
+                        ...amendmentResolution,
+                        files:
+                            amendmentResolution.files &&
+                            (await Promise.all(
+                                amendmentResolution.files.map(async (file) => {
+                                    // @ts-ignore
+                                    storageUsed += +file.file.size
+
+                                    const res =
+                                        await serviceUpload.getPresignedUrl(
+                                            [file.file as File],
+                                            MeetingFileType.PROPOSAL_FILES,
+                                        )
+                                    await serviceUpload.uploadFile(
+                                        file.file as File,
+                                        res.uploadUrls[0],
+                                    )
+
+                                    return {
+                                        id: file.id,
+                                        url: res.uploadUrls[0].split('?')[0],
+                                        uid: file.uid,
+                                    }
+                                }),
+                            )),
+                    }
+                    amendmentResolutions.push(amendmentResolutionItem)
+                },
+            )
+
+            const payloadCreateMeeting: ICreateMeetingPayload = {
+                ...validate.payload,
+                meetingInvitations: await Promise.all(
+                    validate.payload.meetingInvitations.map(
+                        async (meetingInvitation) => {
+                            // @ts-ignore
+                            storageUsed += +meetingInvitation.file.size
+
+                            const res = await serviceUpload.getPresignedUrl(
+                                [meetingInvitation.file as File],
+                                meetingInvitation.fileType,
+                            )
+
+                            const response = await serviceUpload.uploadFile(
+                                meetingInvitation.file as File,
+                                res.uploadUrls[0],
+                            )
+
+                            return {
+                                url: res.uploadUrls[0].split('?')[0],
+                                fileType: meetingInvitation.fileType,
+                                uid: (meetingInvitation.file as RcFile).uid,
+                            }
+                        },
+                    ),
+                ),
+                meetingMinutes: await Promise.all(
+                    validate.payload.meetingMinutes.map(
+                        async (meetingMinute) => {
+                            // @ts-ignore
+                            storageUsed += +meetingMinute.file.size
+
+                            const res = await serviceUpload.getPresignedUrl(
+                                [meetingMinute.file as File],
+                                meetingMinute.fileType,
+                            )
+                            await serviceUpload.uploadFile(
+                                meetingMinute.file as File,
+                                res.uploadUrls[0],
+                            )
+
+                            return {
+                                url: res.uploadUrls[0].split('?')[0],
+                                fileType: meetingMinute.fileType,
+                                uid: (meetingMinute.file as RcFile).uid,
+                            }
+                        },
+                    ),
+                ),
+                resolutions: resolutions,
+                amendmentResolutions: amendmentResolutions,
+            }
+
+            // console.log(
+            //     'storageUsed(GB): ',
+            //     +(storageUsed / (1024 * 1024 * 1024)).toFixed(9),
+            // )
+
+            console.log('payloadCreateMeeting: ', payloadCreateMeeting)
+
+            const res = await serviceMeeting.createMeeting(payloadCreateMeeting)
+            notification.success({
+                message: t('CREATED'),
+                description: t('CREATED_MEETING_SUCCESSFULLY'),
                 duration: 2,
             })
+            const response = companyServicePlan.updateStorageUsed(
+                +(storageUsed / (1024 * 1024 * 1024)).toFixed(9),
+            )
+
+            resetData()
+
+            setStatus(FETCH_STATUS.SUCCESS)
+            router.push('/meeting')
+            // })()
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                notification.error({
+                    message: t('ERROR'),
+                    description: t(error.response?.data.info.message),
+                    duration: 3,
+                })
+            }
             setStatus(FETCH_STATUS.ERROR)
         }
     }

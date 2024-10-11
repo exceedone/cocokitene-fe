@@ -16,7 +16,7 @@ const servicePlan = {
     }: IGetAllPlanQuery): Promise<IGetAllDataReponse<IListPlanResponse>> => {
         const payload = { page, limit, ...filter }
         const response: { data: IGetAllDataReponse<IListPlanResponse> } =
-            await get('/system-admin/plans', payload)
+            await get('/system-admin/plan', payload)
 
         return response.data
     },
@@ -28,7 +28,7 @@ const servicePlan = {
 
     getDetailPlan: async (planId: number) => {
         const response = await get<IPlanDetailResponse>(
-            `/system-admin/plans/${planId}`,
+            `/system-admin/plan/${planId}`,
         )
         return response.data
     },

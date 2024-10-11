@@ -68,6 +68,17 @@ const UpdatePlan = () => {
         }
     }, [planId])
 
+    const validatePrice = (_: any, value: string) => {
+        const regex = /^(0*[1-9]\d*|0+)$/
+        if (!value) {
+            return Promise.resolve()
+        }
+        if (!regex.test(value) || +value <= 0) {
+            return Promise.reject(t('PRICE_GREATER_THAN_0'))
+        }
+        return Promise.resolve()
+    }
+
     const onFinish = async (value: IPlanUpdateForm) => {
         setStatus(FETCH_STATUS.LOADING)
 
@@ -162,16 +173,21 @@ const UpdatePlan = () => {
                                             required: true,
                                             message: t('REQUIRE_PLAN_PRICE'),
                                         },
-                                        {
-                                            pattern: new RegExp(/^[0-9]+$/),
-                                            message: t(
-                                                'PLEASE_ENTER_ONLY_NUMBER',
-                                            ),
-                                        },
+                                        // {
+                                        //     pattern: new RegExp(/^[0-9]+$/),
+                                        //     message: t(
+                                        //         'PLEASE_ENTER_ONLY_NUMBER',
+                                        //     ),
+                                        // },
+                                        { validator: validatePrice },
                                     ]}
                                     className="mb-0"
                                 >
-                                    <Input size="large" maxLength={10} />
+                                    <Input
+                                        size="large"
+                                        maxLength={10}
+                                        disabled={initPlan.price == 0}
+                                    />
                                 </Form.Item>
                             </Col>
                             <Col xs={24} lg={12}>

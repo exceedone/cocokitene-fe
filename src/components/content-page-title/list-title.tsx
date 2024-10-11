@@ -54,6 +54,7 @@ const ListTitle = ({
                 <Input
                     className="w-[178px] max-[470px]:w-[150px]"
                     size={screens.lg ? 'large' : 'middle'}
+                    // size="middle"
                     addonAfter={<SearchOutlined />}
                     placeholder={t('SEARCH')}
                     onChange={handleInputChange}

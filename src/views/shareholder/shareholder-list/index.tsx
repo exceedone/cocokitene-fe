@@ -141,7 +141,7 @@ const ShareholderList = () => {
                 //     {t('SEE_DETAIL')}
                 // </Link>
                 <div className="flex gap-3">
-                    {permissionEdit && (
+                    {permissionEdit && !authState.serviceIsExpired && (
                         <EditTwoTone
                             style={{ fontSize: '18px' }}
                             twoToneColor="#5151e5"
@@ -176,7 +176,16 @@ const ShareholderList = () => {
         <div className="bg-white p-6">
             <Table
                 columns={columns}
-                dataSource={shareholderState.shareholderList}
+                dataSource={shareholderState.shareholderList.map(
+                    (shareholder, index) => ({
+                        ...shareholder,
+                        index:
+                            shareholderState.limit *
+                                (shareholderState.page - 1) +
+                            index +
+                            1,
+                    }),
+                )}
                 rowKey="id"
                 pagination={{
                     pageSize: shareholderState.limit,

@@ -50,7 +50,9 @@ const CalendarCustom = ({
                 )
             }
         }
-        getAllMeetingInMonth()
+        if (!isSystemAdmin) {
+            getAllMeetingInMonth()
+        }
     }, [month, year])
 
     const handleSelectDate = (newValue: Dayjs) => {

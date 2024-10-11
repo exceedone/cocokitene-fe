@@ -5,6 +5,7 @@ export interface IAuthState {
     nonce: any
     isAuthenticated: boolean | null
     userData: IAccount | null
+    serviceIsExpired: boolean
     errorMessage: string
     errorCode: string
 }
@@ -18,6 +19,7 @@ export interface ILoginResponse {
     accessToken: string
     refreshToken: string
     userData: IAccount
+    serviceIsExpired: boolean
 }
 
 export interface IAccount {

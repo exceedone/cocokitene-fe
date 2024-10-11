@@ -9,7 +9,7 @@ const servicePlan = {
     }: IGetAllDataRequest): Promise<IPlanResponse[]> => {
         const payload = { page, limit }
         const response: { data: IGetAllDataReponse<IPlanResponse> } = await get(
-            '/system-admin/plans',
+            '/system-admin/plan',
             payload,
         )
 

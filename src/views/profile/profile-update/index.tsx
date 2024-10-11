@@ -123,7 +123,8 @@ const UpdateMyProfile = () => {
 
     // Upload Image
     const beforeUpload = (file: RcFile) => {
-        const isLt20M = file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024)
+        const isLt20M =
+            file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024 * 1024)
         const langCurrent = cookies.get('NEXT_LOCALE')
         if (!isLt20M) {
             if (langCurrent === 'en') {

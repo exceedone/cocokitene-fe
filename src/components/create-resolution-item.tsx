@@ -3,9 +3,9 @@ import { ACCEPT_FILE_TYPES, MeetingFileType } from '@/constants/meeting'
 import { ResolutionTitle, ResolutionType } from '@/constants/resolution'
 import { Resolution } from '@/constants/resolution'
 import serviceUpload from '@/services/upload'
-import { IProposalFile } from '@/stores/meeting/types'
+import { IProposalFile, IProposalFileMeeting } from '@/stores/meeting/types'
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Input, Typography, Upload, UploadFile } from 'antd'
+import { Button, Input, Tooltip, Typography, Upload, UploadFile } from 'antd'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { useTranslations } from 'next-intl'
 import { ChangeEvent, useState } from 'react'
@@ -20,9 +20,10 @@ interface ICreateResolutionItem extends Resolution {
     onChangeTitle: (value: string) => void
     onChangeContent: (value: string) => void
     onChangeOldContent?: (value: string) => void
-    onAddFile?: (file: IProposalFile) => void
+    onAddFile?: (file: IProposalFileMeeting) => void
     onRemoveFile?: (uuid: string) => void
     onDelete: () => void
+    allowUploadFile: boolean
 }
 
 const CreateResolutionItem = ({
@@ -38,6 +39,7 @@ const CreateResolutionItem = ({
     onAddFile,
     onRemoveFile,
     onDelete,
+    allowUploadFile,
 }: ICreateResolutionItem) => {
     const t = useTranslations()
 
@@ -61,16 +63,16 @@ const CreateResolutionItem = ({
                     ? MeetingFileType.REPORTS
                     : MeetingFileType.PROPOSAL_FILES
 
-            const res = await serviceUpload.getPresignedUrl(
-                [file as File],
-                // MeetingFileType.PROPOSAL_FILES,
-                meetingFileType,
-            )
-            await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
+            // const res = await serviceUpload.getPresignedUrl(
+            //     [file as File],
+            //     // MeetingFileType.PROPOSAL_FILES,
+            //     meetingFileType,
+            // )
+            // await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
 
             onAddFile &&
                 onAddFile({
-                    url: res.uploadUrls[0].split('?')[0],
+                    file: file,
                     uid: (file as RcFile).uid,
                 })
         } catch (error) {}
@@ -81,7 +83,7 @@ const CreateResolutionItem = ({
             if (url) {
                 onAddFile &&
                     onAddFile({
-                        url: url.split('?')[0],
+                        file: info.file as RcFile,
                         uid: info.file.uid,
                     })
                 // const values = data[name]
@@ -136,7 +138,7 @@ const CreateResolutionItem = ({
             errorUniqueFile: false,
         })
 
-        if (file.size > 10 * (1024 * 1024)) {
+        if (file.size > 20 * (1024 * 1024 * 1024)) {
             setFileData({
                 ...fileData,
                 errorFileSize: true,
@@ -204,10 +206,23 @@ const CreateResolutionItem = ({
                             customRequest={onUpload}
                             accept={ACCEPT_FILE_TYPES}
                             name="proposal-files"
+                            disabled={!allowUploadFile}
                         >
-                            <Button icon={<UploadOutlined />}>
-                                {t('CLICK_TO_UPLOAD')}
-                            </Button>
+                            <Tooltip
+                                placement="bottomRight"
+                                title={
+                                    allowUploadFile
+                                        ? ''
+                                        : t('UNABLE_TO_CREATE_MORE')
+                                }
+                            >
+                                <Button
+                                    icon={<UploadOutlined />}
+                                    disabled={!allowUploadFile}
+                                >
+                                    {t('CLICK_TO_UPLOAD')}
+                                </Button>
+                            </Tooltip>
                         </Upload>
                         <div className="flex flex-col items-start">
                             <Text className="break-words text-black-45">

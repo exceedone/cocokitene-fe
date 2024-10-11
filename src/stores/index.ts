@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { configureStore } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
@@ -38,16 +39,17 @@ export function makeStore(preloadedState = undefined) {
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware({
                 thunk: true,
-                serializableCheck: {
-                    ignoredActions: [
-                        FLUSH,
-                        REHYDRATE,
-                        PAUSE,
-                        PERSIST,
-                        PURGE,
-                        REGISTER,
-                    ],
-                },
+                // serializableCheck: {
+                //     ignoredActions: [
+                //         FLUSH,
+                //         REHYDRATE,
+                //         PAUSE,
+                //         PERSIST,
+                //         PURGE,
+                //         REGISTER,
+                //     ],
+                // },
+                serializableCheck: false,
             }),
         devTools: process.env.NODE_ENV === 'development',
         preloadedState,

@@ -39,11 +39,13 @@ export interface ICompanyUpdateForm {
 const CompanyUpdate = () => {
     const router = useRouter()
     const t = useTranslations()
+    const [form] = useForm<ICompanyUpdateForm>()
 
     const [initCompany, setInitCompany] = useState<ICompanyUpdateForm>()
     const [initStatus, setInitStatus] = useState<FETCH_STATUS>(
         FETCH_STATUS.IDLE,
     )
+    const [status, setStatus] = useState(FETCH_STATUS.IDLE)
 
     const params = useParams()
 
@@ -92,10 +94,6 @@ const CompanyUpdate = () => {
             fetchInitCompany()
         }
     }, [companyId])
-
-    const [form] = useForm<ICompanyUpdateForm>()
-
-    const [status, setStatus] = useState(FETCH_STATUS.IDLE)
 
     const onFinish = async (values: ICompanyUpdateForm) => {
         setStatus(FETCH_STATUS.LOADING)

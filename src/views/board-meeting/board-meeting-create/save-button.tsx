@@ -6,9 +6,19 @@ import { useState } from 'react'
 import { FETCH_STATUS, urlRegex } from '@/constants/common'
 import { useRouter } from 'next/navigation'
 import { Button, notification, Spin } from 'antd'
-import { ICreateBoardMeeting } from '@/stores/board-meeting/types'
-import { ICreateBoardMeetingPayload } from '@/services/request.type'
+import {
+    IBoardMeetingReport,
+    ICreateBoardMeeting,
+} from '@/stores/board-meeting/types'
+import {
+    ICreateBoardMeetingPayload,
+    ISaveCreateBoardMeetingPayload,
+} from '@/services/request.type'
 import serviceBoardMeeting from '@/services/board-meeting'
+import serviceUpload from '@/services/upload'
+import { RcFile } from 'antd/es/upload'
+import { MeetingFileType } from '@/constants/meeting'
+import companyServicePlan from '@/services/company-service-plan'
 
 const SaveCreateBoardMeetingButton = () => {
     const t = useTranslations()
@@ -71,7 +81,7 @@ const SaveCreateBoardMeetingButton = () => {
         const rs: {
             isValid: boolean
             errors: { [key: string]: string }
-            payload: ICreateBoardMeetingPayload
+            payload: ISaveCreateBoardMeetingPayload
         } = {
             isValid: true,
             errors: {},
@@ -125,16 +135,152 @@ const SaveCreateBoardMeetingButton = () => {
         try {
             ;(async () => {
                 setStatus(FETCH_STATUS.LOADING)
-                console.log('validate.payload: ', validate.payload)
+
+                let storageUsed: number = 0
+
+                const managementAndFinancials: IBoardMeetingReport[] = []
+                const elections: IBoardMeetingReport[] = []
+
+                validate.payload.managementAndFinancials.forEach(
+                    async (managementAndFinancial) => {
+                        const managementAndFinancialItem: IBoardMeetingReport =
+                            {
+                                ...managementAndFinancial,
+                                files:
+                                    managementAndFinancial.files &&
+                                    (await Promise.all(
+                                        managementAndFinancial.files.map(
+                                            async (file) => {
+                                                // @ts-ignore
+                                                storageUsed += +file.file.size
+
+                                                const res =
+                                                    await serviceUpload.getPresignedUrl(
+                                                        [file.file as File],
+                                                        MeetingFileType.REPORTS,
+                                                    )
+                                                await serviceUpload.uploadFile(
+                                                    file.file as File,
+                                                    res.uploadUrls[0],
+                                                )
+
+                                                return {
+                                                    id: file.id,
+                                                    url: res.uploadUrls[0].split(
+                                                        '?',
+                                                    )[0],
+                                                    uid: file.uid,
+                                                }
+                                            },
+                                        ),
+                                    )),
+                            }
+                        managementAndFinancials.push(managementAndFinancialItem)
+                    },
+                )
+
+                validate.payload.elections.forEach(async (election) => {
+                    const electionItem: IBoardMeetingReport = {
+                        ...election,
+                        files:
+                            election.files &&
+                            (await Promise.all(
+                                election.files.map(async (file) => {
+                                    // @ts-ignore
+                                    storageUsed += +file.file.size
+
+                                    const res =
+                                        await serviceUpload.getPresignedUrl(
+                                            [file.file as File],
+                                            MeetingFileType.PROPOSAL_FILES,
+                                        )
+                                    await serviceUpload.uploadFile(
+                                        file.file as File,
+                                        res.uploadUrls[0],
+                                    )
+
+                                    return {
+                                        id: file.id,
+                                        url: res.uploadUrls[0].split('?')[0],
+                                        uid: file.uid,
+                                    }
+                                }),
+                            )),
+                    }
+                    elections.push(electionItem)
+                })
+
+                const payloadCreateBoardMeeting: ICreateBoardMeetingPayload = {
+                    ...validate.payload,
+                    meetingInvitations: await Promise.all(
+                        validate.payload.meetingInvitations.map(
+                            async (meetingInvitation) => {
+                                // @ts-ignore
+                                storageUsed += +meetingInvitation.file.size
+
+                                const res = await serviceUpload.getPresignedUrl(
+                                    [meetingInvitation.file as File],
+                                    meetingInvitation.fileType,
+                                )
+                                await serviceUpload.uploadFile(
+                                    meetingInvitation.file as File,
+                                    res.uploadUrls[0],
+                                )
+
+                                return {
+                                    url: res.uploadUrls[0].split('?')[0],
+                                    fileType: meetingInvitation.fileType,
+                                    uid: (meetingInvitation.file as RcFile).uid,
+                                }
+                            },
+                        ),
+                    ),
+                    meetingMinutes: await Promise.all(
+                        validate.payload.meetingMinutes.map(
+                            async (meetingMinute) => {
+                                // @ts-ignore
+                                storageUsed += +meetingMinute.file.size
+
+                                const res = await serviceUpload.getPresignedUrl(
+                                    [meetingMinute.file as File],
+                                    meetingMinute.fileType,
+                                )
+                                await serviceUpload.uploadFile(
+                                    meetingMinute.file as File,
+                                    res.uploadUrls[0],
+                                )
+
+                                return {
+                                    url: res.uploadUrls[0].split('?')[0],
+                                    fileType: meetingMinute.fileType,
+                                    uid: (meetingMinute.file as RcFile).uid,
+                                }
+                            },
+                        ),
+                    ),
+                    managementAndFinancials: managementAndFinancials,
+                    elections: elections,
+                }
 
                 const res = await serviceBoardMeeting.createBoardMeeting(
-                    validate.payload,
+                    payloadCreateBoardMeeting,
                 )
+
+                // console.log(
+                //     'storageUsed(GB): ',
+                //     +(storageUsed / (1024 * 1024)).toFixed(3),
+                // )
+
                 notification.success({
                     message: t('CREATED'),
                     description: t('CREATE_BOARD_MEETING_SUCCESSFULLY'),
                     duration: 2,
                 })
+
+                const response = companyServicePlan.updateStorageUsed(
+                    +(storageUsed / (1024 * 1024 * 1024)).toFixed(9),
+                )
+
                 resetData()
                 setStatus(FETCH_STATUS.SUCCESS)
                 router.push('/board-meeting')

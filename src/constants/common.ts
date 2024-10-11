@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import {
+    AuditOutlined,
     BookOutlined,
     ClusterOutlined,
     DashboardOutlined,
@@ -31,6 +32,12 @@ export const SIDEBAR_ITEMS: ISidebarItem[] = [
         label: 'SETTING_ROLE',
         key: '/setting-role',
         permission: Permissions.SETTING_PERMISSION_FOR_ROLES,
+    },
+    {
+        icon: AuditOutlined,
+        label: 'SERVICE_PLAN',
+        key: '/service-plan',
+        permission: Permissions.SUPER_ADMIN_PERMISSION,
     },
     {
         icon: ClusterOutlined,
@@ -73,6 +80,11 @@ export const SIDEBAR_ITEMS_SYSTEM: ISidebarItem[] = [
         icon: BookOutlined,
         label: 'SERVICE_PLAN',
         key: '/plan',
+    },
+    {
+        icon: AuditOutlined,
+        label: 'SERVICE_SUBSCRIPTION',
+        key: '/service-subscription',
     },
 ]
 

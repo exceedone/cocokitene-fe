@@ -90,11 +90,13 @@ const BoardMeetingDetail = () => {
                                             `/board-meeting/update/${boardMeetingId}`,
                                         )
                                     }
+                                    disabled={authState.serviceIsExpired}
                                 >
                                     {t('EDIT')}
                                 </Button>
                             )}
                         {permissionSendMailBoard &&
+                            !authState.serviceIsExpired &&
                             boardMeeting.status !== MeetingStatus.CANCELED &&
                             boardMeeting.status !== MeetingStatus.HAPPENED && (
                                 <SendEmailButton />

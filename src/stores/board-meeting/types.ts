@@ -103,6 +103,7 @@ export interface IBoardMeetingDetail {
     title: string
     note: string
     meetingLink: string
+    meetingCode: string
     startTime: string
     endTime: string
     endVotingTime: string
@@ -176,6 +177,7 @@ export interface IUpdateBoardMeeting {
     note: string
     status: MeetingStatus
     meetingLink: string
+    meetingCode: string
     startTime: string
     endTime: string
     endVotingTime: string

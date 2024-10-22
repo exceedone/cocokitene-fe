@@ -100,7 +100,8 @@ const AmendmentResolutions = ({
                         }
                         fileList={data?.amendmentResolutions[index].files?.map(
                             (file, index) => ({
-                                uid: file.id?.toString() || index.toString(),
+                                // uid: file.id?.toString() || index.toString(),
+                                uid: file.uid?.toString() || index.toString(),
                                 name: getShortNameFromUrl(file.url) as string,
                                 url: file.url,
                                 status: 'done',
@@ -113,6 +114,7 @@ const AmendmentResolutions = ({
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
                         allowUploadFile={allowUploadFile}
+                        meetingCode={data.meetingCode}
                     />
                 ))}
             </div>

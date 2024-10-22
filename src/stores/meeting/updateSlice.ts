@@ -19,6 +19,7 @@ const initialState: IUpdateMeetingState = {
         title: '',
         note: '',
         meetingLink: '',
+        meetingCode: '',
         status: MeetingStatus.NOT_HAPPEN,
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
@@ -71,7 +72,7 @@ export const initUpdateMeeting = createAsyncThunk<
                 .filter((file) => file.fileType === type)
                 .map((file) => ({
                     id: file.id,
-                    url: file.url,
+                    url: file.url ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK + file.url : file.url,
                     fileType: file.fileType,
                     uid: file.id.toString(),
                 }))
@@ -88,7 +89,7 @@ export const initUpdateMeeting = createAsyncThunk<
                     type: resolution.type,
                     files: resolution.proposalFiles.map((file) => ({
                         id: file.id,
-                        url: file.url,
+                        url: file.url ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK + file.url : file.url,
                         uid: file.id.toString(),
                     })),
                 }))
@@ -159,6 +160,7 @@ export const initUpdateMeeting = createAsyncThunk<
             title: meetingDetail.title,
             note: meetingDetail.note,
             meetingLink: meetingDetail.meetingLink,
+            meetingCode: meetingDetail.meetingCode,
             status: meetingDetail.status,
             startTime: new Date(meetingDetail.startTime).toISOString(),
             endTime: new Date(meetingDetail.endTime).toISOString(),

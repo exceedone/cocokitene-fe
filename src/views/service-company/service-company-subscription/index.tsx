@@ -44,17 +44,7 @@ const ServiceCompanySubscription = () => {
     const [form] = useForm<IServiceSubscriptionCreateForm>()
     const [status, setStatus] = useState<FETCH_STATUS>(FETCH_STATUS.IDLE)
 
-    console.log(
-        'serviceSubscriptionCreateState: ',
-        serviceSubscriptionCreateState,
-    )
-
     const onFinish = async (value: IServiceSubscriptionCreateForm) => {
-        console.log('value: ', {
-            ...value,
-            activationDate: dayjs(value.activationDate).format('YYYY-MM-DD'),
-            expirationDate: dayjs(value.expirationDate).format('YYYY-MM-DD'),
-        })
         setStatus(FETCH_STATUS.LOADING)
 
         try {

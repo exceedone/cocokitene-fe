@@ -9,6 +9,7 @@ import {
 } from '@/constants/account'
 import { FETCH_STATUS } from '@/constants/common'
 import { Permissions } from '@/constants/permission'
+import { FolderType } from '@/constants/s3'
 import {
     UserStatus,
     UserStatusColor,
@@ -17,9 +18,13 @@ import {
 import companyServicePlan from '@/services/company-service-plan'
 import serviceShareholder from '@/services/shareholder'
 import serviceUpload from '@/services/upload'
+import serviceUser from '@/services/user'
 import serviceUserRole from '@/services/user-role'
 import serviceUserStatus from '@/services/user-status'
+import store from '@/stores'
 import { useAuthLogin } from '@/stores/auth/hooks'
+import { update } from '@/stores/auth/slice'
+import { IAccount } from '@/stores/auth/type'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import SaveUpdateShareholderButton from '@/views/shareholder/shareholder-update/save-button'
 import { PlusOutlined } from '@ant-design/icons'
@@ -147,6 +152,9 @@ const UpdateShareholder = () => {
                         phone: res.phone,
                         statusId: res.userStatus.id,
                         avatar: res.avatar,
+                        // ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                        //   res.avatar
+                        // : undefined,
                         roleIds: res.roles.map((item) => item.roleName),
                     })
                     form.setFieldsValue({
@@ -160,7 +168,10 @@ const UpdateShareholder = () => {
                                 uid: '-1',
                                 name: 'image.png',
                                 status: 'done',
-                                url: res.avatar,
+                                url: res.avatar
+                                    ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                      res.avatar
+                                    : undefined,
                             },
                         ])
                     }
@@ -351,15 +362,17 @@ const UpdateShareholder = () => {
         try {
             if (fileAvatarInfo?.flag) {
                 const res = await serviceUpload.getPresignedUrlAvatar(
+                    FolderType.USER,
                     [fileAvatarInfo?.file as File],
                     AccountFileType.AVATAR,
-                    values.companyName + '-' + values.username + '-',
                 )
                 await serviceUpload.uploadFile(
                     fileAvatarInfo?.file as File,
                     res.uploadUrls[0],
                 )
-                urlAvatar = res.uploadUrls[0].split('?')[0]
+                urlAvatar = res.uploadUrls[0]
+                    .split('?')[0]
+                    .split('.amazonaws.com/')[1]
             } else {
                 if (fileList.length == 0) {
                     urlAvatar = ''
@@ -384,13 +397,32 @@ const UpdateShareholder = () => {
                     description: t('UPDATED_SHAREHOLDER_SUCCESSFULLY'),
                     duration: 2,
                 })
+
                 setStatus(FETCH_STATUS.SUCCESS)
+                if (updateShareholderResponse.id == authState.userData?.id) {
+                    const newAuth: IAccount = {
+                        companyId: serviceUser.getInfoStorage()?.companyId || 1,
+                        companyName:
+                            serviceUser.getInfoStorage()?.companyName || '',
+                        email: values.email,
+                        id: updateShareholderResponse.id,
+                        permissionKeys:
+                            serviceUser.getInfoStorage()?.permissionKeys || [],
+                        username: values.username,
+                        walletAddress: values.walletAddress || '',
+                        avatar: urlAvatar || '',
+                        defaultAvatarHashColor:
+                            serviceUser.getInfoStorage()
+                                ?.defaultAvatarHashColor || '',
+                    }
+                    store?.dispatch(update(newAuth))
+                }
+
                 if (values.shareQuantity) {
                     router.push(`/shareholder/detail/${shareholderId}`)
                 } else {
                     router.push(`/shareholder/`)
                 }
-                // router.push(``)
             }
         } catch (error) {
             if (error instanceof AxiosError) {

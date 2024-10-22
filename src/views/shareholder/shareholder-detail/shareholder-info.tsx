@@ -76,7 +76,10 @@ const ShareholderInfo = () => {
                 >
                     {shareholder?.avatar ? (
                         <Avatar
-                            src={shareholder.avatar}
+                            src={
+                                process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                shareholder.avatar
+                            }
                             alt="avatar-alt"
                             size="small"
                             style={{

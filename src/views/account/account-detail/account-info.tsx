@@ -78,7 +78,10 @@ const AccountInfo = () => {
                 >
                     {account?.avatar ? (
                         <Avatar
-                            src={account.avatar}
+                            src={
+                                process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                account.avatar
+                            }
                             alt="avatar-alt"
                             size="small"
                             style={{

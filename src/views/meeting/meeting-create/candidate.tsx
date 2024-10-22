@@ -117,7 +117,6 @@ const Candidate = () => {
     }
 
     const onDelete = (index: number, type: ElectionEnum) => () => {
-        console.log('index Delete: ', index)
         if (type == ElectionEnum.VOTE_OF_CONFIDENCE) {
             setData({
                 ...data,

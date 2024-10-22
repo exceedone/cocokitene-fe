@@ -31,11 +31,8 @@ const MeetingDetail = () => {
         useMeetingDetail()
 
     const params = useParams()
-
     const router = useRouter()
-
     const meetingId = Number(params.id)
-
     const { authState } = useAuthLogin()
 
     const permissionEditMeeting = checkPermission(

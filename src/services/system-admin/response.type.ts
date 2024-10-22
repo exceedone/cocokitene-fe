@@ -80,6 +80,7 @@ export interface ICompanyDetailResponse {
     id: number
     companyName: string
     companyShortName: string
+    companyCode: string
     description?: string
     address: string
     planId: number

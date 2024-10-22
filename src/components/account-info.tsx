@@ -85,8 +85,18 @@ const AccountInfo = ({ avatar }: { name: string; avatar: string }) => {
             <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
                     <Image
-                        loader={() => authState.userData?.avatar || avatar}
-                        src={authState.userData?.avatar || avatar}
+                        loader={() =>
+                            authState.userData?.avatar
+                                ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                  authState.userData?.avatar
+                                : avatar
+                        }
+                        src={
+                            authState.userData?.avatar
+                                ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                  authState.userData?.avatar
+                                : avatar
+                        }
                         alt={'avatar'}
                         width={24}
                         height={24}

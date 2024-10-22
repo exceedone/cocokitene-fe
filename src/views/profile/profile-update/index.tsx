@@ -37,6 +37,7 @@ import { IAccount } from '@/stores/auth/type'
 import store from '@/stores'
 import { update } from '@/stores/auth/slice'
 import { Cookies } from 'react-cookie'
+import { FolderType } from '@/constants/s3'
 const cookies = new Cookies()
 const getBase64 = (file: RcFile): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -97,7 +98,10 @@ const UpdateMyProfile = () => {
                                 uid: '-1',
                                 name: 'image.png',
                                 status: 'done',
-                                url: res.avatar,
+                                url: res.avatar
+                                    ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                      res.avatar
+                                    : undefined,
                             },
                         ])
                     }
@@ -213,15 +217,17 @@ const UpdateMyProfile = () => {
             if (authState.userData?.id) {
                 if (fileAvatarInfo?.flag) {
                     const res = await serviceUpload.getPresignedUrlAvatar(
+                        FolderType.USER,
                         [fileAvatarInfo?.file as File],
                         AccountFileType.AVATAR,
-                        values.companyName + '_' + values.username + '-',
                     )
                     await serviceUpload.uploadFile(
                         fileAvatarInfo?.file as File,
                         res.uploadUrls[0],
                     )
-                    urlAvatar = res.uploadUrls[0].split('?')[0]
+                    urlAvatar = res.uploadUrls[0]
+                        .split('?')[0]
+                        .split('.amazonaws.com/')[1]
                 } else {
                     if (fileList.length == 0) {
                         urlAvatar = ''

@@ -10,17 +10,38 @@ import {
     AccountFileType,
     AvatarFileTypeToFolderName,
 } from '@/constants/account'
+import { FolderType } from '@/constants/s3'
 // const cookies = new Cookies()
 
 const serviceUpload = {
     getPresignedUrl: async (
+        folderType: FolderType,
+        subFolder: string,
         files: File[],
         fileType: MeetingFileType,
     ): Promise<IUploadResponse> => {
         const response: { data: IUploadResponse } = await get('/s3', {
             meetingFiles: files.map((file) => ({
+                folderType: folderType,
+                subFolder: subFolder + '/',
                 fileName: file.name,
                 fileType: MeetingFileTypeToFolderName[fileType],
+            })),
+        })
+        return response.data
+    },
+
+    getPresignedUrlAvatar: async (
+        folderType: FolderType,
+        files: File[],
+        fileType: AccountFileType,
+    ): Promise<IUploadResponse> => {
+        const response: { data: IUploadResponse } = await get('/s3', {
+            meetingFiles: files.map((file) => ({
+                folderType: folderType,
+                subFolder: '',
+                fileName: file.name,
+                fileType: AvatarFileTypeToFolderName[fileType],
             })),
         })
         return response.data
@@ -42,19 +63,6 @@ const serviceUpload = {
         return response.data
     },
 
-    getPresignedUrlAvatar: async (
-        files: File[],
-        fileType: AccountFileType,
-        userInfo: string,
-    ): Promise<IUploadResponse> => {
-        const response: { data: IUploadResponse } = await get('/s3', {
-            meetingFiles: files.map((file) => ({
-                fileName: userInfo + file.name,
-                fileType: AvatarFileTypeToFolderName[fileType],
-            })),
-        })
-        return response.data
-    },
 }
 
 export default serviceUpload

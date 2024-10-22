@@ -35,7 +35,7 @@ const AmendmentResolutions = () => {
         socketIO.on(
             `voting-resolution-shareholder-meeting/${meetingId}`,
             (response) => {
-                console.log('response--------: ', response)
+                // console.log('response--------: ', response)
                 if (response.type == ResolutionType.AMENDMENT_RESOLUTION) {
                     if (response.voterId !== authState.userData?.id) {
                         setAmendmentResolutionData((prev) => {

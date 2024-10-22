@@ -44,6 +44,11 @@ import serviceUpload from '@/services/upload'
 import { convertSnakeCaseToTitleCase } from '@/utils/format-string'
 import { Cookies } from 'react-cookie'
 import companyServicePlan from '@/services/company-service-plan'
+import { FolderType } from '@/constants/s3'
+import { IAccount } from '@/stores/auth/type'
+import serviceUser from '@/services/user'
+import store from '@/stores'
+import { update } from '@/stores/auth/slice'
 const cookies = new Cookies()
 const tagRenderStatus = (props: any) => {
     const { label, value, closable, onClose } = props
@@ -153,6 +158,9 @@ const UpdateAccount = () => {
                         roleIds: res.roles.map((item) => item.roleName),
                         statusId: res.userStatus.id,
                         avatar: res.avatar,
+                        // ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                        //   res.avatar
+                        // : undefined,
                     })
                     form.setFieldsValue({
                         roleIds: res.roles.map((item) => item.roleName),
@@ -166,7 +174,9 @@ const UpdateAccount = () => {
                                 uid: '-1',
                                 name: 'image.png',
                                 status: 'done',
-                                url: res.avatar,
+                                url:
+                                    process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                    res.avatar,
                             },
                         ])
                     }
@@ -372,15 +382,17 @@ const UpdateAccount = () => {
         try {
             if (fileAvatarInfo?.flag) {
                 const res = await serviceUpload.getPresignedUrlAvatar(
+                    FolderType.USER,
                     [fileAvatarInfo?.file as File],
                     AccountFileType.AVATAR,
-                    values.companyName + '_' + values.username + '-',
                 )
                 await serviceUpload.uploadFile(
                     fileAvatarInfo?.file as File,
                     res.uploadUrls[0],
                 )
-                urlAvatar = res.uploadUrls[0].split('?')[0]
+                urlAvatar = res.uploadUrls[0]
+                    .split('?')[0]
+                    .split('.amazonaws.com/')[1]
             } else {
                 if (fileList.length == 0) {
                     urlAvatar = ''
@@ -410,6 +422,24 @@ const UpdateAccount = () => {
                     duration: 2,
                 })
 
+                if (updateAccountResponse.id == authState.userData?.id) {
+                    const newAuth: IAccount = {
+                        companyId: serviceUser.getInfoStorage()?.companyId || 1,
+                        companyName:
+                            serviceUser.getInfoStorage()?.companyName || '',
+                        email: values.email,
+                        id: updateAccountResponse.id,
+                        permissionKeys:
+                            serviceUser.getInfoStorage()?.permissionKeys || [],
+                        username: values.username,
+                        walletAddress: values.walletAddress || '',
+                        avatar: urlAvatar || '',
+                        defaultAvatarHashColor:
+                            serviceUser.getInfoStorage()
+                                ?.defaultAvatarHashColor || '',
+                    }
+                    store?.dispatch(update(newAuth))
+                }
                 setStatus(FETCH_STATUS.SUCCESS)
                 router.push(`/account/detail/${accountId}`)
             }

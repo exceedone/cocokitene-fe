@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ListTitle from '@/components/content-page-title/list-title'
 import { Button, Grid, Tooltip } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
@@ -12,6 +12,7 @@ import withAuth from '@/components/component-auth'
 import AccountList from '@/views/account/account-list'
 import { CONSTANT_EMPTY_STRING } from '@/constants/common'
 import { SORT } from '@/constants/meeting'
+import useDebounce from '@/hooks/useDebounce'
 const { useBreakpoint } = Grid
 
 const AccountView = () => {
@@ -21,10 +22,22 @@ const AccountView = () => {
     const { accountState, getListAccountAction, setFilterAction } =
         useListAccount()
     const { authState } = useAuthLogin()
+
+    const [searchString, setSearchString] = useState<string>('')
+    const searchQueryString = useDebounce(searchString, 200)
+
     const permissionCreateAccount = checkPermission(
         authState.userData?.permissionKeys,
         Permissions.CREATE_ACCOUNT,
     )
+
+    useEffect(() => {
+        setFilterAction({
+            ...accountState.filter,
+            searchQuery: searchQueryString,
+        })
+        // eslint-disable-next-line
+    }, [searchQueryString])
 
     useEffect(() => {
         return () => {
@@ -45,7 +58,8 @@ const AccountView = () => {
     }, [accountState.filter])
 
     const handleInputChange = (value: string) => {
-        setFilterAction({ ...accountState.filter, searchQuery: value })
+        // setFilterAction({ ...accountState.filter, searchQuery: value })
+        setSearchString(value.toLocaleLowerCase().trim())
     }
     const handleSelectChange = (value: string) => {
         setFilterAction({ ...accountState.filter, sortOrder: value })

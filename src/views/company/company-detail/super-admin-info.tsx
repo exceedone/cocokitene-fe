@@ -26,19 +26,34 @@ const SuperAdminInfo = () => {
                 <div
                     className={`flex flex-nowrap content-start items-center gap-[4px]`}
                 >
-                    <Avatar
-                        style={{
-                            backgroundColor: backgroundAvatarColor,
-                            verticalAlign: 'middle',
-                            color: AvatarBgHexColors.GOLDEN_PURPLE,
-                        }}
-                        size="small"
-                        className="mb-auto"
-                    >
-                        {getFirstCharacterUpperCase(
-                            company?.superAdminInfo?.username,
-                        )}
-                    </Avatar>
+                    {company.superAdminInfo.avatar ? (
+                        <Avatar
+                            src={
+                                process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                company.superAdminInfo.avatar
+                            }
+                            alt="avatar-alt"
+                            size="small"
+                            style={{
+                                verticalAlign: 'middle',
+                            }}
+                            className="mb-auto"
+                        />
+                    ) : (
+                        <Avatar
+                            style={{
+                                backgroundColor: backgroundAvatarColor,
+                                verticalAlign: 'middle',
+                                color: AvatarBgHexColors.GOLDEN_PURPLE,
+                            }}
+                            size="small"
+                            className="mb-auto"
+                        >
+                            {getFirstCharacterUpperCase(
+                                company?.superAdminInfo?.username,
+                            )}
+                        </Avatar>
+                    )}
                     <Text className="flex-1">
                         {company?.superAdminInfo?.username}
                     </Text>

@@ -98,8 +98,6 @@ const MeetingInformation = ({
                 //     ],
                 // })
 
-                console.log('file---onUpload--101:', file)
-
                 const values = data[name]
                 setData({
                     ...data,
@@ -121,7 +119,7 @@ const MeetingInformation = ({
             fileType: MeetingFileType,
         ) =>
         (info: UploadChangeParam<UploadFile>) => {
-            console.log(info)
+            // console.log(info)
 
             if (info.file.status === 'done') {
                 const url = info.file?.xhr?.responseURL

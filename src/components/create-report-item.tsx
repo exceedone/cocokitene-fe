@@ -12,7 +12,7 @@ import {
 import { useTranslations } from 'next-intl'
 import { ACCEPT_FILE_TYPES, MeetingFileType } from '@/constants/meeting'
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { UploadFile } from 'antd/es/upload/interface'
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface'
 import serviceUpload from '@/services/upload'
@@ -78,6 +78,13 @@ const CreateReportItem = ({
         errorWrongFileType?: boolean
         errorFileSize?: boolean
     }>({ fileList: fileList, errorUniqueFile: false })
+
+    useEffect(() => {
+        setFileData({
+            fileList: fileList,
+            errorUniqueFile: false,
+        })
+    }, [fileList])
 
     const onFileChange = (info: UploadChangeParam) => {
         if (info.file.status === 'done') {

@@ -13,7 +13,8 @@ const NotFoundPage = () => {
                 <Button
                     type="primary"
                     onClick={() => {
-                        router.back()
+                        // router.back()
+                        router.push('/dashboard')
                     }}
                     className="mt-4"
                 >

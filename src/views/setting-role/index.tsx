@@ -21,6 +21,7 @@ import { useSettingRoleMtg } from '@/stores/setting-role-mtg/hook'
 import ModalRegisterRoleMtg from '@/views/setting-role/modal-register-role-mtg'
 import EmptyData from '../service-plan/service-plan-list/empty-plan'
 import { useAuthLogin } from '@/stores/auth/hooks'
+import useDebounce from '@/hooks/useDebounce'
 interface DataType {
     namePermission: string
     [key: string]: any
@@ -68,6 +69,9 @@ const SettingRoleView = () => {
     const [dataChecked, setDataCheked] = useState<IUpdatePermissionRole[]>([])
     const { authState } = useAuthLogin()
 
+    const [searchString, setSearchString] = useState<string>('')
+    const searchQueryString = useDebounce(searchString, 200)
+
     let locale = {
         emptyText: <EmptyData />,
     }
@@ -81,6 +85,13 @@ const SettingRoleView = () => {
             setFilterAction({ searchQuery: CONSTANT_EMPTY_STRING })
         }
     }, [])
+
+    useEffect(() => {
+        setFilterAction({
+            searchQuery: searchQueryString,
+        })
+        // eslint-disable-next-line
+    }, [searchQueryString])
 
     useEffect(() => {
         if (
@@ -223,9 +234,10 @@ const SettingRoleView = () => {
     }, [settingRoleState.filter])
 
     const handleInputChange = (value: string) => {
-        setFilterAction({
-            searchQuery: value.toLocaleLowerCase().trim().replaceAll(' ', '_'),
-        })
+        // setFilterAction({
+        //     searchQuery: value.toLocaleLowerCase().trim().replaceAll(' ', '_'),
+        // })
+        setSearchString(value.toLocaleLowerCase().trim().replaceAll(' ', '_'))
     }
 
     const onChange = (

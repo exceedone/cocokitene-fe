@@ -91,6 +91,8 @@ const Resolutions = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
                         allowUploadFile={allowUploadFile}
+                        // @ts-ignore
+                        fileList={x.files?.map((file) => file.file)}
                     />
                 ))}
             </div>

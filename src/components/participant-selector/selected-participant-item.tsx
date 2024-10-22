@@ -27,7 +27,10 @@ const SelectedParticipantItem = ({
             <div className="flex w-[80%] items-center gap-2">
                 {users_avartar ? (
                     <Avatar
-                        src={users_avartar}
+                        src={
+                            process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                            users_avartar
+                        }
                         alt="avatar-alt"
                         size="small"
                         style={{

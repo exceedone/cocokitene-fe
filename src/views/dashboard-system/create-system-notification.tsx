@@ -137,7 +137,7 @@ const CreateSystemNotificationScreen = ({
 
     const onFinish = async (values: ISystemNotificationForm) => {
         setStatus(FETCH_STATUS.LOADING)
-        console.log('values: ', values)
+        // console.log('values: ', values)
         try {
             const response = await serviceDashBoard.createSystemNotification(
                 values,

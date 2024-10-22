@@ -74,8 +74,6 @@ const ServiceSubscriptionDetail = () => {
         }
     }
 
-    console.log('serviceSubscription: ', serviceSubscription)
-
     if (!serviceSubscription || status === EActionStatus.Pending) {
         return <Loader />
     }

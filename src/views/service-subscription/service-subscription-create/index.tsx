@@ -173,11 +173,11 @@ const CreateServiceSubscription = () => {
 
     const onFinish = async (value: IServiceSubscriptionCreateForm) => {
         setStatus(FETCH_STATUS.LOADING)
-        console.log('value: ', {
-            ...value,
-            activationDate: dayjs(value.activationDate).format('YYYY-MM-DD'),
-            expirationDate: dayjs(value.expirationDate).format('YYYY-MM-DD'),
-        })
+        // console.log('value: ', {
+        //     ...value,
+        //     activationDate: dayjs(value.activationDate).format('YYYY-MM-DD'),
+        //     expirationDate: dayjs(value.expirationDate).format('YYYY-MM-DD'),
+        // })
         try {
             const response =
                 await serviceSubscriptionService.createServiceSubscription({

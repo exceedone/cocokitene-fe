@@ -142,11 +142,9 @@ const EditSystemNotificationScreen = ({
 
     const [form] = useForm<ISystemNotificationForm>()
 
-    console.log('Edit System Notification!!!!!!!')
-
     const onFinish = async (values: ISystemNotificationForm) => {
         setStatus(FETCH_STATUS.LOADING)
-        console.log('values: ', values)
+        // console.log('values: ', values)
         try {
             if (sysNotification?.system_notification_id) {
                 const response =

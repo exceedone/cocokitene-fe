@@ -169,10 +169,10 @@ const SelectParticipantGroup = ({
                             }
                         }
                     }
-                    console.log(
-                        '🚀 ~ file: select-participant-group.tsx:128 ~ ; ~ optionsRes:',
-                        optionsRes,
-                    )
+                    // console.log(
+                    //     '🚀 ~ file: select-participant-group.tsx:128 ~ ; ~ optionsRes:',
+                    //     optionsRes,
+                    // )
 
                     setOptionsData({
                         options: [

@@ -189,7 +189,9 @@ const DetailReportItem = ({
                     <div className="text-black-45">{t('CREATED_BY')}:</div>
                     {avatar ? (
                         <Avatar
-                            src={avatar}
+                            src={
+                                process.env.NEXT_PUBLIC_PRE_URL_S3_LINK + avatar
+                            }
                             alt="avatar-alt"
                             size="small"
                             style={{

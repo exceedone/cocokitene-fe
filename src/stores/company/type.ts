@@ -31,6 +31,7 @@ export interface ICompanyState extends IGetAllCompanyQuery, FetchError {
 export interface ICompanyDetail {
     id: number
     companyName: string | null
+    companyCode: string
     address: string
     description: string
     email: string

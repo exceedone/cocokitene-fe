@@ -5,8 +5,9 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Button, Grid } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ServiceSubscriptionList from './service-subscription-list'
+import useDebounce from '@/hooks/useDebounce'
 
 const { useBreakpoint } = Grid
 
@@ -21,6 +22,17 @@ const ServiceSubscription = () => {
         setFilterAction,
     } = useListServiceSubscription()
 
+    const [searchString, setSearchString] = useState<string>('')
+    const searchQueryString = useDebounce(searchString, 200)
+
+    useEffect(() => {
+        setFilterAction({
+            ...serviceSubscriptionState.filter,
+            searchQuery: searchQueryString,
+        })
+        // eslint-disable-next-line
+    }, [searchQueryString])
+
     useEffect(() => {
         getListServiceSubscriptionAction({
             page: serviceSubscriptionState.page,
@@ -31,10 +43,11 @@ const ServiceSubscription = () => {
     }, [serviceSubscriptionState.filter])
 
     const handleInputChange = (value: string) => {
-        setFilterAction({
-            ...serviceSubscriptionState.filter,
-            searchQuery: value,
-        })
+        // setFilterAction({
+        //     ...serviceSubscriptionState.filter,
+        //     searchQuery: value,
+        // })
+        setSearchString(value.toLocaleLowerCase().trim())
     }
 
     const handleSelectChange = (value: string) => {
@@ -47,7 +60,7 @@ const ServiceSubscription = () => {
     return (
         <div>
             <ListTitle
-                pageName={t('SERVICE_SUBSCRIPTION')}
+                pageName={t('LIST_SERVICE_SUBSCRIPTION')}
                 addButton={
                     <Button
                         type="primary"

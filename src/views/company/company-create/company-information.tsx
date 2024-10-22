@@ -200,7 +200,7 @@ const CompanyInformation = ({ form }: CompanyInfoProp) => {
                         ]}
                         className="mb-0"
                     >
-                        <Input size="large" />
+                        <Input size="large" maxLength={12} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} lg={12}>

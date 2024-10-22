@@ -55,8 +55,6 @@ const DetailSystemNotification = ({
 }: IDetailSystemNotification) => {
     const t = useTranslations()
 
-    console.log('sysNotification---Detail sys-notification: ', sysNotification)
-
     return (
         <div className="z-0">
             <DetailTitle

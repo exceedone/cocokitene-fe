@@ -1,7 +1,7 @@
 import { IMeetingItem } from '@/views/meeting/meeting-list/type'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Button, Col, Row, Tooltip, Typography } from 'antd'
+import { Badge, Button, Col, Row, Tooltip, Typography } from 'antd'
 import Image from 'next/image'
 import { truncateString } from '@/utils/format-string'
 import Link from 'next/link'
@@ -177,12 +177,18 @@ const ItemPassBoardMeeting = ({
                 {enumToArray(MeetingStatus).map((status, key) => {
                     if (status === meetings_status) {
                         return (
-                            <li
+                            // <li
+                            //     key={key}
+                            //     style={{ color: MeetingStatusColor[status] }}
+                            // >
+                            //     {t(MeetingStatusName[status])}
+                            // </li>
+                            <Badge
+                                color={MeetingStatusColor[status]}
+                                text={t(MeetingStatusName[status])}
+                                className="mx-auto"
                                 key={key}
-                                style={{ color: MeetingStatusColor[status] }}
-                            >
-                                {t(MeetingStatusName[status])}
-                            </li>
+                            />
                         )
                     }
                 })}

@@ -162,6 +162,7 @@ export interface IMeetingDetailResponse {
     endTime: string
     endVotingTime: string
     meetingLink: string
+    meetingCode: string
     status: MeetingStatus
     companyId: number
     creatorId: number
@@ -185,6 +186,7 @@ export interface IBoardMeetingDetailResponse {
     endTime: string
     endVotingTime: string
     meetingLink: string
+    meetingCode: string
     status: MeetingStatus
     companyId: number
     creatorId: number

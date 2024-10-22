@@ -22,6 +22,7 @@ export const getCompanyDetail = createAsyncThunk<
         return {
             id: companyDetail?.id,
             companyName: companyDetail?.companyName,
+            companyCode: companyDetail.companyCode,
             address: companyDetail?.address,
             description: companyDetail?.description,
             email: companyDetail?.email,

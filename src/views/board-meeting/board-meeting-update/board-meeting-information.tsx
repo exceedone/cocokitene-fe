@@ -34,6 +34,7 @@ import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
 import { enumToArray } from '@/utils'
 import { useParams } from 'next/navigation'
+import { FolderType } from '@/constants/s3'
 
 const { Text } = Typography
 const { TextArea } = Input
@@ -101,6 +102,8 @@ const BoardMeetingInformation = ({
         async ({ file }: RcCustomRequestOptions) => {
             try {
                 const res = await serviceUpload.getPresignedUrl(
+                    FolderType.MEETING,
+                    data.meetingCode,
                     [file as File],
                     fileType,
                 )
@@ -126,7 +129,6 @@ const BoardMeetingInformation = ({
             fileType: MeetingFileType,
         ) =>
         (info: UploadChangeParam<UploadFile>) => {
-            console.log(info)
             if (info.file.status === 'done') {
                 const url = info.file?.xhr?.responseURL
                 if (url) {

@@ -9,7 +9,7 @@ import { IBoardProposalFile } from '@/stores/board-meeting/types'
 import { useTranslations } from 'next-intl'
 import { ACCEPT_FILE_TYPES, MeetingFileType } from '@/constants/meeting'
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { UploadFile } from 'antd/es/upload/interface'
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface'
 import serviceUpload from '@/services/upload'
@@ -17,6 +17,7 @@ import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { IElectionResponse } from '@/services/response.type'
 import { ElectionColor, ElectionName } from '@/constants/election'
 import { useCreateBoardMeetingInformation } from '@/stores/board-meeting/hook'
+import { FolderType } from '@/constants/s3'
 
 const { Text } = Typography
 const { TextArea } = Input
@@ -38,6 +39,7 @@ interface IUpdateReportItem extends Resolution {
     electionList?: IElectionResponse[] | []
     defaultElection?: number
     allowUploadFile: boolean
+    meetingCode: string
 }
 
 const UpdateReportItem = ({
@@ -56,6 +58,7 @@ const UpdateReportItem = ({
     electionList,
     defaultElection,
     allowUploadFile,
+    meetingCode,
 }: IUpdateReportItem) => {
     const t = useTranslations()
     const [data, setData] = useCreateBoardMeetingInformation()
@@ -75,6 +78,13 @@ const UpdateReportItem = ({
         errorWrongFileType?: boolean
         errorFileSize?: boolean
     }>({ fileList: fileList, errorUniqueFile: false })
+
+    useEffect(() => {
+        setFileData({
+            fileList: fileList,
+            errorUniqueFile: false,
+        })
+    }, [fileList])
 
     const onFileChange = (info: UploadChangeParam) => {
         if (info.file.status === 'done') {
@@ -146,6 +156,8 @@ const UpdateReportItem = ({
                     : MeetingFileType.PROPOSAL_FILES
 
             const res = await serviceUpload.getPresignedUrl(
+                FolderType.MEETING,
+                meetingCode,
                 [file as File],
                 // MeetingFileType.PROPOSAL_FILES,
                 meetingFileType,

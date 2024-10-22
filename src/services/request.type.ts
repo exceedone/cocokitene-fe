@@ -12,6 +12,7 @@ import { PaymentMethod, SubscriptionEnum } from '@/constants/service-subscript'
 export interface ICreateMeetingPayload {
     title: string
     meetingLink: string
+    meetingCode: string
     startTime: string
     endTime: string
     meetingMinutes: IMeetingDocument[]
@@ -53,6 +54,7 @@ export interface IUpdateRoleMtgPayload extends ICreateRoleMtgPayload {}
 export interface ICreateBoardMeetingPayload {
     title: string
     meetingLink: string
+    meetingCode: string
     startTime: string
     endTime: string
     endVotingTime: string

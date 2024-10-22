@@ -96,7 +96,6 @@ const meetingListSlice = createSlice({
                 state.status = EActionStatus.Pending
             })
             .addCase(getAllMeetings.fulfilled, (state, action) => {
-                console.log('action:', action)
                 state.status = EActionStatus.Succeeded
                 state.meetingFutureList = action.payload?.items ?? []
                 state.allowCreate = action.payload.allowCreate

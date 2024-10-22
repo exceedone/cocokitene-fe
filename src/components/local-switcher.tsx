@@ -14,7 +14,7 @@ const LocaleSwitcher = () => {
     function onSelectLocal(event: string) {
         // const nextLocaleSelected: string = event.target.value
         const nextLocaleSelected = event
-        console.log('nextLocaleSelected: ', nextLocaleSelected)
+        // console.log('nextLocaleSelected: ', nextLocaleSelected)
         startTransition(() => {
             document.cookie = `NEXT_LOCALE=${nextLocaleSelected}; path=/, max-age=31536000, SameSite=Lax`
             router.replace(pathname, { locale: nextLocaleSelected })

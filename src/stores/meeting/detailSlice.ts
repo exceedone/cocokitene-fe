@@ -27,11 +27,21 @@ export const getMeetingDetail = createAsyncThunk<
             endTime: meetingDetail.endTime,
             endVotingTime: meetingDetail.endVotingTime,
             meetingLink: meetingDetail.meetingLink,
+            meetingCode: meetingDetail.meetingCode,
             status: meetingDetail.status,
             companyId: meetingDetail.companyId,
             creatorId: meetingDetail.creatorId,
-            meetingFiles: meetingDetail.meetingFiles,
-            proposals: meetingDetail.proposals,
+            meetingFiles: meetingDetail.meetingFiles.map((meetingFile)=>({
+                ...meetingFile,
+                url: meetingFile.url ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK + meetingFile.url :  meetingFile.url,
+            })),
+            proposals: meetingDetail.proposals.map((proposal) => ({
+                ...proposal,
+                proposalFiles: proposal.proposalFiles.map((file) => ({
+                    ...file,
+                    url: file.url ? process.env.NEXT_PUBLIC_PRE_URL_S3_LINK + file.url : file.url
+                }))
+            })),
             personnelVoting: meetingDetail.personnelVoting,
             participants: meetingDetail.participants,
             type: meetingDetail.type,

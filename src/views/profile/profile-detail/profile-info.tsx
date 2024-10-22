@@ -67,7 +67,10 @@ const MyProfileInfo = ({ data }: IProfileDetail) => {
                 >
                     {data?.avatar ? (
                         <Avatar
-                            src={data.avatar}
+                            src={
+                                process.env.NEXT_PUBLIC_PRE_URL_S3_LINK +
+                                data.avatar
+                            }
                             alt="avatar-alt"
                             size="small"
                             style={{

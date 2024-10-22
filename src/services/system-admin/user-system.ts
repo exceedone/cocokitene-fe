@@ -55,7 +55,9 @@ const serviceUserSystem = {
         const refreshToken = cookies.get(USER_SYS_REFRESH_TOKEN_STORAGE_KEY)
         const response = await post<{
             accessToken: string
-        }>('/auths/system-admin/refresh-token', { refreshToken: refreshToken })
+        }>('/auths/system-admin/refresh-token', {
+            systemAdminRefreshToken: refreshToken,
+        })
         const accessToken = response.data
         if (accessToken) {
             cookies.set(

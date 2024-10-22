@@ -83,6 +83,16 @@ const BoardMeetingInformation = () => {
                 </Col>
                 <Col xs={24} lg={12}>
                     <BoxArea title={t('BOARD_MEETING_INFORMATION')}>
+                        <div className="flex flex-wrap gap-x-8 max-[470px]:mb-2">
+                            <div className="flex gap-1">
+                                <Text className="text-black-45">
+                                    {t('MEETING_CODE')}:
+                                </Text>
+                                <div className="flex gap-1">
+                                    {boardMeeting.meetingCode}
+                                </div>
+                            </div>
+                        </div>
                         <div className="flex flex-wrap gap-x-8 max-[470px]:gap-y-2">
                             <div className="flex gap-1">
                                 <Text className="text-black-45">

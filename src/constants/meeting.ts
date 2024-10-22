@@ -100,3 +100,7 @@ export enum ChatPermissionEnum {
     EVERY_PUBLIC = 'EVERY_PUBLIC',
     EVERY_PUBLIC_PRIVATE = 'EVERY_PUBLIC_PRIVATE',
 }
+
+export enum MeetingCode {
+    MEETING_PRE_CODE = 'Meeting_'
+}

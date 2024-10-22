@@ -8,8 +8,9 @@ import { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Input, Tooltip, Typography, Upload, UploadFile } from 'antd'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { useTranslations } from 'next-intl'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface'
+import { FolderType } from '@/constants/s3'
 
 const { Text } = Typography
 const { TextArea } = Input
@@ -24,6 +25,7 @@ interface IUpdateResolutionItem extends Resolution {
     onRemoveFile?: (uuid: string) => void
     onDelete: () => void
     allowUploadFile: boolean
+    meetingCode: string
 }
 
 const UpdateResolutionItem = ({
@@ -40,6 +42,7 @@ const UpdateResolutionItem = ({
     onRemoveFile,
     onDelete,
     allowUploadFile,
+    meetingCode,
 }: IUpdateResolutionItem) => {
     const t = useTranslations()
 
@@ -56,6 +59,17 @@ const UpdateResolutionItem = ({
         errorFileSize?: boolean
     }>({ fileList: fileList, errorUniqueFile: false })
 
+    // console.log('fileList: ', fileList)
+
+    useEffect(() => {
+        console.log('Refetch FileData')
+        console.log('fileList: ', fileList)
+        setFileData({
+            fileList: fileList,
+            errorUniqueFile: false,
+        })
+    }, [fileList])
+
     const onUpload = async ({ file }: RcCustomRequestOptions) => {
         try {
             const meetingFileType =
@@ -64,11 +78,15 @@ const UpdateResolutionItem = ({
                     : MeetingFileType.PROPOSAL_FILES
 
             const res = await serviceUpload.getPresignedUrl(
+                FolderType.MEETING,
+                meetingCode,
                 [file as File],
                 // MeetingFileType.PROPOSAL_FILES,
                 meetingFileType,
             )
             await serviceUpload.uploadFile(file as File, res.uploadUrls[0])
+
+            console.log('Add new File--- info.file.uid: ', (file as RcFile).uid)
 
             onAddFile &&
                 onAddFile({
@@ -107,6 +125,8 @@ const UpdateResolutionItem = ({
             })
             const uid = info.file.uid
             if (uid) {
+                console.log('info.file: ', info)
+                console.log('uid:', uid)
                 onRemoveFile && onRemoveFile(uid)
                 // const values = data[name].filter((item) => item.uid !== uid)
                 // setData({

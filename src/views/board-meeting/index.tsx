@@ -7,7 +7,7 @@ import { useAuthLogin } from '@/stores/auth/hooks'
 import { checkPermission } from '@/utils/auth'
 import { Permissions } from '@/constants/permission'
 import { useListMeeting } from '@/stores/meeting/hooks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { MeetingTime, MeetingType, SORT, SortField } from '@/constants/meeting'
 import { EActionStatus } from '@/stores/type'
 import ListTitle from '@/components/content-page-title/list-title'
@@ -18,6 +18,7 @@ import ListBoardMeetingPast from './board-meeting-list/list-board-meeting-pass'
 import withAuth from '@/components/component-auth'
 import { useListBoardMeeting } from '@/stores/board-meeting/hook'
 import { CONSTANT_EMPTY_STRING } from '@/constants/common'
+import useDebounce from '@/hooks/useDebounce'
 const { useBreakpoint } = Grid
 
 const BoardMeetingList = () => {
@@ -27,17 +28,21 @@ const BoardMeetingList = () => {
     const { attendanceState, resetStateAttendance } = useAttendance()
     const { openNotification, contextHolder } = useNotification()
     const { authState } = useAuthLogin()
-
-    const permissionCreateBoardMeeting = checkPermission(
-        authState.userData?.permissionKeys,
-        Permissions.CREATE_BOARD_MEETING,
-    )
     const {
         boardMeetingState,
         getListFutureBoardMeetingAction,
         getListPassBoardMeetingAction,
         setFilterAction,
     } = useListBoardMeeting()
+
+    const [searchString, setSearchString] = useState<string>('')
+
+    const searchQueryString = useDebounce(searchString, 200)
+
+    const permissionCreateBoardMeeting = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.CREATE_BOARD_MEETING,
+    )
 
     useEffect(() => {
         return () => {
@@ -48,6 +53,14 @@ const BoardMeetingList = () => {
             })
         }
     }, [])
+
+    useEffect(() => {
+        setFilterAction({
+            ...boardMeetingState.filter,
+            searchQuery: searchQueryString,
+        })
+        // eslint-disable-next-line
+    }, [searchQueryString])
 
     useEffect(() => {
         getListFutureBoardMeetingAction({
@@ -68,7 +81,8 @@ const BoardMeetingList = () => {
     }, [boardMeetingState.filter])
 
     const handleInputChange = (value: string) => {
-        setFilterAction({ ...boardMeetingState.filter, searchQuery: value })
+        // setFilterAction({ ...boardMeetingState.filter, searchQuery: value })
+        setSearchString(value.toLocaleLowerCase().trim())
     }
 
     const handleSelectChange = (value: string) => {
@@ -120,8 +134,6 @@ const BoardMeetingList = () => {
         }
         // eslint-disable-next-line
     }, [boardMeetingState.status])
-
-    console.log('boardMeetingState: ', boardMeetingState)
 
     return (
         <div>

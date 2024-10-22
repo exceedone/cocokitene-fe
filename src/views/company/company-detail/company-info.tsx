@@ -32,6 +32,14 @@ const CompanyInfo = () => {
             ),
         },
         {
+            label: 'COMPANY_CODE',
+            content: (
+                <Text className="flex-1 break-words">
+                    {company?.companyCode}
+                </Text>
+            ),
+        },
+        {
             label: 'COMPANY_INFORMATION',
             content: (
                 <Text className="flex-1 break-words">

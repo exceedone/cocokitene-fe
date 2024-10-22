@@ -8,7 +8,7 @@ import { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Input, Tooltip, Typography, Upload, UploadFile } from 'antd'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { useTranslations } from 'next-intl'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface'
 
 const { Text } = Typography
@@ -55,6 +55,13 @@ const CreateResolutionItem = ({
         errorWrongFileType?: boolean
         errorFileSize?: boolean
     }>({ fileList: fileList, errorUniqueFile: false })
+
+    useEffect(() => {
+        setFileData({
+            fileList: fileList,
+            errorUniqueFile: false,
+        })
+    }, [fileList])
 
     const onUpload = async ({ file }: RcCustomRequestOptions) => {
         try {
@@ -200,6 +207,7 @@ const CreateResolutionItem = ({
                         <Upload
                             onChange={onFileChange}
                             fileList={fileData.fileList}
+                            // fileList={fileList}
                             beforeUpload={validateFile}
                             // multiple={true}
                             // method="PUT"

@@ -16,6 +16,7 @@ import withAuth from '@/components/component-auth'
 import { RcFile } from 'antd/es/upload'
 import serviceUpload from '@/services/upload'
 import { AccountFileType } from '@/constants/account'
+import { FolderType } from '@/constants/s3'
 
 export interface IAccountCreateForm {
     companyName: string
@@ -70,15 +71,17 @@ const CreateAccount = () => {
         try {
             if (avatarInfo?.flag) {
                 const res = await serviceUpload.getPresignedUrlAvatar(
+                    FolderType.USER,
                     [avatarInfo?.file as File],
                     AccountFileType.AVATAR,
-                    values.companyName + '_' + values.username + '-',
                 )
                 await serviceUpload.uploadFile(
                     avatarInfo?.file as File,
                     res.uploadUrls[0],
                 )
-                urlAvatar = res.uploadUrls[0].split('?')[0]
+                urlAvatar = res.uploadUrls[0]
+                    .split('?')[0]
+                    .split('.amazonaws.com/')[1]
             }
             const response = await serviceAccount.createAccount({
                 email: values.email,

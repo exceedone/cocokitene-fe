@@ -138,7 +138,7 @@ const CreatePlan = () => {
                             <Col xs={24} lg={12}>
                                 <Form.Item
                                     name="maxShareholderAccount"
-                                    label={t('MAX_SHAREHOLDER_ACCOUNT')}
+                                    label={t('MAX_ACCOUNT')}
                                     rules={[
                                         {
                                             required: true,

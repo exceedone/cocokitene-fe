@@ -4,6 +4,7 @@ import { CONSTANT_EMPTY_STRING } from '@/constants/common'
 import { MeetingTime, MeetingType, SORT, SortField } from '@/constants/meeting'
 import { Permissions } from '@/constants/permission'
 import { useNotification } from '@/hooks/use-notification'
+import useDebounce from '@/hooks/useDebounce'
 import { useAttendance } from '@/stores/attendance/hooks'
 import { useAuthLogin } from '@/stores/auth/hooks'
 import { useListMeeting } from '@/stores/meeting/hooks'
@@ -15,7 +16,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Button, Grid, Tooltip } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 const { useBreakpoint } = Grid
 
 const MeetingList = () => {
@@ -25,18 +26,21 @@ const MeetingList = () => {
     const { attendanceState, resetStateAttendance } = useAttendance()
     const { openNotification, contextHolder } = useNotification()
     const { authState } = useAuthLogin()
-
-    const permissionCreateMeeting = checkPermission(
-        authState.userData?.permissionKeys,
-        Permissions.CREATE_MEETING,
-    )
-
     const {
         meetingState,
         getListFutureMeetingAction,
         getListPassMeetingAction,
         setFilterAction,
     } = useListMeeting()
+
+    const [searchString, setSearchString] = useState<string>('')
+
+    const searchQueryString = useDebounce(searchString, 200)
+
+    const permissionCreateMeeting = checkPermission(
+        authState.userData?.permissionKeys,
+        Permissions.CREATE_MEETING,
+    )
 
     useEffect(() => {
         return () => {
@@ -47,6 +51,14 @@ const MeetingList = () => {
             })
         }
     }, [setFilterAction])
+
+    useEffect(() => {
+        setFilterAction({
+            ...meetingState.filter,
+            searchQuery: searchQueryString,
+        })
+        // eslint-disable-next-line
+    }, [searchQueryString])
 
     useEffect(() => {
         getListFutureMeetingAction({
@@ -68,7 +80,8 @@ const MeetingList = () => {
     }, [meetingState.filter])
 
     const handleInputChange = (value: string) => {
-        setFilterAction({ ...meetingState.filter, searchQuery: value })
+        // setFilterAction({ ...meetingState.filter, searchQuery: value })
+        setSearchString(value.toLocaleLowerCase().trim())
     }
 
     const handleSelectChange = (value: string) => {
@@ -107,8 +120,6 @@ const MeetingList = () => {
         }
         // eslint-disable-next-line
     }, [meetingState.status])
-
-    console.log('meetingState:', meetingState)
 
     return (
         <div>

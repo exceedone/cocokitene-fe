@@ -264,7 +264,7 @@ const MeetingChat = ({ meetingInfo }: IMeetingChat) => {
         return () => {
             if (socket) {
                 socket.disconnect()
-                console.log('Disconnect socket!!!', socket)
+                // console.log('Disconnect socket!!!', socket)
             }
         }
     }, [dataChat.roomChat])

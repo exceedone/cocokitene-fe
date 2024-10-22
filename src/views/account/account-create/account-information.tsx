@@ -191,8 +191,6 @@ const AccountInformation = ({ form, getFileAvatar }: AccountInfoProp) => {
     const [fileList, setFileList] = useState<UploadFile[]>([])
     const t = useTranslations()
     const beforeUpload = (file: RcFile) => {
-        console.log('file size: ', file.size)
-
         const isLt20M =
             file.size < Number(MAX_AVATAR_FILE_SIZE) * (1024 * 1024 * 1024)
         const langCurrent = cookies.get('NEXT_LOCALE')

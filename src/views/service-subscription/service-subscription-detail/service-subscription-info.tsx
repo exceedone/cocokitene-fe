@@ -27,8 +27,6 @@ const ServiceSubscriptionInfo = () => {
     const params = useParams()
     const serviceSubscriptionId = +params.id
 
-    console.log('serviceSubscription:', serviceSubscription)
-
     const dataServiceSubscriptionDetail: IRowServiceSubscriptionInfo[] = [
         {
             label: t('COMPANY_NAME'),

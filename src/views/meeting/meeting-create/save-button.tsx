@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import { FETCH_STATUS, urlRegex } from '@/constants/common'
-import { MeetingFileType } from '@/constants/meeting'
+import { MeetingCode, MeetingFileType } from '@/constants/meeting'
+import { FolderType } from '@/constants/s3'
 import companyServicePlan from '@/services/company-service-plan'
 import serviceMeeting from '@/services/meeting'
 import {
@@ -125,7 +126,11 @@ const SaveCreateMeetingButton = () => {
         try {
             // ;(async () => {
             setStatus(FETCH_STATUS.LOADING)
-            console.log('payload: ', validate.payload)
+            // console.log('payload: ', validate.payload)
+
+            const meetingCode: string =
+                MeetingCode.MEETING_PRE_CODE +
+                Math.floor(100000000 + Math.random() * 900000000)
 
             let storageUsed: number = 0
 
@@ -143,6 +148,8 @@ const SaveCreateMeetingButton = () => {
                                 storageUsed += +file.file.size
 
                                 const res = await serviceUpload.getPresignedUrl(
+                                    FolderType.MEETING,
+                                    meetingCode,
                                     [file.file as File],
                                     MeetingFileType.PROPOSAL_FILES,
                                 )
@@ -154,7 +161,9 @@ const SaveCreateMeetingButton = () => {
 
                                 return {
                                     id: file.id,
-                                    url: res.uploadUrls[0].split('?')[0],
+                                    url: res.uploadUrls[0]
+                                        .split('?')[0]
+                                        .split('.amazonaws.com/')[1],
                                     uid: file.uid,
                                 }
                             }),
@@ -176,6 +185,8 @@ const SaveCreateMeetingButton = () => {
 
                                     const res =
                                         await serviceUpload.getPresignedUrl(
+                                            FolderType.MEETING,
+                                            meetingCode,
                                             [file.file as File],
                                             MeetingFileType.PROPOSAL_FILES,
                                         )
@@ -186,7 +197,9 @@ const SaveCreateMeetingButton = () => {
 
                                     return {
                                         id: file.id,
-                                        url: res.uploadUrls[0].split('?')[0],
+                                        url: res.uploadUrls[0]
+                                            .split('?')[0]
+                                            .split('.amazonaws.com/')[1],
                                         uid: file.uid,
                                     }
                                 }),
@@ -198,6 +211,7 @@ const SaveCreateMeetingButton = () => {
 
             const payloadCreateMeeting: ICreateMeetingPayload = {
                 ...validate.payload,
+                meetingCode: meetingCode,
                 meetingInvitations: await Promise.all(
                     validate.payload.meetingInvitations.map(
                         async (meetingInvitation) => {
@@ -205,6 +219,8 @@ const SaveCreateMeetingButton = () => {
                             storageUsed += +meetingInvitation.file.size
 
                             const res = await serviceUpload.getPresignedUrl(
+                                FolderType.MEETING,
+                                meetingCode,
                                 [meetingInvitation.file as File],
                                 meetingInvitation.fileType,
                             )
@@ -215,7 +231,9 @@ const SaveCreateMeetingButton = () => {
                             )
 
                             return {
-                                url: res.uploadUrls[0].split('?')[0],
+                                url: res.uploadUrls[0]
+                                    .split('?')[0]
+                                    .split('.amazonaws.com/')[1],
                                 fileType: meetingInvitation.fileType,
                                 uid: (meetingInvitation.file as RcFile).uid,
                             }
@@ -229,6 +247,8 @@ const SaveCreateMeetingButton = () => {
                             storageUsed += +meetingMinute.file.size
 
                             const res = await serviceUpload.getPresignedUrl(
+                                FolderType.MEETING,
+                                meetingCode,
                                 [meetingMinute.file as File],
                                 meetingMinute.fileType,
                             )
@@ -238,7 +258,9 @@ const SaveCreateMeetingButton = () => {
                             )
 
                             return {
-                                url: res.uploadUrls[0].split('?')[0],
+                                url: res.uploadUrls[0]
+                                    .split('?')[0]
+                                    .split('.amazonaws.com/')[1],
                                 fileType: meetingMinute.fileType,
                                 uid: (meetingMinute.file as RcFile).uid,
                             }

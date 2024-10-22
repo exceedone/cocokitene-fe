@@ -88,7 +88,8 @@ const Resolutions = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
                         content={data.resolutions[index].description}
                         fileList={data?.resolutions[index].files?.map(
                             (file, index) => ({
-                                uid: file.id?.toString() || index.toString(),
+                                // uid: file.id?.toString() || index.toString(),
+                                uid: file.uid?.toString() || index.toString(),
                                 name: getShortNameFromUrl(file.url) as string,
                                 url: file.url,
                                 status: 'done',
@@ -100,6 +101,7 @@ const Resolutions = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
                         allowUploadFile={allowUploadFile}
+                        meetingCode={data.meetingCode}
                     />
                 ))}
             </div>

@@ -91,7 +91,7 @@ const Elections = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
                         oldContent={data.elections[index].oldDescription}
                         fileList={data?.elections[index].files?.map(
                             (file, index) => ({
-                                uid: file.id?.toString() || index.toString(),
+                                uid: file.uid?.toString() || index.toString(),
                                 name: getShortNameFromUrl(file.url) as string,
                                 url: file.url,
                                 status: 'done',
@@ -104,6 +104,7 @@ const Elections = ({ allowUploadFile }: { allowUploadFile: boolean }) => {
                         onRemoveFile={onRemoveFile(index)}
                         onDelete={onDelete(index)}
                         allowUploadFile={allowUploadFile}
+                        meetingCode={data.meetingCode}
                     />
                 ))}
             </div>

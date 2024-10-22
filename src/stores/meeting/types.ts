@@ -183,6 +183,7 @@ export interface IMeetingDetail {
     endTime: string
     endVotingTime: string
     meetingLink: string
+    meetingCode: string
     status: MeetingStatus
     companyId: number
     creatorId: number
@@ -223,6 +224,7 @@ export interface IUpdateMeeting {
     note: string
     status: MeetingStatus
     meetingLink: string
+    meetingCode: string
     startTime: string
     endTime: string
     endVotingTime: string

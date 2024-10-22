@@ -36,7 +36,6 @@ export const getAllAccount = createAsyncThunk<
 >('users/getUserAll', async (param, { rejectWithValue }) => {
     try {
         const data = await serviceAccount.getAllUsers(param)
-        console.log('data: ', data)
 
         const mappedData = data.users.items.map((item, index) => {
             return {

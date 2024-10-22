@@ -102,7 +102,6 @@ const DetailPersonnelVotingItem = ({
                 message: t('VOTED_CANDIDATE'),
                 duration: 2,
             })
-            console.log('Vote for candidate failed!!!')
             setVoteStatus(FETCH_STATUS.ERROR)
         }
     }

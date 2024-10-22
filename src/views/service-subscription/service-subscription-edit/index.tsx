@@ -134,18 +134,6 @@ const UpdateServiceSubscription = () => {
     const onFinish = async (value: IServiceSubscriptionUpdate) => {
         setStatus(FETCH_STATUS.LOADING)
 
-        console.log('value: ', {
-            companyId: value.companyId,
-            planId: value.planId,
-            amount: +value.amount,
-            type: value.type,
-            paymentMethod: value.paymentMethod,
-            status: value.status,
-            activationDate: dayjs(value.activationDate).format('YYYY-MM-DD'),
-            expirationDate: dayjs(value.expirationDate).format('YYYY-MM-DD'),
-            note: value?.note,
-        })
-
         try {
             const updateServicePlanSubscription =
                 await serviceSubscriptionService.updateServicePlanSubscription(
